@@ -54,7 +54,7 @@ namespace GraduationProject.Controllers
                         return View(viewmodel);
                     }
                     //check for Category ShortcuntName length
-                    if (checkforCategoryShortcutnameLength(viewmodel.MainCategoryId, viewmodel.Name))
+                    if (checkforCategoryShortcutnameLength(viewmodel.MainCategoryId, viewmodel.ShortcutName))
                     {
                         ViewBag.errorMassage = "ترميز الصنف الرئيسي 2 بينما ترميز الصنف الفرعي 3";
                         return View(viewmodel);
@@ -283,12 +283,12 @@ namespace GraduationProject.Controllers
         private bool checkforCategoryShortcutnameLength(int? categoryId, string shortCutName)
         {
             bool check = false;
-            if (categoryId == null && shortCutName.Length != 2)
+            if (categoryId == -1 && shortCutName.Length != 2)
             {
                 // so this category is main category and shortcutname should be 2
                 check = true;
             }
-            else if (categoryId != null && shortCutName.Length != 3)
+            else if (categoryId != -1 && shortCutName.Length != 3)
             {
                 // so this category is subcategory and shortcutname should be 3
                 check = true;
