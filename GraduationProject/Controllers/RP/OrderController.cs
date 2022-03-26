@@ -43,9 +43,16 @@ namespace GraduationProject.Controllers
         ///chooose what t
         public IActionResult Index()
         {
+            IEnumerable<Order> objList= _context.Orders;
+            return View(objList);
+        }
+        
+        //get All Annual Needs
+        public IActionResult AllAnualNeeds()
+        {
+            //var model = _context.AnnualOrder.ToList();
             return View();
         }
-
         public IActionResult Create()
         {
             return View();

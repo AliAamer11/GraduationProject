@@ -8,10 +8,10 @@
     <title> </title>
     <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
     <link href="~/css/layout.css" rel="stylesheet" />
-    <script src="~/js/layout_js.js"></script>
 </head>
 
 <body>
+
     <nav>
         <div class="sidebar-top">
 
@@ -116,36 +116,13 @@
                 </div>
             </ul>
         </div>
-        <!--
-            <div class="sidebar-footer">
-              <a href="#" class="account tooltip-element" data-tooltip="0">
-                <i class='bx bx-user'></i>
-              </a>
-              <div class="admin-user tooltip-element" data-tooltip="1">
-                <div class="admin-profile hide">
-                  <img src="./img/face-1.png" alt="">
-                  <div class="admin-info">
-                    <h3>John Doe</h3>
-                    <h5>Admin</h5>
-                  </div>
-                </div>
-                <a href="#" class="log-out">
-                  <i class='bx bx-log-out'></i>
-                </a>
-              </div>
-              <div class="tooltip">
-                <span class="show">John Doe</span>
-                <span>Logout</span>
-              </div>
-            </div>
-            -->
 
     </nav>
 
 
     <main>
         <h1>My Dashboard</h1>
-        
+
         @RenderBody()
 
         <p class="copyright">
@@ -153,7 +130,8 @@
         </p>
     </main>
 
-    <script src="app.js"></script>
+    <script src="~/js/layout_js.js"></script>
+
 </body>
 
 </html>
