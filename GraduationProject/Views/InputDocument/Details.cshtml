@@ -1,0 +1,43 @@
+﻿@model IEnumerable<GraduationProject.Data.Models.InputDocumentDetails>
+
+@{
+    ViewData["Title"] = "تفاصيل السند";
+}
+<link href="~/css/button.css" rel="stylesheet" />
+<h1>سندات الإدخال</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                المادة
+            </th>
+            <th>
+                الكمية
+            </th>
+            <th>
+                المصدر
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            string statuscode = item.Item.BarCode.Substring(0, 1);
+            string maincategory = item.Item.BarCode.Substring(1, 2);
+            string subcategory = item.Item.BarCode.Substring(3, 3);
+            string serial = item.Item.BarCode.Substring(6, 4);
+            string barcode = serial + " " + subcategory + " " + maincategory + " " + statuscode;
+            <tr>
+                <td>
+                    @barcode
+                </td>
+                <td>
+                    @item.Quantity
+                </td>
+                <td>
+                    @item.Source
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
