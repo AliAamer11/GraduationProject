@@ -83,3 +83,38 @@
         transform: scale(1.05);
         text-decoration: none;
     }
+
+
+.details-icon-btn {
+    background: var(--white);
+    border: 2px solid var(--dark-blue);
+    box-shadow: 0px 5px 5px var(--dark-blue);
+    font-size: 16px;
+    padding-left: 17px;
+    padding-right: 17px;
+    color: var(--dark-blue);
+    cursor: pointer;
+    transition: all .4s ease-in-out;
+    font-weight: bold;
+    border-radius: 20px;
+    width: auto;
+    text-decoration: none;
+}
+
+    .details-icon-btn:hover {
+        background: var(--dark-blue);
+        color: var(--white);
+        border: 1px solid var(--white);
+        transform: scale(1.05);
+        text-decoration: none;
+    }
+
+
+.tableheader {
+    color: var(--dark-orange);
+    font-weight: bold;
+    font-size: 3rem;
+    text-align: center;
+    margin-top: 15px;
+    margin-bottom: 30px;
+}
