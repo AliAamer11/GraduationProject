@@ -1,0 +1,29 @@
+﻿@model GraduationProject.ViewModels.Administration.CreateRoleViewModel
+
+@{
+    ViewData["Title"] = "إنشاء دور";
+}
+
+<h1>إنشاء دور</h1>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="CreateRole">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="RoleName" class="control-label"></label>
+                <input asp-for="RoleName" class="form-control" />
+                <span asp-validation-for="RoleName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input style="width:auto" type="submit" value="إنشاء دور" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}

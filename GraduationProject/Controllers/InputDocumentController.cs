@@ -47,6 +47,11 @@ namespace GraduationProject.Controllers
             {
                 try
                 {
+                    if (viewModel.AddMoreList==null)
+                    {
+                        ViewBag.errorMessage = "طيب عبيلك شي شغلة";
+                        return View(viewModel);
+                    }
                     var inputDocument = new InputDocument()
                     {
                         CreatedAt = DateTime.Now.Date,

@@ -1,0 +1,46 @@
+﻿@model GraduationProject.ViewModels.Administration.CreateUserViewModel
+
+@{
+    ViewData["Title"] = "إنشاء مستخدم";
+}
+
+<h1>إنشاء مستخدم</h1>
+
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="CreateUser">
+            @if (ViewBag.errorMassage != null)
+            {
+                <h4 class="alert alert-danger">@ViewBag.errorMassage</h4>
+            }
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label class="control-label">اسم الجهة</label>
+                <input asp-for="RequestingParty" class="form-control" />
+                <span asp-validation-for="RequestingParty" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">البريد</label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">كلمة المرور</label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label"> النوع</label>
+                <select asp-for="Type" class="form-control fitcontent" asp-items="ViewBag.Type"></select>
+                <span asp-validation-for="Type" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="إنشاء" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>

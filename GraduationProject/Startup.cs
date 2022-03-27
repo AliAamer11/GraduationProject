@@ -1,4 +1,5 @@
 using GraduationProject.Data;
+using GraduationProject.Data.DataSeed;
 using GraduationProject.Data.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -33,14 +34,25 @@ namespace GraduationProject
                     Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddControllersWithViews();
-
+            services.Configure<IdentityOptions>(option =>
+            {
+                option.Password.RequiredLength = 4;// befor we put 9
+                option.Password.RequiredUniqueChars = 0; //befor we put 3
+                option.Password.RequireNonAlphanumeric = false;
+                option.Password.RequireLowercase = false;
+                option.Password.RequireUppercase = false;
+                option.Password.RequireDigit = false;
+            });
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
+            //this for seedDefault roles and Admin
+            DataInitilizer.SeedData(userManager, roleManager);
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
