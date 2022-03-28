@@ -19,6 +19,7 @@ namespace GraduationProject.Controllers
         {
             _context = context;
         }
+
         public IActionResult Index()
         {
             var Categories = _context.Category.Include(c => c.Category).ToList();

@@ -5,6 +5,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\StockKeeper\**" />
+    <Compile Remove="Controllers\VP\**" />
+    <Content Remove="Controllers\StockKeeper\**" />
+    <Content Remove="Controllers\VP\**" />
+    <EmbeddedResource Remove="Controllers\StockKeeper\**" />
+    <EmbeddedResource Remove="Controllers\VP\**" />
+    <None Remove="Controllers\StockKeeper\**" />
+    <None Remove="Controllers\VP\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="compilerconfig.json" />
   </ItemGroup>
   <ItemGroup>
@@ -20,10 +31,8 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Controllers\VP\" />
-    <Folder Include="Controllers\StockKeeper\" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="compilerconfig.json" />
+    <None Include="Views\Order\Annual.cshtml" />
+    <None Include="Views\Order\Index.cshtml" />
   </ItemGroup>
 </Project>
