@@ -1,60 +1,22 @@
-﻿const shrink_btn = document.querySelector(".shrink-btn");
-const search = document.querySelector(".search");
-const sidebar_links = document.querySelectorAll(".sidebar-links a");
-const active_tab = document.querySelector(".active-tab");
-const shortcuts = document.querySelector(".sidebar-links h4");
-const tooltip_elements = document.querySelectorAll(".tooltip-element");
+﻿let sidebar = document.querySelector(".sidebar");
+let closeBtn = document.querySelector("#btn");
+let searchBtn = document.querySelector(".bx-search");
 
-let activeIndex;
-
-shrink_btn.addEventListener("click", () => {
-    document.body.classList.toggle("shrink");
-    setTimeout(moveActiveTab, 400);
-
-    shrink_btn.classList.add("hovered");
-
-    setTimeout(() => {
-        shrink_btn.classList.remove("hovered");
-    }, 500);
+closeBtn.addEventListener("click", () => {
+    sidebar.classList.toggle("open");
+    menuBtnChange();//calling the function(optional)
 });
 
-search.addEventListener("click", () => {
-    document.body.classList.remove("shrink");
-    search.lastElementChild.focus();
+searchBtn.addEventListener("click", () => { // Sidebar open when you click on the search iocn
+    sidebar.classList.toggle("open");
+    menuBtnChange(); //calling the function(optional)
 });
 
-function moveActiveTab() {
-    let topPosition = activeIndex * 58 + 2.5;
-
-    if (activeIndex > 3) {
-        topPosition += shortcuts.clientHeight;
+// following are the code to change sidebar button(optional)
+function menuBtnChange() {
+    if (sidebar.classList.contains("open")) {
+        closeBtn.classList.replace("bx-menu", "bx-menu-alt-left");//replacing the iocns class
+    } else {
+        closeBtn.classList.replace("bx-menu-alt-left", "bx-menu");//replacing the iocns class
     }
-
-    active_tab.style.top = `${topPosition}px`;
 }
-
-function changeLink() {
-    sidebar_links.forEach((sideLink) => sideLink.classList.remove("active"));
-    this.classList.add("active");
-
-    activeIndex = this.dataset.active;
-
-    moveActiveTab();
-}
-
-sidebar_links.forEach((link) => link.addEventListener("click", changeLink));
-
-function showTooltip() {
-    let tooltip = this.parentNode.lastElementChild;
-    let spans = tooltip.children;
-    let tooltipIndex = this.dataset.tooltip;
-
-    Array.from(spans).forEach((sp) => sp.classList.remove("show"));
-    spans[tooltipIndex].classList.add("show");
-
-    tooltip.style.top = `${(100 / (spans.length * 2)) * (tooltipIndex * 2 + 1)}%`;
-}
-
-tooltip_elements.forEach((elem) => {
-    elem.addEventListener("mouseover", showTooltip);
-});

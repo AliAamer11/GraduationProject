@@ -1,23 +1,25 @@
 ﻿:root {
     /*this for navigation*/
-    --dark-blue: #0b0b47;
-    --dark-orange: #FF5733;
+    --main-blue: #11101D;
+    --sub-blue: #1d1b31;
+    --background: #E4E9F7;
+    --main-orange: #FF5733;
     /*special use*/
-    --mikado-yellow: #08623B;
     /*main color*/
     --white: #fff;
     --black: #000;
     --gray: #e7e7e7;
+    --background-gray: #c7c7c7;
     --red: #b2323d;
     --black-hover: #171a20;
     --red-hover: #92474d;
 }
 
 .create-icon-btn {
-    background: var(--dark-orange);
-    border: 1px solid var(--dark-blue);
+    background: var(--main-orange);
+    border: 1px solid var(--main-blue);
     box-shadow: 0px 5px 10px rgba(0,0,0,.2);
-    padding: 10px 20px;
+    padding: 7px 14px;
     color: var(--white);
     cursor: pointer;
     transition: all .4s ease-in-out;
@@ -33,8 +35,8 @@
 
     .create-icon-btn:hover {
         background: #fff;
-        color: var(--dark-blue);
-        border: 1px solid var(--dark-orange);
+        color: var(--main-blue);
+        border: 1px solid var(--main-orange);
         transform: scale(1.05);
         text-decoration: none;
     }
@@ -76,6 +78,7 @@
     width: auto;
     text-decoration: none;
 }
+
     .edit-icon-btn:hover {
         background: var(--black-hover);
         color: var(--white);
@@ -87,12 +90,12 @@
 
 .details-icon-btn {
     background: var(--white);
-    border: 2px solid var(--dark-blue);
-    box-shadow: 0px 5px 5px var(--dark-blue);
+    border: 2px solid var(--main-blue);
+    box-shadow: 0px 5px 5px var(--main-blue);
     font-size: 16px;
     padding-left: 17px;
     padding-right: 17px;
-    color: var(--dark-blue);
+    color: var(--main-blue);
     cursor: pointer;
     transition: all .4s ease-in-out;
     font-weight: bold;
@@ -102,7 +105,7 @@
 }
 
     .details-icon-btn:hover {
-        background: var(--dark-blue);
+        background: var(--main-blue);
         color: var(--white);
         border: 1px solid var(--white);
         transform: scale(1.05);
@@ -111,7 +114,7 @@
 
 
 .tableheader {
-    color: var(--dark-orange);
+    color: var(--main-orange);
     font-weight: bold;
     font-size: 3rem;
     text-align: center;

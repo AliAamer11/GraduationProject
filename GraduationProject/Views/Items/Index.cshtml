@@ -4,107 +4,110 @@
     ViewData["Title"] = "المواد";
 }
 <link href="~/css/button.css" rel="stylesheet" />
+<link href="~/css/tableformanagment.css" rel="stylesheet" />
 <h1 class="tableheader">المواد</h1>
 
 <a title="إضافة صنف" class="create-icon-btn" asp-action="Create"><i class="fa fa-plus"></i></a>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th style="padding-left:80px">
-                ترميز المادة
-            </th>
-            <th>
-                اسم المادة
-            </th>
-            <th>
-                الكمية
-            </th>
-            <th>
-                حالة المادة
-            </th>
-            <th>
-                العلامة
-            </th>
-            <th>
-                الحد الأدنى
-            </th>
-            <th>
-                ملاحظات
-            </th>
-            <th>
-                صنف المادة
-            </th>
-            <th>
-                ودحدة القياس
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            string statuscode = item.BarCode.Substring(0, 1);
-            string maincategory = item.BarCode.Substring(1, 2);
-            string subcategory = item.BarCode.Substring(3, 3);
-            string serial = item.BarCode.Substring(6, 4);
-            string barcode = serial + " " + subcategory + " " + maincategory + " " + statuscode;
+<div class="table-responsive">
+    <table class="styled-table">
+        <thead>
             <tr>
-                <td>
-                    @barcode
-                </td>
-                <td>
-                    @item.Name
-                </td>
-                <td>
-                    @item.Quantity
-                </td>
-
-                @if (item.Status == "1")
-                {
-                    <td>
-                        مستهلكة
-                    </td>
-                }
-                else if (item.Status == "2")
-                {
-                    <td>
-                        ثابتة
-                    </td>
-                }
-                else
-                {
-                    <td>
-                        تالفة
-                    </td>
-                }
-
-                <td>
-                    @item.Brand
-                </td>
-                <td>
-                    @item.MinimumRange
-                </td>
-                <td>
-                    @item.Note
-                </td>
-                <td>
-                    @item.Category.Name
-                </td>
-                <td>
-                    @item.Measurement.Name
-                </td>
-                <td>
-                    <div class="d-inline-flex">
-                        <a asp-action="Edit" title="تعديل" asp-route-id="@item.ItemID" class="edit-icon-btn ml-1"><i class='far fa-edit'></i></a>
-                        <form method="post" asp-action="Delete" asp-controller="Items" asp-route-id="@item.ItemID">
-                            <button style="width:60px" onclick="return confirm('هل تود بالفعل حذف المادة @item.Name ؟ ')" type="submit" class="delete-icon-btn">
-                                <i class='far fa-trash-alt'></i>
-                            </button>
-                        </form>
-                    </div>
-                </td>
+                <th style="padding-left:80px">
+                    ترميز المادة
+                </th>
+                <th>
+                    اسم المادة
+                </th>
+                <th>
+                    الكمية
+                </th>
+                <th>
+                    حالة المادة
+                </th>
+                <th>
+                    العلامة
+                </th>
+                <th>
+                    الحد الأدنى
+                </th>
+                <th>
+                    ملاحظات
+                </th>
+                <th>
+                    صنف المادة
+                </th>
+                <th>
+                    ودحدة القياس
+                </th>
+                <th></th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                string statuscode = item.BarCode.Substring(0, 1);
+                string maincategory = item.BarCode.Substring(1, 2);
+                string subcategory = item.BarCode.Substring(3, 3);
+                string serial = item.BarCode.Substring(6, 4);
+                string barcode = serial + " " + subcategory + " " + maincategory + " " + statuscode;
+                <tr>
+                    <td>
+                        @barcode
+                    </td>
+                    <td>
+                        @item.Name
+                    </td>
+                    <td>
+                        @item.Quantity
+                    </td>
+
+                    @if (item.Status == "1")
+                    {
+                        <td>
+                            مستهلكة
+                        </td>
+                    }
+                    else if (item.Status == "2")
+                    {
+                        <td>
+                            ثابتة
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+                            تالفة
+                        </td>
+                    }
+
+                    <td>
+                        @item.Brand
+                    </td>
+                    <td>
+                        @item.MinimumRange
+                    </td>
+                    <td>
+                        @item.Note
+                    </td>
+                    <td>
+                        @item.Category.Name
+                    </td>
+                    <td>
+                        @item.Measurement.Name
+                    </td>
+                    <td>
+                        <div class="d-inline-flex">
+                            <a asp-action="Edit" title="تعديل" asp-route-id="@item.ItemID" class="edit-icon-btn ml-1"><i class='far fa-edit'></i></a>
+                            <form method="post" asp-action="Delete" asp-controller="Items" asp-route-id="@item.ItemID">
+                                <button style="width:60px" onclick="return confirm('هل تود بالفعل حذف المادة @item.Name ؟ ')" type="submit" class="delete-icon-btn">
+                                    <i class='far fa-trash-alt'></i>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+

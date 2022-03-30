@@ -3,39 +3,69 @@
     ViewData["Title"] = "إنشاء صنف";
 }
 
-<h1>إنشاء صنف</h1>
 
+<link href="~/css/createItem.css" rel="stylesheet" />
+<div class="container">
+    <form id='create-form' asp-action="Create">
+        <p id='description' class="header">
+            إنشاء صنف
+        </p>
+        @if (ViewBag.errorMassage != null)
+        {
+            <h4 class="alert alert-danger">@ViewBag.errorMassage</h4>
+        }
+        <div class='form-input'>
+            <label>اسم الصنف</label>
+            <input asp-for="Name" class='form-input-size' />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class='form-input'>
+            <label>ترميز الصنف</label>
+            <input asp-for="ShortcutName" class='form-input-size' />
+            <span asp-validation-for="ShortcutName" class="text-danger"></span>
+        </div>
+        <div class="form-input">
+            <label>الصنف الأساسي</label>
+            <select asp-for="MainCategoryId" class="form-input-size" asp-items="ViewBag.MainCategory"></select>
+            <span asp-validation-for="MainCategoryId" class="text-danger"></span>
 
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            @if (ViewBag.errorMassage != null)
-            {
-                <h4 class="alert alert-danger">@ViewBag.errorMassage</h4>
-            }
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label  class="control-label">اسم الصنف</label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label class="control-label">ترميز الصنف</label>
-                <input asp-for="ShortcutName" class="form-control" />
-                <span asp-validation-for="ShortcutName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label  class="control-label"> الصنف الأساسي</label>
-                <select asp-for="MainCategoryId" class="form-control fitcontent" asp-items="ViewBag.MainCategory"></select>
-                <span asp-validation-for="MainCategoryId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="إنشاء" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+        </div>
+        <div class='form-input'>
+            <button type='submit' id='submit'>إنشاء صنف<i class="bx bx-add-to-queue mr-3"></i></button>
+        </div>
+    </form>
 </div>
+
+@*<hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Create">
+                @if (ViewBag.errorMassage != null)
+                {
+                    <h4 class="alert alert-danger">@ViewBag.errorMassage</h4>
+                }
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label  class="control-label">اسم الصنف</label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">ترميز الصنف</label>
+                    <input asp-for="ShortcutName" class="form-control" />
+                    <span asp-validation-for="ShortcutName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label  class="control-label"> الصنف الأساسي</label>
+                    <select asp-for="MainCategoryId" class="form-control fitcontent" asp-items="ViewBag.MainCategory"></select>
+                    <span asp-validation-for="MainCategoryId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="إنشاء" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>*@
 
 @section Scripts{
     <partial name="_ValidationScriptsPartial" />

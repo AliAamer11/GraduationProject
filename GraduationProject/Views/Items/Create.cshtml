@@ -4,56 +4,63 @@
     ViewData["Title"] = "إنشاء";
 }
 
-<h1>إنشاء مادة</h1>
+<link href="~/css/createItem.css" rel="stylesheet" />
+<div class="container">
+    <form id='create-form' asp-action="Create">
+        <p id='description' class="header">
+            إنشاء مادة
+        </p>
+        <div class='form-input'>
+            <label>اسم المادة</label>
+            <input asp-for="Name" class='form-input-size' />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class='form-input'>
+            <label>الكمية</label>
+            <input asp-for="Quantity" class='form-input-size' />
+            <span asp-validation-for="Quantity" class="text-danger"></span>
 
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Quantity" class="control-label"></label>
-                <input asp-for="Quantity" class="form-control" />
-                <span asp-validation-for="Quantity" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Brand" class="control-label"></label>
-                <input asp-for="Brand" class="form-control" />
-                <span asp-validation-for="Brand" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MinimumRange" class="control-label"></label>
-                <input asp-for="MinimumRange" class="form-control" />
-                <span asp-validation-for="MinimumRange" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Note" class="control-label"></label>
-                <input asp-for="Note" class="form-control" />
-                <span asp-validation-for="Note" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CategoryId" class="control-label"></label>
-                <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                <select asp-for="Status" class="form-control" asp-items="ViewBag.Status"></select>
-                <span asp-validation-for="Status" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MeasurementId" class="control-label"></label>
-                <select asp-for="MeasurementId" class="form-control" asp-items="ViewBag.MeasurementId"></select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="إنشاء" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+        </div>
+        <div class='form-input'>
+            <label>الحد الأدنى</label>
+            <input asp-for="MinimumRange" class='form-input-size' />
+            <span asp-validation-for="MinimumRange" class="text-danger"></span>
+
+        </div>
+        <div class='form-input'>
+            <label>العلامة التجارية</label>
+            <input asp-for="Brand" class='form-input-size' />
+            <span asp-validation-for="Brand" class="text-danger"></span>
+
+        </div>
+        <div class='form-input'>
+            <label>ملاحظات عن المادة</label>
+            <textarea asp-for="Note"></textarea>
+            <span asp-validation-for="Note" class="text-danger"></span>
+
+        </div>
+        <div class="form-input">
+            <label>الصنف</label>
+            <select asp-for="CategoryId" class="form-input-size" asp-items="ViewBag.CategoryId"></select>
+            <span asp-validation-for="CategoryId" class="text-danger"></span>
+
+        </div>
+        <div class="form-input">
+            <label>حالة المادة</label>
+            <select asp-for="Status" class="form-input-size" asp-items="ViewBag.Status"></select>
+            <span asp-validation-for="Status" class="text-danger"></span>
+        </div>
+        <div class="form-input">
+            <label>القياس</label>
+            <select asp-for="MeasurementId" class="form-input-size" asp-items="ViewBag.MeasurementId"></select>
+            <span asp-validation-for="MeasurementId" class="text-danger"></span>
+        </div>
+        <div class='form-input'>
+            <button type='submit' id='submit'>إنشاء المادة<i class="bx bx-add-to-queue mr-3"></i></button>
+        </div>
+    </form>
 </div>
+
 
 @section Scripts{
     <partial name="_ValidationScriptsPartial" />
