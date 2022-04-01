@@ -1,140 +1,88 @@
 ﻿<!DOCTYPE html>
-<html lang="en" dir="rtl">
-
+<html dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> </title>
-    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - GraduationProject</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="~/lib/boxicons/css/boxicons.min.css" rel="stylesheet" />
     <link href="~/css/layout.css" rel="stylesheet" />
+    <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" />
+
 </head>
-
 <body>
-
-    <nav>
-        <div class="sidebar-top">
-
-            <span class="shrink-btn">
-                <i class='bx bx-chevron-right'></i>
-            </span>
-
-            <img src="./img/logo.png" class="logo" alt="">
-            <h3 class="hide">
-                <h1 class="logo2">
-                    <a href="#"> <span> KALAMOON </span></a>
-                </h1>
-            </h3>
+    <div class="sidebar">
+        <div class="logo-details">
+            <i class='bx bxl-c-plus-plus icon'></i>
+            <div class="logo_name">WHMS</div>
+            <i class='bx bx-menu' id="btn"></i>
         </div>
-
-        <div class="search">
-            <i class='bx bx-search'></i>
-            <input type="text" class="hide" placeholder="بحث سريع . . .">
-        </div>
-
-        <div class="sidebar-links">
-            <ul>
-                <div class="active-tab"></div>
-                <li class="tooltip-element" data-tooltip="0">
-                    <a href="~/InputDocument/Index" class="active" data-active="0">
-                        <div class="icon">
-                            <i class='bx bx-tachometer'></i>
-                            <i class='bx bxs-tachometer'></i>
-                        </div>
-                        <span class="link hide">الصفحة الرئيسيّة</span>
-                    </a>
-                </li>
-                <li class="tooltip-element" data-tooltip="1">
-                    <a href="~/InputDocument/Index" data-active="1">
-                        <div class="icon">
-                            <i class='bx bx-folder'></i>
-                            <i class='bx bxs-folder'></i>
-                        </div>
-                        <span class="link hide">طلبات الاحتياجات</span>
-                    </a>
-                </li>
-                <li class="tooltip-element" data-tooltip="2">
-                    <a href="#" data-active="2">
-                        <div class="icon">
-                            <i class='bx bx-message-square-detail'></i>
-                            <i class='bx bxs-message-square-detail'></i>
-                        </div>
-                        <span class="link hide">الإشعارات</span>
-                    </a>
-                </li>
-                <li class="tooltip-element" data-tooltip="3">
-                    <a href="#" data-active="3">
-                        <div class="icon">
-                            <i class='bx bx-bar-chart-square'></i>
-                            <i class='bx bxs-bar-chart-square'></i>
-                        </div>
-                        <span class="link hide">التقارير</span>
-                    </a>
-                </li>
-                <div class="tooltip">
-                    <span class="show">Dashboard</span>
-                    <span>Projects</span>
-                    <span>Messages</span>
-                    <span>Analytics</span>
+        <ul class="nav-list">
+            <li>
+                <i class='bx bx-search'></i>
+                <input type="text" placeholder="ابحث هنا...">
+                <span class="tooltip">ابحث</span>
+            </li>
+            <li>
+                <a href="~/Items/Index">
+                    <i class='bx bx-spreadsheet'></i>
+                    <span class="links_name">المواد</span>
+                </a>
+                <span class="tooltip">المواد</span>
+            </li>
+            <li>
+                <a href="~/Category/Index">
+                    <i class='bx bx-category-alt'></i>
+                    <span class="links_name">الأصناف</span>
+                </a>
+                <span class="tooltip">الأصناف</span>
+            </li>
+            <li>
+                <a href="~/Measurements/Index">
+                    <i class='bx bx-pie-chart-alt-2'></i>
+                    <span class="links_name">القياسات</span>
+                </a>
+                <span class="tooltip">القياسات</span>
+            </li>
+            <li>
+                <a href="~/InputDocument/Index">
+                    <i class='bx bx-folder'></i>
+                    <span class="links_name">سندات الإدخال</span>
+                </a>
+                <span class="tooltip">سندات الإدخال</span>
+            </li>
+            <li>
+                <a href="#">
+                    <i class='bx bx-cart-alt'></i>
+                    <span class="links_name">الطلبات</span>
+                </a>
+                <span class="tooltip">الطلبات</span>
+            </li>
+            <li class="profile">
+                <div class="profile-details">
+                    <!--<img src="profile.jpg" alt="profileImg">-->
+                    <div class="name_job">
+                        <div class="name">اسم المستخدم</div>
+                        @*<div class="job">Web designer</div>*@
+                    </div>
                 </div>
-            </ul>
-
-            <h4 class="hide">المختصرات</h4>
-
-            <ul>
-                <li class="tooltip-element" data-tooltip="0">
-                    <a href="#" data-active="4">
-                        <div class="icon">
-                            <i class='bx bx-notepad'></i>
-                            <i class='bx bxs-notepad'></i>
-                        </div>
-                        <span class="link hide">الأرشيف</span>
-                    </a>
-                </li>
-                <li class="tooltip-element" data-tooltip="1">
-                    <a href="#" data-active="5">
-                        <div class="icon">
-                            <i class='bx bx-help-circle'></i>
-                            <i class='bx bxs-help-circle'></i>
-                        </div>
-                        <span class="link hide">مساعدة</span>
-                    </a>
-                </li>
-                <li class="tooltip-element" data-tooltip="2">
-                    <a href="#" data-active="6">
-                        <div class="icon">
-                            <i class='bx bx-log-out'></i>
-                            <i class='bx bx-log-out'></i>
-                        </div>
-                        <span class="link hide">تسجيل الخروج</span>
-                    </a>
-                </li>
-                <div class="tooltip">
-                    <span class="show">Tasks</span>
-                    <span>Help</span>
-                    <span>Settings</span>
-                </div>
-            </ul>
+                <i class='bx bx-log-out' id="log_out"></i>
+            </li>
+        </ul>
+    </div>
+    <section class="home-section">
+        <div class="container" style="text-align:right;padding-top:20px;">
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
         </div>
-
-    </nav>
-
-
-    <main>
-        <h1>My Dashboard</h1>
-
-        @RenderBody()
-
-        <p class="copyright">
-            &copy; 2021 - <span>S-A-R-A</span> All Rights Reserved.
-        </p>
-    </main>
-
+    </section>
 
     <script src="~/js/layout_js.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/togglemenu.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
-
-
 </body>
-
 </html>
