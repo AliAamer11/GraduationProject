@@ -1,0 +1,54 @@
+﻿@model GraduationProject.ViewModels.AnnualNeedOrders.EditAnnualNeedOrderViewModel;
+
+<h1>تعديل طلب مادة</h1>
+
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="EditAnnualNeedOrder">
+            <input type="hidden" asp-for="AnnualOrderID" />
+            <input type="hidden" asp-for="OrderId" />
+
+            <div class="form-group">
+                <label class="control-label">اسم المادة</label>
+                <select asp-for="ItemId" asp-items="ViewBag.Item"></select>
+                <span asp-validation-for="ItemId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">كمية الفصل الأول</label>
+                <input asp-for="FirstSemQuantity" class="form-control" />
+                <span asp-validation-for="FirstSemQuantity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label"> كمية الفصل الثاني</label>
+                <input asp-for="SecondSemQuantity" class="form-control" />
+                <span asp-validation-for="SecondSemQuantity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label"> كمية الفصل الثالث</label>
+                <input asp-for="ThirdSemQuantity" class="form-control" />
+                <span asp-validation-for="ThirdSemQuantity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label"> معدل التدفق</label>
+                <input asp-for="FlowRate" class="form-control" />
+                <span asp-validation-for="FlowRate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">المعدل التقريبي</label>
+                <input asp-for="ApproxRate" class="form-control" />
+                <span asp-validation-for="ApproxRate" class="text-danger"></span>
+            </div>
+            <div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="تعديل" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}

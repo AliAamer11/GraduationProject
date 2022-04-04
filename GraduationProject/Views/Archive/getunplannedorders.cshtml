@@ -1,0 +1,33 @@
+﻿@model List<GraduationProject.Data.Models.UnPlannedOrder>;
+
+@{
+    ViewData["Title"] = "طلبات المواد في الطلب غير المخطط ";
+}
+<link href="~/css/button.css" rel="stylesheet" />
+<h1>طلبات المواد في الطلب غير المخطط</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>اسم المادة</th>
+            <th>الكمية المطلوبة</th>
+            <th>توصيف</th>
+            <th>سبب الطلب</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var uo in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => uo.Item.Name)</td>
+                <td>@uo.Quantity</td>
+                <td>@uo.Description</td>
+                <td>@uo.Reason</td>
+
+                
+            </tr>
+        }
+    </tbody>
+</table>
+
