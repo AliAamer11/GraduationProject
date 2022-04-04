@@ -22,11 +22,19 @@ namespace GraduationProject.Controllers
             return View();
         }
 
+        [HttpGet]
         public IActionResult AlLAnnualOrders()
         {
 
-            return View();
+            return RedirectToAction("Index", "AnnualOrder");
         }
+
+        [HttpGet]
+        public IActionResult AllUnplannedOrders()
+        {
+            return RedirectToAction("Index", "UnplannedOrder");
+        }
+
 
         ///gotta fix the user id for certain 
         //Get All AnnualNeed To Specific Order///// from archive
@@ -48,6 +56,7 @@ namespace GraduationProject.Controllers
             var unplannedorders = _context.UnPlannedOrder.Include(o => o.Order)
                 .Include(i => i.Item)
                 .Where(x => x.OrderId == id)
+                .Where(o => o.Order.UserId == "1")
                 .ToList();
             return View(unplannedorders);
         }
