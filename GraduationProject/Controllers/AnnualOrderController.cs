@@ -43,7 +43,9 @@ namespace GraduationProject.Controllers
         }
         public IActionResult Index()
         {
-            return View();
+            var annualneeds = _context.Orders
+                .Where(x => x.Type == false).ToList();
+            return View(annualneeds);
         }
 
         //Get All AnnualNeed
