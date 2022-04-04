@@ -23,7 +23,7 @@ namespace GraduationProject.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            var inputDocuments = _context.InputDocument.ToList();
+            var inputDocuments = _context.InputDocument.ToList().OrderByDescending(i=>i.InputDocumentID);
             return View(inputDocuments);
         }
 
@@ -94,8 +94,15 @@ namespace GraduationProject.Controllers
                 {
                     return NotFound();
                 }
-                var inputDoumentDetails =_context.InputDocumentDetails.Include(d=>d.Item).Where(d => d.InputDocumentId == inputDocumentId);
-                return View(await inputDoumentDetails.ToListAsync());
+                var inputDoucment = await _context.InputDocument.FirstOrDefaultAsync(i => i.InputDocumentID == inputDocumentId);
+                var inputDoumentDetails =await _context.InputDocumentDetails.Include(d=>d.Item).Where(d => d.InputDocumentId == inputDocumentId).ToListAsync();
+
+                var inputDocumnetDetailsViewModel = new InputDocumnetDetailsViewModel()
+                {
+                    InputDocumentDetails = inputDoumentDetails,
+                    CreatedAt = inputDoucment.CreatedAt,
+                };
+                return View(inputDocumnetDetailsViewModel);
             }
             catch
             {

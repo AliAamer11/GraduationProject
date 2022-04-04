@@ -1,0 +1,34 @@
+﻿@model GraduationProject.ViewModels.Measurements.CreateMeasurementViewModel
+
+<link href="~/css/popup.css" rel="stylesheet" />
+<div class="modal fade" id="addMeasurement">
+    <div class="modal-dialog">
+        <div class="modal-content box">
+
+            <div class="modal-header">
+                <h4 class="modal-title" id="addMeasurementLabale">إضافة قياس</h4>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span class="close-icon">x</span>
+                </button>
+
+            </div>
+
+            <div class="modal-body">
+                <form action="Create">
+                    <div class="form-group">
+                        <label>عنوان القياس</label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                </form>
+            </div>
+      
+            <div class="modal-footer tail">
+                @*<button type="button" class="btn btn-primary" data-dismiss="modal">إغلاق</button>*@
+                <button type="button" id="submit" data-save="modal">إنشاء قياس<i class="bx bx-add-to-queue mr-3"></i></button>
+            </div>
+        </div>
+
+    </div>
+
+</div>

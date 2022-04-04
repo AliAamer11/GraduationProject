@@ -4,38 +4,49 @@
     ViewData["Title"] = "القياسات";
 }
 <link href="~/css/button.css" rel="stylesheet" />
-<h1>القياسات</h1>
+<link href="~/css/tableformanagment.css" rel="stylesheet" />
 
-<a title="إضافة قياس" class="create-icon-btn" asp-action="Create"><i class="fa fa-plus"></i></a>
+<style>
+    .modal-backdrop{
+        z-index:-1;
+    }
+</style>
+<h1 class="tableheader-right mr-4" style="color: #FF5733">القياسات</h1>
 
+<button type="button" title="إضافة قياس" class="create-icon-btn" data-toggle="ajax-modal" data-target="#addMeasurement"
+        data-url="@Url.Action("Create")"><i class="fa fa-plus"></i></button>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                اسم القياس
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+<div id="PlaceHolderHer"></div>
+<div class="table-responsive">
+    <table class="styled-table">
+        <thead>
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    <div class="d-inline-flex">
-                        <a asp-action="Edit" title="تعديل" asp-route-id="@item.MeasurmentID" class="edit-icon-btn ml-1"><i class='far fa-edit'></i></a>
-                        <form method="post" asp-action="Delete" asp-controller="Measurements" asp-route-id="@item.MeasurmentID">
-                            <button style="width:60px" onclick="return confirm('هل تود بالفعل حذف القياس @item.Name ؟ ')" type="submit" class="delete-icon-btn">
-                                <i class='far fa-trash-alt'></i>
-                            </button>
-                        </form>
-                    </div>
-                </td>
+                <th>
+                    اسم القياس
+                </th>
+                <th></th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        <div class="d-inline-flex">
+                            <a asp-action="Edit" title="تعديل" asp-route-id="@item.MeasurmentID" class="edit-icon-btn ml-1"><i class='far fa-edit'></i></a>
+                            <form method="post" asp-action="Delete" asp-controller="Measurements" asp-route-id="@item.MeasurmentID">
+                                <button style="width:60px" onclick="return confirm('هل تود بالفعل حذف القياس @item.Name ؟ ')" type="submit" class="delete-icon-btn">
+                                    <i class='far fa-trash-alt'></i>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
