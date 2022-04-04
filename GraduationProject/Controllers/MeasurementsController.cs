@@ -27,41 +27,58 @@ namespace GraduationProject.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            return View();
+            CreateMeasurementViewModel model = new CreateMeasurementViewModel();
+            return PartialView("_MeasurementModelPartial",model);
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CreateMeasurementViewModel viewModel)
+        public IActionResult Create(CreateMeasurementViewModel model)
         {
-            if (ModelState.IsValid)
+            if (checkMeasurementyName(model.Name))
             {
-                try
-                {
-                    //check for Duplicate The CategoryName
-                    if (checkMeasurementyName(viewModel.Name))
-                    {
-                        ViewBag.errorMassage = "هذا الصنف موجود بالفعل";
-                        return View(viewModel);
-                    }
-                    //Initial the Category 
-                    var measurements = new Measurements
-                    {
-                        Name = viewModel.Name
-                    };
-                    //add category to Database
-                    _context.Add(measurements);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction("Index", "Measurements");
-                }
-                catch
-                {
-                    throw;
-                }
+                ViewBag.errorMassage = "هذا القياس موجود بالفعل";
+                return View(model);
             }
-            ModelState.AddModelError("", "الحقول هذه مطلوبة");
-            return View();
+            var measurements = new Measurements
+            {
+                Name = model.Name
+            };
+            _context.Measurements.Add(measurements);
+            _context.SaveChanges();
+            return PartialView("_MeasurementModelPartial", model);
         }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Create(CreateMeasurementViewModel viewModel)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        try
+        //        {
+        //            //check for Duplicate The CategoryName
+        //            if (checkMeasurementyName(viewModel.Name))
+        //            {
+        //                ViewBag.errorMassage = "هذا القياس موجود بالفعل";
+        //                return View(viewModel);
+        //            }
+        //            //Initial the Measurement 
+        //            var measurements = new Measurements
+        //            {
+        //                Name = viewModel.Name
+        //            };
+        //            //add Measurement to Database
+        //            _context.Add(measurements);
+        //            await _context.SaveChangesAsync();
+        //            return RedirectToAction("Index", "Measurements");
+        //        }
+        //        catch
+        //        {
+        //            throw;
+        //        }
+        //    }
+        //    ModelState.AddModelError("", "الحقول هذه مطلوبة");
+        //    return View();
+        //}
 
         [HttpGet]
         public async Task<IActionResult> Edit(int? id)

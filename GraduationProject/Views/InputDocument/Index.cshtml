@@ -4,29 +4,32 @@
     ViewData["Title"] = "سندات الإدخال";
 }
 <link href="~/css/button.css" rel="stylesheet" />
-<h1 class="tableheader">سندات الإدخال</h1>
+<link href="~/css/tableformanagment.css" rel="stylesheet" />
+<h1 class="tableheader-right mr-4"style="color: #FF5733">سندات الإدخال</h1>
 <a title="إضافة صنف" class="create-icon-btn" asp-action="Create"><i class="fa fa-plus"></i></a>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                تاريخ الإنشاء
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+<div class="table-responsive">
+    <table class="styled-table">
+        <thead>
             <tr>
-                <td>
-                    @item.CreatedAt.Date.ToString("dd/M/yyyy")
-                </td>
-                <td>
-                    <a class="details-icon-btn" title="تفاصيل سند الإدخال" asp-action="Details" asp-route-inputDocumentId="@item.InputDocumentID"><i class='far fa-file'></i></a>
-                </td>
+                <th>
+                    تاريخ الإنشاء
+                </th>
+                <th></th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @item.CreatedAt.Date.ToString("dd/M/yyyy")
+                    </td>
+                    <td>
+                        <a class="details-icon-btn" title="تفاصيل سند الإدخال" asp-action="Details" asp-route-inputDocumentId="@item.InputDocumentID"><i class='far fa-file'></i></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+

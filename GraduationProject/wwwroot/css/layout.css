@@ -25,6 +25,10 @@
     --background-gray: #c7c7c7;
 }
 
+.fit-content{
+    height:auto;
+}
+
 .sidebar {
     position: fixed;
     right: 0;

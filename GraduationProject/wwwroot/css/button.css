@@ -121,3 +121,9 @@
     margin-top: 15px;
     margin-bottom: 30px;
 }
+.tableheader-right {
+    color: var(--main-blue);
+    font-weight: bold;
+    font-size: 3rem;
+    text-align: right;
+}
