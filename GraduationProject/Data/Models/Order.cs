@@ -18,6 +18,9 @@ namespace GraduationProject.Data.Models
         public string State { get; set; }
 
         public bool Type { get; set; }
+        //to differentiate between the completed ones on the RP side and the ones to be altered(Set not not complete)
+
+        public bool Complete { get; set; }
 
         //Navigation Prop
         //this for User

@@ -1,18 +1,26 @@
 ﻿using GraduationProject.Data;
+using GraduationProject.Data.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+
+
 
 namespace GraduationProject.Controllers
 {
     public class ArchiveController : Controller
     {
+        private readonly UserManager<ApplicationUser> userManager;
+        private readonly SignInManager<ApplicationUser> signInManager;
+
         private readonly ApplicationDbContext _context;
-        public ArchiveController(ApplicationDbContext context)
+        public ArchiveController(ApplicationDbContext context,
+                                UserManager<ApplicationUser> userManager,
+                                 SignInManager<ApplicationUser> signInManager)
         {
+            this.userManager = userManager;
+            this.signInManager = signInManager;
             _context = context;
         }
 
@@ -36,15 +44,16 @@ namespace GraduationProject.Controllers
         }
 
 
-        ///gotta fix the user id for certain 
         //Get All AnnualNeed To Specific Order///// from archive
         [HttpGet]
         public IActionResult getAnnualNeedOrders(int id)
         {
+            //var user = await _userManager.GetUserAsync(User);
+            var userid = userManager.GetUserId(User);
             var annualneedorders = _context.AnnualOrder.Include(o => o.Order)
                 .Include(i => i.Item)
                 .Where(x => x.OrderId == id)
-                .Where(o => o.Order.UserId == "1")
+                .Where(o => o.Order.UserId == userid)
                 .ToList();
             return View(annualneedorders);
         }
@@ -53,10 +62,11 @@ namespace GraduationProject.Controllers
         [HttpGet]
         public IActionResult getUnplannedOrders(int id)
         {
+            var userid = userManager.GetUserId(User);
             var unplannedorders = _context.UnPlannedOrder.Include(o => o.Order)
                 .Include(i => i.Item)
                 .Where(x => x.OrderId == id)
-                .Where(o => o.Order.UserId == "1")
+                .Where(o => o.Order.UserId == userid)
                 .ToList();
             return View(unplannedorders);
         }

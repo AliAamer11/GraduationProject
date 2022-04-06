@@ -28,14 +28,14 @@ namespace GraduationProject.Controllers
             var model = _context.Orders.Where(x => x.CreatedAt.Year == CurrentYear && x.Type == false).FirstOrDefault();
             if (model == null)
             {
-                ////need to know how to get current user :|
                 var order = new Order { CreatedAt = DateTime.Today, State = "0", Type = false, UserId = "1" };
                 var model1 = _context.Orders.Add(order);
                 ID = order.OrderID;
                 _context.SaveChanges();
                 return ID;
-
             }
+            else if (model.Complete == true)  ////if the annaul order exists but its complete
+            { return 0; }
             ID = model.OrderID;
 
             return ID;
@@ -52,12 +52,19 @@ namespace GraduationProject.Controllers
         [HttpGet]
         public IActionResult getAnnualNeedOrders()
         {
+
             int id = AnnualNeedOrderCheck();
-            var annualneedorders = _context.AnnualOrder.Include(o => o.Order)
-                .Include(i => i.Item)
-                .Where(x => x.OrderId == id)
-                .ToList();
-            return View(annualneedorders);
+            if (id > 0)
+            {
+                var annualneedorders = _context.AnnualOrder.Include(o => o.Order)
+                    .Include(i => i.Item)
+                    .Where(x => x.OrderId == id)
+                    .ToList();
+                return View(annualneedorders);
+            }
+            else
+                ///either return the user to home page or let him view the annual need withoput option of alteration
+                return RedirectToAction("Home", "Order");
         }
 
         [HttpGet]
