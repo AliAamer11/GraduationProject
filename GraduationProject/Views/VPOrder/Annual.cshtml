@@ -1,0 +1,64 @@
+﻿@model IEnumerable<GraduationProject.Data.Models.Order>
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
+</head>
+<body>
+    @if (Model.Count() > 0)
+    {
+        <table>
+            <thead>
+                <tr>
+                    <td>تاريخ الطلب</td>
+                    <td>نوع الطلب</td>
+                    <td>
+                    </td>
+                </tr>
+
+            </thead>
+            @foreach (var obj in Model)
+            {
+                <tbody>
+                    <tr>
+                        <td>@obj.CreatedAt </td>
+                        <td>@obj.Type </td>
+                        <td> <a asp-action="Index" asp-controller="VPAnnualOrder" asp-route-OrderId="@obj.OrderID">تفاصيل الطلب</a></td>
+
+                    </tr>
+                </tbody>
+            }
+        </table>
+    }
+    else
+    { <h6>لا يوجد طلبات</h6>}
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
