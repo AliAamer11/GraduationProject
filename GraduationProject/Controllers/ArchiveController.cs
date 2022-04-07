@@ -46,13 +46,14 @@ namespace GraduationProject.Controllers
 
         //Get All AnnualNeed To Specific Order///// from archive
         [HttpGet]
-        public IActionResult getAnnualNeedOrders(int id)
+        public IActionResult GetAnnualNeedOrders(int id)
         {
             //var user = await _userManager.GetUserAsync(User);
             var userid = userManager.GetUserId(User);
             var annualneedorders = _context.AnnualOrder.Include(o => o.Order)
                 .Include(i => i.Item)
                 .Where(x => x.OrderId == id)
+                .Where(o=>o.Order.Complete == true && o.Order.State =="2")
                 .Where(o => o.Order.UserId == userid)
                 .ToList();
             return View(annualneedorders);
@@ -60,13 +61,14 @@ namespace GraduationProject.Controllers
 
         //Get All Unplanned Orders To Specific Order///// from archive
         [HttpGet]
-        public IActionResult getUnplannedOrders(int id)
+        public IActionResult GetUnplannedOrders(int id)
         {
             var userid = userManager.GetUserId(User);
             var unplannedorders = _context.UnPlannedOrder.Include(o => o.Order)
                 .Include(i => i.Item)
                 .Where(x => x.OrderId == id)
                 .Where(o => o.Order.UserId == userid)
+                .Where(o => o.Order.Complete == true && o.Order.State == "2")
                 .ToList();
             return View(unplannedorders);
         }
