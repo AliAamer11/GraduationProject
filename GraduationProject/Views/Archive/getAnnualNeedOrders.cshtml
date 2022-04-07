@@ -4,33 +4,41 @@
     ViewData["Title"] = "طلبات المواد في الإحتياج السنوي";
 }
 <link href="~/css/button.css" rel="stylesheet" />
-<h1>طلبات المواد في الإحتياج السنوي</h1>
+<link href="~/css/tableformanagment.css" rel="stylesheet" />
 
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>اسم المادة</th>
-            <th>كمية الفصل الأول</th>
-            <th>كمية الفصل الثاني</th>
-            <th>كمية الفصل الثالث</th>
-            <th>معدل التدفق</th>
-            <th>التدفق التقريبي</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var ano in Model)
-        {
+<h1 class="tableheader">طلبات المواد في الإحتياج السنوي</h1>
+<div class="table-responsive">
+    <table class="styled-table">
+        <thead >
+        <thead>
             <tr>
-                <td>@Html.DisplayFor(modelItem => ano.Item.Name)</td>
+                <th style="padding-left:80px">#</th>
+                <th>اسم المادة</th>
+                <th>كمية الفصل الأول</th>
+                <th>كمية الفصل الثاني</th>
+                <th>كمية الفصل الثالث</th>
+                <th>التوصيف</th>
+                <th>معدل التدفق</th>
+                <th>التدفق التقريبي</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var ano in Model)
+            {
+            <tr>
+                <td>@ano.AnnualOrderID</td>
+                <td>@ano.Item.Name</td>
                 <td>@ano.FirstSemQuantity</td>
                 <td>@ano.SecondSemQuantity</td>
                 <td>@ano.ThirdSemQuantity</td>
+                <td>@ano.Description</td>
                 <td>@ano.FlowRate</td>
                 <td>@ano.ApproxRate</td>
-                
-            </tr>
-        }
-    </tbody>
-</table>
 
+            </tr>
+            }
+
+        </tbody>
+    </table>
+    </div>

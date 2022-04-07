@@ -53,8 +53,8 @@ namespace GraduationProject.Controllers
             var annualneedorders = _context.AnnualOrder.Include(o => o.Order)
                 .Include(i => i.Item)
                 .Where(x => x.OrderId == id)
-                .Where(o=>o.Order.Complete == true && o.Order.State =="2")
-                .Where(o => o.Order.UserId == userid)
+                //.Where(o=>o.Order.Complete == true && o.Order.State =="2")
+                .Where(o => o.Order.UserId == "1")
                 .ToList();
             return View(annualneedorders);
         }
