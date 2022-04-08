@@ -36,5 +36,55 @@ namespace GraduationProject.Controllers
             return RedirectToAction("Annual" ,"VPOrder");
         }
 
+
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public async Task<IActionResult> AddComment(int? Orderid, string[] comments)
+        {
+            bool check = false;
+            foreach (var c in comments)
+            {
+                if (c == null)
+                {
+                    check = false;
+                }
+                else
+                {
+                    check = true;
+                    break;
+                }
+            }
+            if (ModelState.IsValid && check)
+            {
+
+                try
+                {
+                    var AnnualOrders = await _context.AnnualOrder.Where(o => o.OrderId == Orderid).ToListAsync();
+                    using (var e1 = AnnualOrders.GetEnumerator())
+                    {
+
+                        while (e1.MoveNext())
+                        {
+                            foreach (var c in comments)
+                            {
+                                var obj = e1.Current;
+                                obj.Comment = c;
+                                _context.AnnualOrder.Update(obj);
+                                _context.SaveChanges();
+                                e1.MoveNext();
+                            }
+                        }
+                    }
+
+                    return RedirectToAction("Index", new { Orderid });
+                }
+
+                catch
+                {
+                    return StatusCode(500, "Internal server error");
+                }
+            }
+            return Ok("يجب إدخال تعليق واحد على الأقل حتى يتم إعادةإرسال الطلب!! ");
+        }
     }
 }
