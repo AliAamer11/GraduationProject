@@ -248,7 +248,7 @@ namespace GraduationProject.Controllers
 
         private List<SelectListItem> bindListforType()
         {
-            List<SelectListItem> list = new List<SelectListItem>();
+            List<SelectListItem> list = new();
             list.Add(new SelectListItem { Text = "مدير التطبيق", Value = "Admin" });
             list.Add(new SelectListItem { Text = "الجهة الطالبة", Value = "Requester" });
             list.Add(new SelectListItem { Text = "نائب رئيس الجامعة", Value = "VicePris" });

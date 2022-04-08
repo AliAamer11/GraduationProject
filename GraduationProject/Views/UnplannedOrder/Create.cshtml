@@ -1,0 +1,53 @@
+﻿@model GraduationProject.ViewModels.UnplannedOrders.CreateUnplannedOrderViewModel;
+@{
+    ViewData["Title"] = "إضافة مادة لطلب غير مخطط";
+}
+
+
+<link href="~/css/createItem.css" rel="stylesheet" />
+<div class="container">
+    <form id='create-form' asp-action="Create">
+        <p id='description' class="header">
+            إضافة مادة لطلب غير مخطط
+        </p>
+        @if (ViewBag.errorMassage != null)
+        {
+            <h4 class="alert alert-danger">@ViewBag.errorMassage</h4>
+        }
+        <div class="form-input">
+            <label class="control-label">اسم المادة</label>
+            <select asp-for="ItemId" asp-items="ViewBag.Item"></select>
+            <span asp-validation-for="ItemId" class="text-danger"></span>
+        </div>
+        <div class='form-input'>
+            <label>كمية المادة</label>
+            <input asp-for="Quantity" class='form-input-size' />
+            <span asp-validation-for="Quantity" class="text-danger"></span>
+        </div>
+
+        <div class="form-input">
+            <label>توصيف</label>
+            <input asp-for="Description" class="form-input-size"/>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        <div class="form-input">
+            <label>سبب إحتياج المادة</label>
+            <input asp-for="Reason" class="form-input-size"/>
+            <span asp-validation-for="Reason" class="text-danger"></span>
+        </div>
+
+        <div>
+            <input asp-for="OrderId" value="@ViewBag.OrderId" class="form-control" hidden />
+        </div>
+
+        <div class='form-input'>
+            <button type='submit' id='submit'>إضافة مادة<i class="bx bx-add-to-queue mr-3"></i></button>
+        </div>
+    </form>
+</div>
+
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}

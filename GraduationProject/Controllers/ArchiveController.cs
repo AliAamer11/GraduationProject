@@ -1,18 +1,26 @@
 ﻿using GraduationProject.Data;
+using GraduationProject.Data.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+
+
 
 namespace GraduationProject.Controllers
 {
     public class ArchiveController : Controller
     {
+        private readonly UserManager<ApplicationUser> userManager;
+        private readonly SignInManager<ApplicationUser> signInManager;
+
         private readonly ApplicationDbContext _context;
-        public ArchiveController(ApplicationDbContext context)
+        public ArchiveController(ApplicationDbContext context,
+                                UserManager<ApplicationUser> userManager,
+                                 SignInManager<ApplicationUser> signInManager)
         {
+            this.userManager = userManager;
+            this.signInManager = signInManager;
             _context = context;
         }
 
@@ -22,20 +30,30 @@ namespace GraduationProject.Controllers
             return View();
         }
 
+        [HttpGet]
         public IActionResult AlLAnnualOrders()
         {
 
-            return View();
+            return RedirectToAction("Index", "AnnualOrder");
         }
 
-        ///gotta fix the user id for certain 
+        [HttpGet]
+        public IActionResult AllUnplannedOrders()
+        {
+            return RedirectToAction("Index", "UnplannedOrder");
+        }
+
+
         //Get All AnnualNeed To Specific Order///// from archive
         [HttpGet]
-        public IActionResult getAnnualNeedOrders(int id)
+        public IActionResult GetAnnualNeedOrders(int id)
         {
+            //var user = await _userManager.GetUserAsync(User);
+            var userid = userManager.GetUserId(User);
             var annualneedorders = _context.AnnualOrder.Include(o => o.Order)
                 .Include(i => i.Item)
                 .Where(x => x.OrderId == id)
+                //.Where(o=>o.Order.Complete == true && o.Order.State =="2")
                 .Where(o => o.Order.UserId == "1")
                 .ToList();
             return View(annualneedorders);
@@ -43,11 +61,14 @@ namespace GraduationProject.Controllers
 
         //Get All Unplanned Orders To Specific Order///// from archive
         [HttpGet]
-        public IActionResult getUnplannedOrders(int id)
+        public IActionResult GetUnplannedOrders(int id)
         {
+            var userid = userManager.GetUserId(User);
             var unplannedorders = _context.UnPlannedOrder.Include(o => o.Order)
                 .Include(i => i.Item)
                 .Where(x => x.OrderId == id)
+                .Where(o => o.Order.UserId == userid)
+                .Where(o => o.Order.Complete == true && o.Order.State == "2")
                 .ToList();
             return View(unplannedorders);
         }

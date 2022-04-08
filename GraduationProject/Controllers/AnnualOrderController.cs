@@ -1,6 +1,7 @@
 ﻿using GraduationProject.Data;
 using GraduationProject.Data.Models;
 using GraduationProject.ViewModels.AnnualNeedOrders;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -14,48 +15,64 @@ namespace GraduationProject.Controllers
     public class AnnualOrderController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> userManager;
 
-        public AnnualOrderController(ApplicationDbContext context)
+        public AnnualOrderController(ApplicationDbContext context,
+                    UserManager<ApplicationUser> userManager)
         {
+            this.userManager = userManager;
             _context = context;
         }
 
-        public int AnnualNeedOrderCheck()
+        public int GetAnnualNeedOrderid()
         {
+            var userid = userManager.GetUserId(User);
             DateTime CurrentDate = DateTime.Now;
             int CurrentYear = CurrentDate.Year;
-            int ID;
-            var model = _context.Orders.Where(x => x.CreatedAt.Year == CurrentYear && x.Type == false).FirstOrDefault();
-            if (model == null)
+            var model = _context.Orders.Where(x => x.CreatedAt.Year == CurrentYear
+                                            && x.Type == false
+                                            && x.UserId == "1"//userid
+                                            ).Last();
+
+            if (model == null) //to check if there is an annual need initialized or not
             {
-                ////need to know how to get current user :|
-                var order = new Order { CreatedAt = DateTime.Today, State = "0", Type = false, UserId = "1" };
+                var order = new Order { 
+                    CreatedAt = DateTime.Today,
+                    State = "0", 
+                    Type = false, 
+                    UserId = "1" //userid 
+                };
                 var model1 = _context.Orders.Add(order);
-                ID = order.OrderID;
                 _context.SaveChanges();
-                return ID;
-
+                return order.OrderID;
             }
-            ID = model.OrderID;
-
-            return ID;
+            return model.OrderID;
 
         }
         public IActionResult Index()
         {
-            return View();
+            var annualneeds = _context.Orders
+                .Where(x => x.Type == false).ToList();
+            return View(annualneeds);
         }
 
         //Get All AnnualNeed
         [HttpGet]
         public IActionResult getAnnualNeedOrders()
         {
-            int id = AnnualNeedOrderCheck();
-            var annualneedorders = _context.AnnualOrder.Include(o => o.Order)
-                .Include(i => i.Item)
-                .Where(x => x.OrderId == id)
-                .ToList();
-            return View(annualneedorders);
+
+            int id = GetAnnualNeedOrderid();
+            if (id > 0)
+            {
+                var annualneedorders = _context.AnnualOrder.Include(o => o.Order)
+                    .Include(i => i.Item)
+                    .Where(x => x.OrderId == id)
+                    .ToList();
+                return View(annualneedorders);
+            }
+            else
+                ///either return the user to home page or let him view the annual need withoput option of alteration
+                return RedirectToAction("Home", "Order");
         }
 
         [HttpGet]
@@ -69,7 +86,7 @@ namespace GraduationProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateAnnualNeedOrder(CreateAnnualNeedOrderViewModel viewModel)
         {
-            ViewData["OrderId"] = AnnualNeedOrderCheck();
+            ViewData["OrderId"] = GetAnnualNeedOrderid();
             ViewData["Item"] = new SelectList(BindListforItem(), "Value", "Text");
             if (ModelState.IsValid)
             {
@@ -83,6 +100,7 @@ namespace GraduationProject.Controllers
                         FirstSemQuantity = viewModel.FirstSemQuantity,
                         SecondSemQuantity = viewModel.SecondSemQuantity,
                         ThirdSemQuantity = viewModel.ThirdSemQuantity,
+                        Description = viewModel.Description,
                         FlowRate = viewModel.FlowRate,
                         ApproxRate = viewModel.ApproxRate,
                         OrderId = viewModel.OrderId,
@@ -118,6 +136,7 @@ namespace GraduationProject.Controllers
                 FirstSemQuantity = annualorder.FirstSemQuantity,
                 SecondSemQuantity = annualorder.SecondSemQuantity,
                 ThirdSemQuantity = annualorder.ThirdSemQuantity,
+                Description = annualorder.Description,
                 FlowRate = annualorder.FlowRate,
                 ApproxRate = annualorder.ApproxRate,
                 OrderId = annualorder.OrderId,
@@ -143,6 +162,7 @@ namespace GraduationProject.Controllers
                         FirstSemQuantity = viewModel.FirstSemQuantity,
                         SecondSemQuantity = viewModel.SecondSemQuantity,
                         ThirdSemQuantity = viewModel.ThirdSemQuantity,
+                        Description = viewModel.Description,
                         FlowRate = viewModel.FlowRate,
                         ApproxRate = viewModel.ApproxRate,
                         OrderId = viewModel.OrderId,
@@ -152,7 +172,7 @@ namespace GraduationProject.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!annualOrderExists(viewModel.AnnualOrderID))
+                    if (!AnnualOrderExists(viewModel.AnnualOrderID))
                     {
                         return NotFound();
                     }
@@ -184,7 +204,7 @@ namespace GraduationProject.Controllers
         /// <returns></returns>
         private List<SelectListItem> BindListforItem()
         {
-            List<SelectListItem> list = new List<SelectListItem>();
+            List<SelectListItem> list = new();
             var itemlist = _context.Items.ToList();
             foreach (var item in itemlist)
             {
@@ -193,7 +213,7 @@ namespace GraduationProject.Controllers
             return list;
         }
 
-        private bool annualOrderExists(int id) => _context.AnnualOrder.Any(c => c.AnnualOrderID == id);
+        private bool AnnualOrderExists(int id) => _context.AnnualOrder.Any(c => c.AnnualOrderID == id);
 
     }
 }

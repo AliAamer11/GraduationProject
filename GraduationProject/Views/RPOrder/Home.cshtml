@@ -1,0 +1,69 @@
+﻿<div class="container">
+
+    <br /><br />
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">  الاحتياج السنوي للسنة @ViewBag.Current_Year</h5>
+                    @if (ViewBag.Annual_State == "incomplete_rp_side")
+                    {
+                        <p class="card-text">طلب الإحتياج في قيد التعديل</p>
+                        <a asp-action="" asp-controller="" class="btn btn-primary">تعديل </a>
+                    }
+                    else if (ViewBag.Annual_State == "complete_vp_side")
+                    {
+                        <p class="card-text">طلب الإحتياج  قيد المراجعة</p>
+                        <a asp-action="" asp-controller="" class="btn btn-primary">استعراض </a>
+                    }
+                    else if (ViewBag.Annual_State == "complete_rp_side")
+                    {
+                        <p class="card-text">طلب الإحتياج  يحتاج إلى تعديل</p>
+                        <a asp-action="" asp-controller="" class="btn btn-primary">تعديل </a>
+                    }
+                    else if (ViewBag.Annual_State == "complete_sk_side")
+                    {
+                        <p class="card-text">طلب الإحتياج موافق عليه</p>
+                        <a asp-action="" asp-controller="" class="btn btn-primary">استعراض </a>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">طلب غير مخطط</h5>
+                    @if (ViewBag.Annual_State == "incomplete_rp_side")
+                    {
+                        <p class="card-text">الطلب في قيد التعديل</p>
+                        <a asp-action="" asp-controller="" class="btn btn-primary">تعديل</a>
+                    }
+                    else if (ViewBag.Annual_State == "complete_vp_side")
+                    {
+                        <p class="card-text">الطلب قيد المراجعة</p>
+                        <a asp-action="" asp-controller="" class="btn btn-primary">استعراض </a>
+                    }
+                    else if (ViewBag.Annual_State == "complete_rp_side")
+                    {
+                        <p class="card-text">الطلب يحتاج إلى تعديل</p>
+                        <a asp-action="" asp-controller="" class="btn btn-primary">تعديل</a>
+                    }
+                    else if (ViewBag.Annual_State == "complete_sk_side")
+                    {
+                        <p class="card-text">الطلب موافق عليه</p>
+                        <a asp-action="" asp-controller="" class="btn btn-primary">استعراض </a>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">الأرشيف</h5>
+                    <p class="card-text">جميع الطلبات : الإحتياجات سنوية و طلبات غير مخططة</p>
+                    <a asp-action="Index" asp-controller="Archive" class="btn btn-primary">استعراض </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
