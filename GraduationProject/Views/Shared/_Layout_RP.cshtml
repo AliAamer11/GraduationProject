@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@inject SignInManager<ApplicationUser> signInManager;
+
+
+<!DOCTYPE html>
 <html dir="rtl">
 <head>
     <meta charset="utf-8" />
@@ -17,55 +20,88 @@
             <i class='bx bx-menu' id="btn"></i>
         </div>
         <ul class="nav-list">
+
             <li>
                 <i class='bx bx-search'></i>
                 <input type="text" placeholder="ابحث هنا...">
                 <span class="tooltip">ابحث</span>
             </li>
-            <li>
-                <a href="~/Items/Index">
-                    <i class='bx bx-spreadsheet'></i>
-                    <span class="links_name">المواد</span>
-                </a>
-                <span class="tooltip">المواد</span>
-            </li>
-            <li>
-                <a href="~/Category/Index">
-                    <i class='bx bx-category-alt'></i>
-                    <span class="links_name">الأصناف</span>
-                </a>
-                <span class="tooltip">الأصناف</span>
-            </li>
-            <li>
-                <a href="~/Measurements/Index">
-                    <i class='bx bx-pie-chart-alt-2'></i>
-                    <span class="links_name">القياسات</span>
-                </a>
-                <span class="tooltip">القياسات</span>
-            </li>
-            <li>
-                <a href="~/InputDocument/Index">
-                    <i class='bx bx-folder'></i>
-                    <span class="links_name">سندات الإدخال</span>
-                </a>
-                <span class="tooltip">سندات الإدخال</span>
-            </li>
-            <li>
-                <a href="#">
-                    <i class='bx bx-cart-alt'></i>
-                    <span class="links_name">الطلبات</span>
-                </a>
-                <span class="tooltip">الطلبات</span>
-            </li>
+            <!--to check if user was sign in or not to show to him the loging or logout-->
+            <!--Admin Operation-->
+            @if (User.IsInRole("Admin"))
+            {
+                <li>
+                    <a href="~/Administration/DashBoard">
+                        <i class='bx bxs-dashboard'></i>
+                        <span class="links_name">لوحة التحكم</span>
+                    </a>
+                    <span class="tooltip">لوحة التحكم</span>
+                </li>
+            }
+
+            <!--StoreKeeper Operation-->
+            @if (User.IsInRole("StoreKeep"))
+            {
+                <li>
+                    <a href="~/Items/Index">
+                        <i class='bx bx-spreadsheet'></i>
+                        <span class="links_name">المواد</span>
+                    </a>
+                    <span class="tooltip">المواد</span>
+                </li>
+                <li>
+                    <a href="~/Category/Index">
+                        <i class='bx bx-category-alt'></i>
+                        <span class="links_name">الأصناف</span>
+                    </a>
+                    <span class="tooltip">الأصناف</span>
+                </li>
+                <li>
+                    <a href="~/Measurements/Index">
+                        <i class='bx bx-pie-chart-alt-2'></i>
+                        <span class="links_name">القياسات</span>
+                    </a>
+                    <span class="tooltip">القياسات</span>
+                </li>
+                <li>
+                    <a href="~/InputDocument/Index">
+                        <i class='bx bx-folder'></i>
+                        <span class="links_name">سندات الإدخال</span>
+                    </a>
+                    <span class="tooltip">سندات الإدخال</span>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class='bx bx-cart-alt'></i>
+                        <span class="links_name">الطلبات</span>
+                    </a>
+                    <span class="tooltip">الطلبات</span>
+                </li>
+            }
+            <!--Requester Operation-->
+            @if (User.IsInRole("Requester"))
+            {
+
+            }
+
+            <!--VicePres Operation-->
+            @if (User.IsInRole("VicePres"))
+            {
+
+            }
             <li class="profile">
                 <div class="profile-details">
                     <!--<img src="profile.jpg" alt="profileImg">-->
                     <div class="name_job">
-                        <div class="name">اسم المستخدم</div>
+                        <div class="name">@User.Identity.Name</div>
                         @*<div class="job">Web designer</div>*@
                     </div>
                 </div>
-                <i class='bx bx-log-out' id="log_out"></i>
+                <form method="post" asp-action="logout" asp-controller="Account">
+                    <button type="submit">
+                        <i class='bx bx-log-out' id="log_out"></i>
+                    </button>
+                </form>
             </li>
         </ul>
     </div>

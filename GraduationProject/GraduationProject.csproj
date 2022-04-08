@@ -14,10 +14,6 @@
     <None Remove="Controllers\StockKeeper\**" />
     <None Remove="Controllers\VP\**" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Content Remove="compilerconfig.json" />
-  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AspNetCoreHero.ToastNotification" Version="1.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.8" />
@@ -29,8 +25,5 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="compilerconfig.json" />
   </ItemGroup>
 </Project>

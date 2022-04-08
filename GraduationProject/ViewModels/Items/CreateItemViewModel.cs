@@ -17,15 +17,17 @@ namespace GraduationProject.ViewModels.Items
         [Display(Name = "حالة المادة")]
         public string Status { get; set; }
 
-        [Required(ErrorMessage = "هذا الحقل مطلوب")]
-        [Display(Name = "كمية المادة")]
-        public int Quantity { get; set; }
+        //[Required(ErrorMessage = "هذا الحقل مطلوب")]
+        //[Display(Name = "كمية المادة")]
+        //public int Quantity { get; set; }
 
         [StringLength(20)]
         [Display(Name = "العلامة")]
         public string Brand { get; set; }
 
+        [Required(ErrorMessage ="هذا الحقل مطلوب")]
         [Display(Name = "الحد الأدنى")]
+        [Range(1, 1000, ErrorMessage = "أدخل العدد بشكله الصحيح")]
         public int MinimumRange { get; set; }
 
         [Display(Name = "ملاحظات")]

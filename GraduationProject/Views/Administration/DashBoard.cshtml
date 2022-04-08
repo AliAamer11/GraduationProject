@@ -1,0 +1,102 @@
+﻿@model GraduationProject.ViewModels.Administration.DashBoardViewModel
+@{
+    ViewData["Title"] = "لوحة التحكم";
+}
+
+<link href="~/css/tableformanagment.css" rel="stylesheet" />
+<link href="~/css/AdminDashboard.css" rel="stylesheet" />
+<div class="cardBox">
+    <div class="card-a">
+        <div>
+            <div class="numbers" data-goal="77">-1</div>
+            <div class="cardName">الزيارات اليومية</div>
+        </div>
+
+        <div class="iconBox">
+            <i class="fa fa-eye" aria-hidden="true"></i>
+        </div>
+    </div>
+
+    <div class="card-a">
+        <a>
+            <div>
+                <div class="numbers" data-goal="@Model.CountforAllUser">-1</div>
+                <div class="cardName">المستخدمين</div>
+            </div>
+        </a>
+        <div class="iconBox">
+            <i class="fa fa-users" aria-hidden="true"></i>
+        </div>
+    </div>
+
+    <div class="card-a">
+        <a>
+            <div>
+                <div class="numbers" data-goal="@Model.CountforAllRoles">-1</div>
+                <div class="cardName">الأدوار</div>
+            </div>
+        </a>
+        <div class="iconBox">
+            <i class="fa fa-registered" aria-hidden="true"></i>
+        </div>
+    </div>
+</div>
+<div class="details">
+    <div class="users radius">
+        <div class="cardHeader">
+            <h2>المستخدمين</h2>
+            <a title="إضافة مستخدم" class="create-icon-btn" asp-action="CreateUser"><i class="fa fa-plus"></i></a>
+        </div>
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th>اسم المستخدم</th>
+                    <th>البريد</th>
+                    <th>النوع </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in ViewBag.users)
+                {
+                    <tr>
+                        <td>
+                            @item.RequstingParty
+                        </td>
+                        <td>
+                            @item.Email
+
+                        </td>
+                        <td>
+                            @item.Type
+                        </td>
+                        <td>
+                            <a asp-action="EditUser" title="تعديل" asp-route-id="@item.Id" class="edit-icon-btn ml-1"><i class='far fa-edit'></i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="Roles">
+        @foreach (var role in ViewBag.roles)
+        {
+            <div class="card mb-3 radius">
+                <div class="card-header card-headercss" style="border-radius:20px;">
+                    <h3 class="titlecss">
+                        عنوان الدور
+                        <a class="edit-icon-btn" title="تعديل" asp-controller="Administration" asp-action="EditUsersInRole" asp-route-roleId="@role.Id"><i class='far fa-edit'></i></a>
+                    </h3>
+                </div>
+                <div class="card-body titlebodycss">
+                    <h2 class="card-title">@role.Name</h2>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+@section Scripts{
+    <script src="~/js/IncreaseNumber.js"></script>
+}

@@ -1,6 +1,7 @@
 ﻿using GraduationProject.Data;
 using GraduationProject.Data.Models;
 using GraduationProject.ViewModels.InputDocument;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace GraduationProject.Controllers
 {
+    [Authorize(Roles = "StoreKeep")]
     public class InputDocumentController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -41,6 +43,7 @@ namespace GraduationProject.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(AddMoreItemForInputDocument viewModel)
         {
             if (ModelState.IsValid)
@@ -52,6 +55,17 @@ namespace GraduationProject.Controllers
                         ViewBag.errorMessage = "طيب عبيلك شي شغلة";
                         return View(viewModel);
                     }
+                    foreach (var item in viewModel.AddMoreList)
+                    {
+                        if (item!=null)
+                        {
+                            if (item.Quantity < 1)
+                            {
+                                ViewBag.errorMessage = "يعني كيف كمية وسالبة ؟؟؟؟؟؟";
+                                return View(viewModel);
+                            }
+                        }
+                    }
                     var inputDocument = new InputDocument()
                     {
                         CreatedAt = DateTime.Now.Date,
@@ -61,19 +75,23 @@ namespace GraduationProject.Controllers
 
                     foreach (var item in viewModel.AddMoreList)
                     {
-                        var inputDocumentDetail = new InputDocumentDetails()
+                        if (item!=null)
                         {
-                            InputDocumentId = inputDocument.InputDocumentID,
-                            ItemId = item.ItemId,
-                            Quantity = item.Quantity,
-                            Source = item.source,
-                        };
-                        _context.Add(inputDocumentDetail);
-                        await _context.SaveChangesAsync();
-                        var updateditem = await _context.Items.FirstOrDefaultAsync(i => i.ItemID == item.ItemId);
-                        updateditem.Quantity += item.Quantity;
-                        _context.Update(updateditem);
-                        await _context.SaveChangesAsync();
+                            var inputDocumentDetail = new InputDocumentDetails()
+                            {
+                                InputDocumentId = inputDocument.InputDocumentID,
+                                ItemId = item.ItemId,
+                                Quantity = item.Quantity,
+                                Source = item.source,
+                            };
+                            _context.Add(inputDocumentDetail);
+                            await _context.SaveChangesAsync();
+                            var updateditem = await _context.Items.FirstOrDefaultAsync(i => i.ItemID == item.ItemId);
+                            updateditem.Quantity += item.Quantity;
+                            _context.Update(updateditem);
+                            await _context.SaveChangesAsync();
+                        }
+                       
                     }
                     return RedirectToAction("Index", "InputDocument");
                 }

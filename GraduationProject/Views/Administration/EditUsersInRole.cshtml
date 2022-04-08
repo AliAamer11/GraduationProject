@@ -3,30 +3,31 @@
 @{
     var roleId = ViewBag.roleId;
 }
+<link href="~/css/edituserinrole.css" rel="stylesheet" />
+<div class="container">
+    <form method="post">
+        <div class="card cardcss radius">
+            <div class="card-header card-headercss" style="border-radius:20px;">
+                إضافة أو إزالة مستحدم من الدور
+            </div>
+            <div class="card-body">
+                @for (int i = 0; i < Model.Count; i++)
+                {
 
-<form method="post">
-    <div class="card">
-        <div class="card-header">
-            إضافة او إزالة مستحدم من الدور
-        </div>
-        <div class="card-body">
-            @for (int i = 0; i < Model.Count; i++)
-            {
+                    <div class="form-check m-1 card-bodycss">
+                        <input type="hidden" asp-for="@Model[i].UserId" />
+                        <input type="hidden" asp-for="@Model[i].UserName" />
+                        <input asp-for="@Model[i].IsSelected" class="form-check-input" style="margin-top: 13px;" />
+                        <label class="form-check-label mr-3 pb-1" asp-for="@Model[i].IsSelected">
+                            @Model[i].UserName
+                        </label>
+                    </div>
+                }
+            </div>
 
-                <div class="form-check m-1">
-                    <input type="hidden" asp-for="@Model[i].UserId" />
-                    <input type="hidden" asp-for="@Model[i].UserName" />
-                    <input asp-for="@Model[i].IsSelected" class="form-check-input" />
-                    <label class="form-check-label mr-3 pb-1" asp-for="@Model[i].IsSelected">
-                        @Model[i].UserName
-                    </label>
-                </div>
-            }
+            <div class="card-footer">
+                <button type="submit" id="submit">تعديل<i class="bx bx-refresh mr-3"></i></button>
+            </div>
         </div>
-
-        <div class="card-footer">
-            <input type="submit" value="تعديل" class="btn btn-primary" style="width:auto" />
-            <a class="btn btn-primary" style="width:auto" asp-action="EditRole" asp-route-roleId="@roleId">رجوع</a>
-        </div>
-    </div>
-</form>
+    </form>
+</div>

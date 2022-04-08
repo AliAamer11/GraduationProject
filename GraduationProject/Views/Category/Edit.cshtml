@@ -6,13 +6,13 @@
 <link href="~/css/button.css" rel="stylesheet" />
 <link href="~/css/createItem.css" rel="stylesheet" />
 <div class="container">
-    <form id='create-form' asp-action="Create">
+    <form id='create-form' asp-action="Edit">
         <p id='description' class="header">
             تعديل الصنف
         </p>
         @if (ViewBag.errorMassage != null)
         {
-            <h4 class="alert alert-danger">@ViewBag.errorMassage</h4>
+            <h4 class="text-danger"style=" text-align: center; background: #fff; padding: 5px; border-radius: 20px;">@ViewBag.errorMassage</h4>
         }
         <div class='form-input'>
             <label>اسم الصنف</label>
@@ -21,7 +21,7 @@
         </div>
         <div class='form-input'>
             <label>ترميز الصنف</label>
-            <input asp-for="ShortCutName" class='form-input-size' />
+            <input asp-for="ShortCutName" onkeypress="return onlyNumberKey(event)" class='form-input-size' />
             <span asp-validation-for="ShortCutName" class="text-danger"></span>
         </div>
         <div class="form-input">
@@ -31,45 +31,14 @@
 
         </div>
         <div class='form-input'>
-            <button type='submit' id='submit'>إنشاء صنف<i class="bx bx-add-to-queue mr-3"></i></button>
+            <button type='submit' id='submit'>تعديل الصنف<i class="bx bx-edit mr-3"></i></button>
         </div>
     </form>
 </div>
 
 
-
-@*<div class="row">
-        <div class="col-md-4">
-            <form asp-action="Edit">
-                @if (ViewBag.errorMassage != null)
-                {
-                    <h4 class="alert alert-danger">@ViewBag.errorMassage</h4>
-                }
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <input type="hidden" asp-for="CategoryID" />
-                <div class="form-group">
-                    <label class="control-label">اسم الصنف</label>
-                    <input asp-for="Name" class="form-control" />
-                    <span asp-validation-for="Name" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label class="control-label">رمز الصنف</label>
-                    <input asp-for="ShortCutName" class="form-control" />
-                    <span asp-validation-for="ShortCutName" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label class="control-label"> الصنف الرئيسي</label>
-                    <select asp-for="MainCategoryId" class="form-control" asp-items="ViewBag.MainCategory"></select>
-                    <span asp-validation-for="MainCategoryId" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <input type="submit" value="تعديل" class="edit-icon-btn" />
-                </div>
-            </form>
-        </div>
-    </div>*@
-
 @section Scripts{
     <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/enternumber.js"></script>
 }
 

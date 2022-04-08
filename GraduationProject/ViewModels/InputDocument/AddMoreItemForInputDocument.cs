@@ -8,6 +8,7 @@ namespace GraduationProject.ViewModels.InputDocument
 {
     public class AddMoreItemForInputDocument
     {
+        [Required]
         public int Quantity { get; set; }
         [StringLength(20)]
         public string source { get; set; }

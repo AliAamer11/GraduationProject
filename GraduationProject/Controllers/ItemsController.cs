@@ -8,9 +8,11 @@ using GraduationProject.Data;
 using GraduationProject.ViewModels.Items;
 using Microsoft.EntityFrameworkCore;
 using GraduationProject.Data.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GraduationProject.Controllers
 {
+    [Authorize(Roles = "StoreKeep")]
     public class ItemsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -55,7 +57,7 @@ namespace GraduationProject.Controllers
                         Name = viewModel.Name,
                         BarCode = barCode,
                         Status = viewModel.Status,
-                        Quantity = viewModel.Quantity,
+                        Quantity = 0,
                         Brand = viewModel.Brand,
                         MinimumRange = viewModel.MinimumRange,
                         Note = viewModel.Note,

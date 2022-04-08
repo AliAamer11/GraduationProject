@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace GraduationProject.ViewModels.Administration
 {
-    public class CreateUserViewModel
+    public class EditUserViewModel
     {
         public string UserID { get; set; }
 
-        [Required(ErrorMessage ="هذا الحقل مطلوب ")]
+        [Required(ErrorMessage = "هذا الحقل مطلوب ")]
         public string RequestingParty { get; set; }
 
         [Required(ErrorMessage = "البريد الالكتروني مطلوب")]
@@ -21,11 +21,6 @@ namespace GraduationProject.ViewModels.Administration
         public string Email { get; set; }
 
         [Required]
-        [Display(Name = "كلمة السر")]
-        public string Password { get; set; }
-
-        [Required]
         public string Type { get; set; }
-
     }
 }

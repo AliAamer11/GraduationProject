@@ -14,7 +14,7 @@
 
 th {
     cursor: pointer;
-    background: var(--main-blue);
+    background: var(--main-orange);
 }
 
 .styled-table {
@@ -22,8 +22,8 @@ th {
     margin: 25px 0;
     font-size: 0.9em;
     min-width: 400px;
-    width:100%;
-    font-size:20px;
+    width: 100%;
+    font-size: 20px;
 }
     .styled-table thead tr th:first-child {
         border-top-right-radius: 20px;
@@ -53,11 +53,11 @@ th {
         .styled-table tbody tr:nth-of-type(even) {
             background-color: #f3f3f3;
             font-weight: bold;
-            color: var(--main-blue);
+            color: var(--main-orange);
         }
 
             .styled-table tbody tr:nth-of-type(even):hover {
-                background-color: var(--sub-blue);
+                background-color: var(--main-orange);
                 font-weight: bold;
                 color: var(--white);
                 border: 2px solid var(--main-orange);
@@ -65,11 +65,11 @@ th {
 
         .styled-table tbody tr:nth-of-type(odd) {
             font-weight: bold;
-            color: var(--main-orange);
+            color: var(--main-blue);
         }
 
             .styled-table tbody tr:nth-of-type(odd):hover {
-                background-color: var(--main-orange);
+                background-color: var(--main-blue);
                 font-weight: bold;
                 color: var(--white);
                 border:2px solid var(--main-blue);
@@ -80,3 +80,12 @@ th {
         .styled-table tbody tr:last-of-type {
             border-bottom: 2px solid var(--main-blue);
         }
+
+.tableheader {
+    color: var(--main-blue);
+    font-weight: bold;
+    font-size: 3rem;
+    text-align: center;
+    margin-top: 15px;
+    margin-bottom: 30px;
+}

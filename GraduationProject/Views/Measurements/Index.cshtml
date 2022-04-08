@@ -7,14 +7,17 @@
 <link href="~/css/tableformanagment.css" rel="stylesheet" />
 
 <style>
-    .modal-backdrop{
-        z-index:-1;
+    .modal-backdrop {
+        z-index: -1;
     }
 </style>
+
 <h1 class="tableheader-right mr-4" style="color: #FF5733">القياسات</h1>
 
 <button type="button" title="إضافة قياس" class="create-icon-btn" data-toggle="ajax-modal" data-target="#addMeasurement"
-        data-url="@Url.Action("Create")"><i class="fa fa-plus"></i></button>
+        data-url="@Url.Action("Create")">
+    <i class="fa fa-plus"></i>
+</button>
 
 <div id="PlaceHolderHer"></div>
 <div class="table-responsive">
@@ -36,7 +39,10 @@
                     </td>
                     <td>
                         <div class="d-inline-flex">
-                            <a asp-action="Edit" title="تعديل" asp-route-id="@item.MeasurmentID" class="edit-icon-btn ml-1"><i class='far fa-edit'></i></a>
+                            <button type="button" title="تعديل" class="edit-icon-btn ml-1" data-toggle="ajax-modal" data-target="#addMeasurement"
+                                    data-url="@Url.Action($"Edit/{item.MeasurmentID}")">
+                                <i class="fa fa-edit"></i>
+                            </button>
                             <form method="post" asp-action="Delete" asp-controller="Measurements" asp-route-id="@item.MeasurmentID">
                                 <button style="width:60px" onclick="return confirm('هل تود بالفعل حذف القياس @item.Name ؟ ')" type="submit" class="delete-icon-btn">
                                     <i class='far fa-trash-alt'></i>

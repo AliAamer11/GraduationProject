@@ -14,10 +14,18 @@
     --black-hover: #171a20;
     --red-hover: #92474d;
 }
-
+.form-group-material {
+    position: relative;
+    margin-bottom: 0px !important;
+}
+.cardcss{
+    background: var(--main-blue);
+    border:2px solid var(--main-orange);
+    border-radius:20px;
+}
 .create-icon-btn {
-    background: var(--main-orange);
-    border: 1px solid var(--main-blue);
+    background: var(--white);
+    border: 1px solid var(--main-orange);
     box-shadow: 0px 5px 10px rgba(0,0,0,.2);
     padding: 7px 14px;
     color: var(--white);
@@ -27,16 +35,15 @@
     border-radius: 30px;
     width: auto;
     text-decoration: none;
-    bottom: 30px;
-    left: 20px;
-    position: fixed;
+    position: absolute;
     font-size: 20px;
+    margin-right:13px;
 }
 
     .create-icon-btn:hover {
-        background: #fff;
+        background: var(--main-orange);
         color: var(--main-blue);
-        border: 1px solid var(--main-orange);
+        border: 1px solid var(--white);
         transform: scale(1.05);
         text-decoration: none;
     }
@@ -51,10 +58,10 @@
     transition: all .4s ease-in-out;
     font-weight: bold;
     border-radius: 20px;
-    padding-top:3px;
-    padding-bottom:2px;
     width: auto;
     text-decoration: none;
+    padding: 7px 14px;
+    margin-top: 32px;
 }
 
     .delete-icon-btn:hover {
@@ -65,67 +72,29 @@
         text-decoration: none;
     }
 
-.edit-icon-btn {
-    background: var(--white);
-    border: 1px solid var(--black);
+.push {
+    background: var(--main-orange);
+    border: 1px solid var(--white);
+    padding: 1px 6px;
     box-shadow: 0px 5px 10px rgba(0,0,0,.2);
-    font-size: 16px;
-    padding-left: 17px;
-    padding-right: 17px;
-    color: var(--black);
-    cursor: pointer;
-    transition: all .4s ease-in-out;
-    font-weight: bold;
-    border-radius: 20px;
-    width: auto;
-    text-decoration: none;
-}
-
-    .edit-icon-btn:hover {
-        background: var(--black-hover);
-        color: var(--white);
-        border: 1px solid var(--black);
-        transform: scale(1.05);
-        text-decoration: none;
-    }
-
-
-.details-icon-btn {
-    background: var(--white);
-    border: 2px solid var(--main-blue);
-    box-shadow: 0px 5px 5px var(--main-blue);
-    font-size: 16px;
-    padding-left: 17px;
-    padding-right: 17px;
     color: var(--main-blue);
     cursor: pointer;
     transition: all .4s ease-in-out;
     font-weight: bold;
-    border-radius: 20px;
+    border-radius: 30px;
     width: auto;
     text-decoration: none;
+    font-size: 2rem;
 }
-
-    .details-icon-btn:hover {
-        background: var(--main-blue);
-        color: var(--white);
-        border: 1px solid var(--white);
+    .push:hover {
+        background: var(--white);
+        color: var(--main-blue);
+        border: 1px solid var(--main-orange);
         transform: scale(1.05);
         text-decoration: none;
     }
-
-
-.tableheader {
-    color: var(--main-orange);
-    font-weight: bold;
-    font-size: 3rem;
-    text-align: center;
-    margin-top: 15px;
-    margin-bottom: 30px;
-}
-.tableheader-right {
-    color: var(--main-blue);
-    font-weight: bold;
-    font-size: 3rem;
-    text-align: right;
+label{
+    color:var(--white);
+    margin-right:6px;
+    font-weight:600;
 }
