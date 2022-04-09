@@ -81,6 +81,41 @@
             <!--Requester Operation-->
             @if (User.IsInRole("Requester"))
             {
+                <li>
+                    <a href="~/AnnualOrder/GetAnnualNeedOrders">
+                        <i class='bx bx-spreadsheet'></i>
+                        <span class="links_name">الإحتياجات السنوية</span>
+                    </a>
+                    <span class="tooltip">الإحتياجات السنوية</span>
+                </li>
+                <li>
+                    <a href="~/UnplannedOrder/GetAllUnplanned">
+                        <i class='bx bx-spreadsheet'></i>
+                        <span class="links_name">الطلبات غير المخططة</span>
+                    </a>
+                    <span class="tooltip">الطلبات غير المخططة</span>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class='bx bx-paper-plane'></i>
+                        <span class="links_name">الطلبات المراد تعديلها</span>
+                    </a>
+                    <span class="tooltip">الطلبات المراد تعديلها</span>
+                </li>
+                <li>
+                    <a href="~/Archive/Index">
+                        <i class='bx bx-archive'></i>
+                        <span class="links_name">الأرشيف</span>
+                    </a>
+                    <span class="tooltip">الأرشيف</span>
+                </li>
+                <li>
+                    <a href="~/InputDocument/Index">
+                        <i class='bx bx-notification'></i>
+                        <span class="links_name">الإشعارات</span>
+                    </a>
+                    <span class="tooltip">الإشعارات</span>
+                </li>
 
             }
 

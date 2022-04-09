@@ -8,7 +8,10 @@ namespace GraduationProject.ViewModels.UnplannedOrders
 {
     public class EditUnplannedOrderViewModel
     {
+        public int UnPlannedOrderID { get; set; }
+
         public Data.Models.Items Item { get; set; }
+
 
         [Required(ErrorMessage = "هذا الحقل مطلوب")]
         public int ItemId { get; set; }

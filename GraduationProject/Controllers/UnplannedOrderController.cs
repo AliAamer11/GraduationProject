@@ -4,6 +4,7 @@ using GraduationProject.ViewModels.UnplannedOrders;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,22 +27,28 @@ namespace GraduationProject.Controllers.RP
         public int GetUnplannedOrderid()
         {
             var userid = userManager.GetUserId(User);
-            var model = _context.Orders.Last();
-            if (model == null) // no unplanned order 
+             
+            
+                var model = _context.Orders
+                .OrderBy(o => o.CreatedAt)
+                .Where(x=> x.Type == true && x.UserId == userid
+               ).LastOrDefault();
+           
+            if (model == default) // no unplanned order 
             {
                 var order = new Order
                 {
                     CreatedAt = DateTime.Today,
                     State = "0",
-                    Type = false,
-                    UserId = "1" //userid 
+                    Type = true,
+                    UserId = userid
                 };
                 _ = _context.Orders.Add(order);
                 _context.SaveChanges();
                 return order.OrderID;
             }
-           ///// order either complete|| or not complete or state is in VP side
-                return model.OrderID;
+            ///// order either complete|| or not complete or state is in VP side
+            return model.OrderID;
 
 
         }
@@ -75,15 +82,24 @@ namespace GraduationProject.Controllers.RP
             return View(annualneeds);
         }
 
-        public IActionResult GetAllUnplanned(int id)
+        public IActionResult GetAllUnplanned()
         {
+            int id = GetUnplannedOrderid();
             var unplannedorders = _context.UnPlannedOrder
+                .Include(i => i.Item)
                 .Where(x => x.OrderId == id)
                 .ToList();
-
-
             return View();
         }
+
+        //public IActionResult GetAllUnplanned(int id)
+        //{
+        //    var unplannedorders = _context.UnPlannedOrder
+        //        .Where(x => x.OrderId == id)
+        //        .ToList();
+        //    return View();
+        //}
+
         [HttpGet]
         public IActionResult Create()
         {
@@ -93,9 +109,9 @@ namespace GraduationProject.Controllers.RP
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(int id, CreateUnplannedOrderViewModel viewModel)
+        public async Task<IActionResult> Create(CreateUnplannedOrderViewModel viewModel)
         {
-            ViewData["OrderId"] = id;
+            ViewData["OrderId"] = GetUnplannedOrderid();
             ViewData["Item"] = new SelectList(BindListforItem(), "Value", "Text");
             if (ModelState.IsValid)
             {
@@ -103,6 +119,7 @@ namespace GraduationProject.Controllers.RP
                 {
                     var unplannedorder = new CreateUnplannedOrderViewModel()
                     {
+                        UnPlannedOrderID = viewModel.UnPlannedOrderID,
                         ItemId = viewModel.ItemId,
                         Quantity = viewModel.Quantity,
                         Description = viewModel.Description,
@@ -120,6 +137,84 @@ namespace GraduationProject.Controllers.RP
             ModelState.AddModelError("", "الحقول هذه مطلوبة");
             return View(viewModel);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var unplannedorder = await _context.UnPlannedOrder.FindAsync(id);
+            if (unplannedorder == null)
+            {
+                return NotFound();
+            }
+            var editunplannedorderViewModel = new EditUnplannedOrderViewModel()
+            {
+                ItemId = unplannedorder.ItemId,
+                UnPlannedOrderID = unplannedorder.UnPlannedOrderID,
+                Quantity = unplannedorder.Quantity,
+                Description = unplannedorder.Description,
+                Reason = unplannedorder.Reason,
+                OrderId = unplannedorder.OrderId,
+            };
+            ViewData["Item"] = new SelectList(BindListforItem(), "Value", "Text");
+            return View(editunplannedorderViewModel);
+        }
+
+        //Post
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(EditUnplannedOrderViewModel viewModel, int id)
+        {
+            ViewData["Item"] = new SelectList(BindListforItem(), "Value", "Text");
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var unplannedorder = new UnPlannedOrder()
+                    {
+                        ItemId = viewModel.ItemId,
+                        UnPlannedOrderID = viewModel.UnPlannedOrderID,
+                        Quantity = viewModel.Quantity,
+                        Reason = viewModel.Reason,
+                        Description = viewModel.Description,
+                        OrderId = viewModel.OrderId,
+                    };
+                    _context.Update(unplannedorder);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!UnplannedOrderExists(viewModel.UnPlannedOrderID))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                int idd = id;
+                return RedirectToAction();
+            }
+            ModelState.AddModelError("", "تأكد من صحة الحقول");
+            return View(viewModel);
+        }
+        public async Task<IActionResult> Delete(int id)
+        {
+            var unplannedorder = await _context.UnPlannedOrder.FindAsync(id);
+            if (unplannedorder == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            _context.UnPlannedOrder.Remove(unplannedorder);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(GetAllUnplanned));
+        }
+
+
 
 
 

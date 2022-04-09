@@ -29,18 +29,23 @@ namespace GraduationProject.Controllers
             var userid = userManager.GetUserId(User);
             DateTime CurrentDate = DateTime.Now;
             int CurrentYear = CurrentDate.Year;
-            var model = _context.Orders.Where(x => x.CreatedAt.Year == CurrentYear
-                                            && x.Type == false
-                                            && x.UserId == "1"//userid
-                                            ).Last();
 
-            if (model == null) //to check if there is an annual need initialized or not
+            var model = _context.Orders
+                .OrderBy(o => o.CreatedAt)
+                .Where(x => x.CreatedAt.Year == CurrentYear
+                                            && x.Type == false
+                                            && x.UserId == userid
+                                            ).LastOrDefault();
+
+
+            if (model == default) //to check if there is an annual need initialized or not
             {
-                var order = new Order { 
+                var order = new Order
+                {
                     CreatedAt = DateTime.Today,
-                    State = "0", 
-                    Type = false, 
-                    UserId = "1" //userid 
+                    State = "0",
+                    Type = false,
+                    UserId = userid
                 };
                 var model1 = _context.Orders.Add(order);
                 _context.SaveChanges();
@@ -67,6 +72,7 @@ namespace GraduationProject.Controllers
                 var annualneedorders = _context.AnnualOrder.Include(o => o.Order)
                     .Include(i => i.Item)
                     .Where(x => x.OrderId == id)
+                    .Where(o => o.Order.Type == false)
                     .ToList();
                 return View(annualneedorders);
             }

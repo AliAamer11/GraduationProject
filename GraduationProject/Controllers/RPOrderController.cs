@@ -25,7 +25,7 @@ namespace GraduationProject.Controllers
         public int GetUnplannedOrderid()
         {
             var userid = userManager.GetUserId(User);
-            var model = _context.Orders.OrderBy(o=>o.CreatedAt).LastOrDefault();
+            var model = _context.Orders.OrderBy(o=>o.CreatedAt).Last();
             if (model == null) // no unplanned order 
             {
                 var order = new Order

@@ -1,0 +1,63 @@
+﻿@model IEnumerable<GraduationProject.Data.Models.UnPlannedOrder>;
+
+@{
+    ViewData["Title"] = "طلبات المواد في الطلب غير المخطط";
+}
+
+<link href="~/css/button.css" rel="stylesheet" />
+<h1>طلبات المواد في الطلب غير المخطط</h1>
+<div>
+        <a title="إضافة مادة" class="create-icon-btn" asp-action="CreateAnnualNeedOrder"><i class="fa fa-plus"></i></a>
+</div>
+
+<div>
+    <a title="تأكيد الإحنياج السنوي" class="create-icon-btn" asp-action="CreateAnnualNeedOrder"><i class="fa fa-check"></i></a>
+</div>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>اسم المادة</th>
+            <th>كمية المادة</th>
+            <th>توصيف</th>
+            <th>سبب الطلب</th>
+            <th></th>
+        </tr>
+    </thead> 
+    
+    <tbody>
+        @if (Model != null)
+        {
+            @foreach (var upo in Model)
+            {
+                <tr>
+                    <td>@upo.Item.Name</td>
+                    <td>@upo.Quantity</td>
+                    <td>@upo.Description</td>
+                    <td>@upo.Reason</td>
+                    <td>
+                        <div class="d-inline-flex">
+                            <a asp-action="EditAnnualNeedOrder" title="تعديل" asp-route-id="@upo.UnPlannedOrderID" class="edit-icon-btn ml-1"><i class='far fa-edit'></i></a>
+                            <form method="post" asp-action="Delete" asp-controller="UnplannedOrder" asp-route-id="@upo.UnPlannedOrderID">
+                                <button style="width:60px" onclick="return confirm('هل تود بالفعل حذف القياس @upo.Item.Name ؟ ')" type="submit" class="delete-icon-btn">
+                                    <i class='far fa-trash-alt'></i>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>no</tr>
+            }
+
+        
+    </tbody>
+    
+</table>
+
+
+
