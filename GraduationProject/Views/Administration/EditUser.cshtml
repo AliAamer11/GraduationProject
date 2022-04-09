@@ -1,0 +1,46 @@
+﻿@model GraduationProject.ViewModels.Administration.EditUserViewModel;
+
+
+
+
+@{
+    ViewData["Title"] = "تعديل المستحدم";
+}
+<link href="~/css/button.css" rel="stylesheet" />
+<link href="~/css/createItem.css" rel="stylesheet" />
+<div class="container">
+    <form id='create-form' asp-action="EditUser">
+        <p id='description' class="header">
+            تعديل المستخدم
+        </p>
+        @if (ViewBag.errorMassage != null)
+        {
+            <h4 class="text-danger" style=" text-align: center; background: #fff; padding: 5px; border-radius: 20px;">@ViewBag.errorMassage</h4>
+        }
+        <input type="hidden" asp-for="UserID" />
+        <div class='form-input'>
+            <label>اسم المستخدم</label>
+            <input asp-for="RequestingParty" class='form-input-size' />
+            <span asp-validation-for="RequestingParty" class="text-danger"></span>
+        </div>
+        <div class='form-input'>
+            <label>البريد الإلكتروني</label>
+            <input asp-for="Email" class='form-input-size' />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+        <div class="form-input">
+            <label>النوع</label>
+            <select asp-for="Type" class="form-input-size" asp-items="ViewBag.Type"></select>
+            <span asp-validation-for="Type" class="text-danger"></span>
+
+        </div>
+        <div class='form-input'>
+            <button type='submit' id='submit'>تعديل المستخدم<i class="bx bx-edit mr-3"></i></button>
+        </div>
+    </form>
+</div>
+
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}

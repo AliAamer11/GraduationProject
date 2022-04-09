@@ -22,6 +22,8 @@ th {
     margin: 25px 0;
     font-size: 0.9em;
     min-width: 400px;
+    width:100%;
+    font-size:20px;
 }
     .styled-table thead tr th:first-child {
         border-top-right-radius: 20px;

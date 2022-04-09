@@ -8,9 +8,11 @@ using GraduationProject.Data;
 using Microsoft.EntityFrameworkCore;
 using GraduationProject.ViewModels.Category;
 using GraduationProject.Data.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GraduationProject.Controllers
 {
+    [Authorize(Roles = "StoreKeep")]
     public class CategoryController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -135,6 +137,13 @@ namespace GraduationProject.Controllers
                         ViewBag.errorMassage = "هذا الترميز موجود بالفعل لصنف آخر";
                         return View(viewModel);
                     }
+                    //check for Category ShortcuntName length
+                    if (checkforCategoryShortcutnameLength(viewModel.MainCategoryId, viewModel.ShortCutName))
+                    {
+                        ViewBag.errorMassage = "ترميز الصنف الرئيسي 2 بينما ترميز الصنف الفرعي 3";
+                        return View(viewModel);
+                    }
+
                     // so the Category dosen't Has MainCategory
                     if (viewModel.MainCategoryId == -1)
                     {
@@ -142,7 +151,7 @@ namespace GraduationProject.Controllers
                     }
                     var category = new Categoreis()
                     {
-                        CategoryID = viewModel.CategoryID,
+                        CategoryID = id,
                         Name = viewModel.Name,
                         ShortCutName = viewModel.ShortCutName,
                         MainCategoryId = viewModel.MainCategoryId,

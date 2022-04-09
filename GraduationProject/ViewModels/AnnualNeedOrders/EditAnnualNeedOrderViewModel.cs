@@ -14,6 +14,7 @@ namespace GraduationProject.ViewModels.AnnualNeedOrders
         public int SecondSemQuantity { get; set; }
         public int ThirdSemQuantity { get; set; }
         public int FlowRate { get; set; }
+        public string Description { get; set; }
         public int ApproxRate { get; set; }
         public int OrderId { get; set; }
     }

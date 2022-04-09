@@ -12,7 +12,8 @@ $(function () {
         //var element = document.getElementsByClassName("modal-backdrop");
         //element.style.backgroundColor = 'yellow';
         var url = $(this).data('url');
-        $.get(url).done(function (data) {
+        var decodeUrl = decodeURIComponent(url)
+        $.get(decodeUrl).done(function (data) {
             PlaceHolderElement.html(data);
             PlaceHolderElement.find('.modal').modal('show');
         })

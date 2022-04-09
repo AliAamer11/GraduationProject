@@ -1,0 +1,91 @@
+﻿:root {
+    /*this for navigation*/
+    --main-blue: #11101D;
+    --sub-blue: #1d1b31;
+    --background: #E4E9F7;
+    --main-orange: #FF5733;
+    /*special use*/
+    /*main color*/
+    --white: #fff;
+    --balck: #000;
+    --gray: #e7e7e7;
+    --background-gray: #c7c7c7;
+}
+
+th {
+    cursor: pointer;
+    background: var(--main-orange);
+}
+
+.styled-table {
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 0.9em;
+    min-width: 400px;
+    width: 100%;
+    font-size: 20px;
+}
+    .styled-table thead tr th:first-child {
+        border-top-right-radius: 20px;
+        border-bottom-right-radius: 20px;
+    }
+
+    .styled-table thead tr th:last-child {
+        border-bottom-left-radius: 20px;
+        border-top-left-radius: 20px;
+    }
+
+    .styled-table thead tr {
+        background-color: black;
+        color: #ffffff;
+        border-radius:20px;
+    }
+
+    .styled-table th,
+    .styled-table td {
+        padding: 12px 15px;
+    }
+
+    .styled-table tbody tr {
+        border-bottom: 1px solid #dddddd;
+    }
+
+        .styled-table tbody tr:nth-of-type(even) {
+            background-color: #f3f3f3;
+            font-weight: bold;
+            color: var(--main-orange);
+        }
+
+            .styled-table tbody tr:nth-of-type(even):hover {
+                background-color: var(--main-orange);
+                font-weight: bold;
+                color: var(--white);
+                border: 2px solid var(--main-orange);
+            }
+
+        .styled-table tbody tr:nth-of-type(odd) {
+            font-weight: bold;
+            color: var(--main-blue);
+        }
+
+            .styled-table tbody tr:nth-of-type(odd):hover {
+                background-color: var(--main-blue);
+                font-weight: bold;
+                color: var(--white);
+                border:2px solid var(--main-blue);
+
+            }
+
+
+        .styled-table tbody tr:last-of-type {
+            border-bottom: 2px solid var(--main-blue);
+        }
+
+.tableheader {
+    color: var(--main-blue);
+    font-weight: bold;
+    font-size: 3rem;
+    text-align: center;
+    margin-top: 15px;
+    margin-bottom: 30px;
+}

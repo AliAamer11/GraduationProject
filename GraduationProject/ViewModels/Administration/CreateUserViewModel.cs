@@ -10,7 +10,7 @@ namespace GraduationProject.ViewModels.Administration
     {
         public string UserID { get; set; }
 
-        [Required(ErrorMessage ="هذا الحقل مطلوب يا حبوب")]
+        [Required(ErrorMessage ="هذا الحقل مطلوب ")]
         public string RequestingParty { get; set; }
 
         [Required(ErrorMessage = "البريد الالكتروني مطلوب")]

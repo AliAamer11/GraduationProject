@@ -1,0 +1,87 @@
+﻿:root {
+    /*this for navigation*/
+    --main-blue: #11101D;
+    --sub-blue: #1d1b31;
+    --background: #E4E9F7;
+    --main-orange: #FF5733;
+    /*special use*/
+    /*main color*/
+    --white: #fff;
+    --black: #000;
+    --gray: #e7e7e7;
+    --background-gray: #c7c7c7;
+    --red: #b2323d;
+    --black-hover: #171a20;
+    --red-hover: #92474d;
+}
+
+
+.container {
+    width: 100%;
+}
+
+@media(min-width: 576px) {
+    .container {
+        max-width: 540px;
+    }
+}
+
+@media(min-width: 768px) {
+    .container {
+        max-width: 720px
+    }
+}
+
+@media(min-width: 576px) {
+    .ccc {
+        max-width: 540px;
+    }
+}
+
+@media(min-width: 768px) {
+    .ccc {
+        max-width: 720px
+    }
+}
+
+.cardcss {
+    width: 500px;
+    margin-top: 30px;
+}
+.radius {
+    border-radius: 20px;
+}
+.card-headercss {
+    background: var(--main-orange);
+    color: var(--white);
+    border-radius: 20px;
+    font-size:2rem;
+    font-weight:bold;
+    text-align:center;
+}
+.card-bodycss{
+    text-align:center;
+    color:var(--main-blue);
+    font-size:1.5rem;
+
+}
+#submit {
+    width: 100%;
+    padding: 0.8rem;
+    background: var(--main-blue);
+    color: var(--white);
+    border-radius: 1rem;
+    cursor: pointer;
+    border: none;
+    font-size: 1.5rem;
+    font-weight: bold;
+    border: 1px solid var(--white);
+}
+
+    #submit:hover {
+        background: var(--white);
+        color: var(--main-orange);
+        border: 1px solid var(--main-blue);
+        text-decoration: none;
+        transition: all 0.5s ease;
+    }

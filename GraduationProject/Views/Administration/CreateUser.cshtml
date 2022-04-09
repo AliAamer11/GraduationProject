@@ -3,44 +3,48 @@
 @{
     ViewData["Title"] = "إنشاء مستخدم";
 }
+<link href="~/css/createItem.css" rel="stylesheet" />
 
-<h1>إنشاء مستخدم</h1>
 
+<div class="container">
+    <form id='create-form' asp-action="CreateUser">
 
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="CreateUser">
-            @if (ViewBag.errorMassage != null)
-            {
-                <h4 class="alert alert-danger">@ViewBag.errorMassage</h4>
-            }
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <p id='description' class="header">
+            إنشاء مستخدم
+        </p>
+        @if (ViewBag.errorMassage != null)
+        {
+            <h4 class="text-danger" style=" text-align: center; background: #fff; padding: 5px; border-radius: 20px;">@ViewBag.errorMassage</h4>
+        }
+        <div class='form-input'>
+            <label>اسم المستخدم</label>
+            <input asp-for="RequestingParty" class='form-input-size' />
+            <span asp-validation-for="RequestingParty" class="text-danger"></span>
+        </div>
+        <div class='form-input'>
+            <label>البريد الإلكتروني</label>
+            <input asp-for="Email" class='form-input-size' />
+            <span asp-validation-for="Email" class="text-danger"></span>
 
-            <div class="form-group">
-                <label class="control-label">اسم الجهة</label>
-                <input asp-for="RequestingParty" class="form-control" />
-                <span asp-validation-for="RequestingParty" class="text-danger"></span>
-            </div>
+        </div>
+        <div class='form-input'>
+            <label>كلمة المرور</label>
+            <input asp-for="Password" class='form-input-size' />
+            <span asp-validation-for="Password" class="text-danger"></span>
 
-            <div class="form-group">
-                <label class="control-label">البريد</label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label class="control-label">كلمة المرور</label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label class="control-label"> النوع</label>
-                <select asp-for="Type" class="form-control fitcontent" asp-items="ViewBag.Type"></select>
-                <span asp-validation-for="Type" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="إنشاء" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+        </div>
+        <div class="form-input">
+            <label>نوع المستخدم</label>
+            <select asp-for="Type" class="form-input-size fit-content" asp-items="ViewBag.Type"></select>
+            <span asp-validation-for="Type" class="text-danger"></span>
+
+        </div>
+        <div class='form-input'>
+            <button type='submit' id='submit'>إنشاء المستخدم<i class="bx bx-add-to-queue mr-3"></i></button>
+        </div>
+    </form>
 </div>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -51,6 +51,8 @@
     transition: all .4s ease-in-out;
     font-weight: bold;
     border-radius: 20px;
+    padding-top:3px;
+    padding-bottom:2px;
     width: auto;
     text-decoration: none;
 }

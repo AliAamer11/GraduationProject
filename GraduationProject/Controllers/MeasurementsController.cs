@@ -8,9 +8,11 @@ using GraduationProject.Data;
 using Microsoft.EntityFrameworkCore;
 using GraduationProject.ViewModels.Measurements;
 using GraduationProject.Data.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GraduationProject.Controllers
 {
+    [Authorize(Roles = "StoreKeep")]
     public class MeasurementsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -81,13 +83,13 @@ namespace GraduationProject.Controllers
         //}
 
         [HttpGet]
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-            var measurement = await _context.Measurements.FindAsync(id);
+            var measurement =  _context.Measurements.Find(id);
             if (measurement == null)
             {
                 return NotFound();
@@ -97,48 +99,80 @@ namespace GraduationProject.Controllers
                 MeasurementID = measurement.MeasurmentID,
                Name = measurement.Name
             };
-            return View(editmeasurmentviewmodel);
+            return PartialView("_EditMeasurementModelPartial",editmeasurmentviewmodel);
+            //return View(editmeasurmentviewmodel);
         }
-        //Post
+
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(EditMeasurementViewModel viewModel, int id)
+        public IActionResult Edit(EditMeasurementViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    //check for Duplicate The CategoryName
-                    if (checkMeasurementyName(viewModel.Name, id))
+                    if (checkMeasurementyName(viewModel.Name, viewModel.MeasurementID))
                     {
                         ViewBag.errorMassage = "هذا القياس موجود بالفعل";
-                        return View(viewModel);
+                        return PartialView("_EditMeasurementModelPartial", viewModel);
                     }
-
                     var measurement = new Measurements()
                     {
-                       MeasurmentID = viewModel.MeasurementID,
-                       Name = viewModel.Name,
+                        MeasurmentID = viewModel.MeasurementID,
+                        Name = viewModel.Name,
                     };
                     _context.Update(measurement);
-                    await _context.SaveChangesAsync();
+                    _context.SaveChanges();
+                    return PartialView("_EditMeasurementModelPartial", viewModel);
+
                 }
-                catch (DbUpdateConcurrencyException)
+                catch
                 {
-                    if (!MeasurementExists(viewModel.MeasurementID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    throw;
                 }
-                return RedirectToAction(nameof(Index));
             }
-            ModelState.AddModelError("", "زبط حقولك");
-            return View(viewModel);
+            return View();
         }
+
+        //Post
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Edit(EditMeasurementViewModel viewModel, int id)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        try
+        //        {
+        //            //check for Duplicate The CategoryName
+        //            if (checkMeasurementyName(viewModel.Name, id))
+        //            {
+        //                ViewBag.errorMassage = "هذا القياس موجود بالفعل";
+        //                return View(viewModel);
+        //            }
+
+        //            var measurement = new Measurements()
+        //            {
+        //               MeasurmentID = viewModel.MeasurementID,
+        //               Name = viewModel.Name,
+        //            };
+        //            _context.Update(measurement);
+        //            await _context.SaveChangesAsync();
+        //        }
+        //        catch (DbUpdateConcurrencyException)
+        //        {
+        //            if (!MeasurementExists(viewModel.MeasurementID))
+        //            {
+        //                return NotFound();
+        //            }
+        //            else
+        //            {
+        //                throw;
+        //            }
+        //        }
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    ModelState.AddModelError("", "زبط حقولك");
+        //    return View(viewModel);
+        //}
 
         [HttpPost]
         [ValidateAntiForgeryToken]

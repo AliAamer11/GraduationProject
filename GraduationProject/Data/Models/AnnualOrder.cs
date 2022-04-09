@@ -18,6 +18,8 @@ namespace GraduationProject.Data.Models
 
         [StringLength(100)]
         public string Comment { get; set; }
+        [StringLength(100)]
+        public string Description { get; set; }
 
         //Navigation Prop
         //this for Item

@@ -1,6 +1,7 @@
 ﻿using GraduationProject.Data;
 using GraduationProject.Data.Models;
 using GraduationProject.ViewModels.Administration;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace GraduationProject.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AdministrationController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -25,122 +27,28 @@ namespace GraduationProject.Controllers
             this.userManager = userManager;
             _context = context;
         }
-        ///begin of all action related for roles
-        ///
-        ///
-        ///
-
-        //get all roles
-        [HttpGet]
-        public IActionResult ListRoles()
-        {
-            var roles = roleManager.Roles;
-            return View(roles);
-        }
 
         [HttpGet]
-        public IActionResult CreateRole()
+        public IActionResult DashBoard()
         {
-            return View();
-        }
-        //create role post method
-        [HttpPost]
-        public async Task<IActionResult> CreateRole(CreateRoleViewModel viewModel)
-        {
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    IdentityRole identityRole = new IdentityRole
-                    {
-                        Name = viewModel.RoleName
-                    };
+            DashBoardViewModel viewModel = new DashBoardViewModel();
 
-                    IdentityResult result = await roleManager.CreateAsync(identityRole);
+            //this for get count of User in System 
+            int countforAllUser = _context.Users.Count();
 
-                    if (result.Succeeded)
-                    {
-                        return RedirectToAction("ListRoles", "Administration");
-                    }
+            //this for get count of roles in system
+            int countforAllRoles = roleManager.Roles.Count();
 
-                    foreach (IdentityError error in result.Errors)
-                    {
-                        ModelState.AddModelError("", error.Description);
-                    }
-                }
-            }
-            catch
-            {
-                throw;
-            }
+            //this to get list of Users 
+            ViewBag.users = _context.Users.ToList();
+
+            //this to get list of roles 
+            ViewBag.roles = roleManager.Roles;
+
+            viewModel.CountforAllUser = countforAllUser;
+            viewModel.CountforAllRoles = countforAllRoles;
             return View(viewModel);
         }
-
-        //view  EditRole/roleId
-        [HttpGet]
-        public async Task<IActionResult> EditRole(string roleId)
-        {
-            var role = await roleManager.FindByIdAsync(roleId);
-            if (role == null)
-            {
-                return NotFound();
-            }
-            var model = new EditRoleViewModel
-            {
-                Id = role.Id,
-                RoleName = role.Name,
-            };
-
-            foreach (var user in userManager.Users)
-            {
-                // to show user in this role 
-                if (await userManager.IsInRoleAsync(user, role.Name))
-                {
-                    model.Users.Add(user.RequstingParty);
-                }
-            }
-            return View(model);
-        }
-
-        //Edit role post method
-        //here edit is just edit name of role 
-        [HttpPost]
-        public async Task<IActionResult> EditRole(EditRoleViewModel model)
-        {
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    var role = await roleManager.FindByIdAsync(model.Id);
-                    if (role == null)
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        role.Name = model.RoleName;
-                        var result = await roleManager.UpdateAsync(role);
-
-                        if (result.Succeeded)
-                        {
-                            return RedirectToAction("ListRoles");
-                        }
-                        foreach (var error in result.Errors)
-                        {
-                            ModelState.AddModelError("", error.Description);
-                        }
-                    }
-                }
-
-                return View(model);
-            }
-            catch
-            {
-                throw;
-            }
-        }
-
-
 
         // for edit user in role 
         // this meaning add user to role or remover user to role
@@ -216,28 +124,12 @@ namespace GraduationProject.Controllers
                     if (i < model.Count - 1)
                         continue;
                     else
-                        return RedirectToAction("EditRole", new { roleId = role.Id });
+                        return RedirectToAction("DashBoard", "Administration");
                 }
             }
 
-            return RedirectToAction("EditRole", "Administration", new { roleId = role.Id });
+            return RedirectToAction("DashBoard", "Administration");
 
-        }
-        ///
-        ///
-        ///
-        ///end of all action related for roles
-
-
-
-        ///begin of all action related for users
-        ///
-        ///
-        [HttpGet]
-        public IActionResult ListUsers()
-        {
-            var users = _context.Users.ToList();
-            return View(users);
         }
         [HttpGet]
         public IActionResult CreateUser()
@@ -255,6 +147,11 @@ namespace GraduationProject.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    if (checkForEmail(viewModel.Email))
+                    {
+                        ViewBag.errorMassage = "هذا البريد الالكتروني موجود بالفعل حاول مجددا";
+                        return View(viewModel);
+                    }
                     var user = new ApplicationUser()
                     {
                         UserName = viewModel.Email,
@@ -265,8 +162,8 @@ namespace GraduationProject.Controllers
                     var result = await userManager.CreateAsync(user, viewModel.Password);
                     if (result.Succeeded)
                     {
-                        userManager.AddToRoleAsync(user, viewModel.Type).Wait();
-                        return RedirectToAction("ListUsers", "Administration");
+                        await userManager.AddToRoleAsync(user, viewModel.Type);
+                        return RedirectToAction("DashBoard", "Administration");
                     }
                 }
             }
@@ -276,15 +173,82 @@ namespace GraduationProject.Controllers
             }
             return View(viewModel);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> EditUser(string id)
+        {
+            try
+            {
+                if (id == null)
+                {
+                    return NotFound();
+                }
+                var user = await userManager.FindByIdAsync(id);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
+                var editUserViewModel = new EditUserViewModel()
+                {
+                    UserID = user.Id,
+                    RequestingParty = user.RequstingParty,
+                    Email = user.Email,
+                    Type = user.Type,
+                };
+                ViewData["Type"] = new SelectList(bindListforType(), "Value", "Text");
+                return View(editUserViewModel);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> EditUser(EditUserViewModel viewModel, string id)
+        {
+            if (id != viewModel.UserID)
+            {
+                return NotFound();
+            }
+            ViewData["Type"] = new SelectList(bindListforType(), "Value", "Text");
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    if (checkForEmail(viewModel.Email, viewModel.UserID))
+                    {
+                        ViewBag.errorMassage = "هذا البريد موجود بالفعل لمستخدم آخر";
+                        return View(viewModel);
+                    }
+                    ApplicationUser user = await userManager.FindByIdAsync(viewModel.UserID);
+                    user.Email = viewModel.Email;
+                    user.RequstingParty = viewModel.RequestingParty;
+                    user.Type = viewModel.Type;
+                    user.UserName = user.Email;
+                    await userManager.UpdateAsync(user);
+                    return RedirectToAction("DashBoard", "Administration");
+                }
+                catch
+                {
+                    throw;
+                }
+            }
+            ModelState.AddModelError("", "زبط حقولك");
+            return View(viewModel);
+
+        }
         ///
         ///
         ///
         ///end of all action related for users
 
 
+
+
         private List<SelectListItem> bindListforType()
         {
-            List<SelectListItem> list = new List<SelectListItem>();
+            List<SelectListItem> list = new();
             list.Add(new SelectListItem { Text = "مدير التطبيق", Value = "Admin" });
             list.Add(new SelectListItem { Text = "الجهة الطالبة", Value = "Requester" });
             list.Add(new SelectListItem { Text = "نائب رئيس الجامعة", Value = "VicePris" });
@@ -292,5 +256,22 @@ namespace GraduationProject.Controllers
 
             return list;
         }
+
+        /// <summary>
+        /// this for not duplicate the email for any user
+        /// this for create action
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns> true if duplacate email false if not </returns>
+        private bool checkForEmail(string email) => _context.Users.Any(t => t.Email == email);
+
+        /// <summary>
+        /// this for not duplicate the email for any user
+        /// this for Update action
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns> true if duplacate email false if not </returns>
+        private bool checkForEmail(string email, string id) => _context.Users.Any(t => t.Email == email && t.Id != id);
+
     }
 }

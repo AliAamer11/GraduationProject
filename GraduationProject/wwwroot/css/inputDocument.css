@@ -1,0 +1,100 @@
+﻿:root {
+    /*this for navigation*/
+    --main-blue: #11101D;
+    --sub-blue: #1d1b31;
+    --background: #E4E9F7;
+    --main-orange: #FF5733;
+    /*special use*/
+    /*main color*/
+    --white: #fff;
+    --black: #000;
+    --gray: #e7e7e7;
+    --background-gray: #c7c7c7;
+    --red: #b2323d;
+    --black-hover: #171a20;
+    --red-hover: #92474d;
+}
+.form-group-material {
+    position: relative;
+    margin-bottom: 0px !important;
+}
+.cardcss{
+    background: var(--main-blue);
+    border:2px solid var(--main-orange);
+    border-radius:20px;
+}
+.create-icon-btn {
+    background: var(--white);
+    border: 1px solid var(--main-orange);
+    box-shadow: 0px 5px 10px rgba(0,0,0,.2);
+    padding: 7px 14px;
+    color: var(--white);
+    cursor: pointer;
+    transition: all .4s ease-in-out;
+    font-weight: bold;
+    border-radius: 30px;
+    width: auto;
+    text-decoration: none;
+    position: absolute;
+    font-size: 20px;
+    margin-right:13px;
+}
+
+    .create-icon-btn:hover {
+        background: var(--main-orange);
+        color: var(--main-blue);
+        border: 1px solid var(--white);
+        transform: scale(1.05);
+        text-decoration: none;
+    }
+
+.delete-icon-btn {
+    background: var(--white);
+    border: 1px solid var(--red);
+    box-shadow: 0px 5px 10px rgba(178,50,61,.2);
+    font-size: 16px;
+    color: var(--red);
+    cursor: pointer;
+    transition: all .4s ease-in-out;
+    font-weight: bold;
+    border-radius: 20px;
+    width: auto;
+    text-decoration: none;
+    padding: 7px 14px;
+    margin-top: 32px;
+}
+
+    .delete-icon-btn:hover {
+        background: var(--red-hover);
+        color: var(--white);
+        border: 1px solid var(--white);
+        transform: scale(1.05);
+        text-decoration: none;
+    }
+
+.push {
+    background: var(--main-orange);
+    border: 1px solid var(--white);
+    padding: 1px 6px;
+    box-shadow: 0px 5px 10px rgba(0,0,0,.2);
+    color: var(--main-blue);
+    cursor: pointer;
+    transition: all .4s ease-in-out;
+    font-weight: bold;
+    border-radius: 30px;
+    width: auto;
+    text-decoration: none;
+    font-size: 2rem;
+}
+    .push:hover {
+        background: var(--white);
+        color: var(--main-blue);
+        border: 1px solid var(--main-orange);
+        transform: scale(1.05);
+        text-decoration: none;
+    }
+label{
+    color:var(--white);
+    margin-right:6px;
+    font-weight:600;
+}

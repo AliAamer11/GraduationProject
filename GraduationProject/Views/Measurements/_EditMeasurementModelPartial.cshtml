@@ -1,0 +1,40 @@
+﻿@model GraduationProject.ViewModels.Measurements.EditMeasurementViewModel
+
+<link href="~/css/popup.css" rel="stylesheet" />
+<div class="modal fade" id="addMeasurement">
+
+    <div class="modal-dialog">
+        <div class="modal-content box">
+
+            <div class="modal-header">
+                <h4 class="modal-title" id="addMeasurementLabale">تعديل القياس</h4>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span class="close-icon">x</span>
+                </button>
+
+            </div>
+
+            <div class="modal-body">
+                <form action="Edit">
+                    @if (ViewBag.errorMassage != null)
+                    {
+                        <h4 class="alert alert-danger">@ViewBag.errorMassage</h4>
+                    }
+                    <input type="hidden" asp-for="@Model.MeasurementID" />
+                    <div class="form-group">
+                        <label>عنوان القياس</label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer tail">
+                @*<button type="button" class="btn btn-primary" data-dismiss="modal">إغلاق</button>*@
+                <button type="button" id="submit" data-save="modal">تعديل القياس<i class="bx bx-edit mr-3"></i></button>
+            </div>
+        </div>
+
+    </div>
+
+</div>
