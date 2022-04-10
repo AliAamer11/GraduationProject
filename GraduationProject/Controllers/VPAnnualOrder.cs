@@ -22,6 +22,7 @@ namespace GraduationProject.Controllers
             var annualOrders = await _context.AnnualOrder.Where(o => o.OrderId == OrderId).ToListAsync();
 
             ViewBag.Orderid = _context.AnnualOrder.Find(OrderId);
+          
             return View(annualOrders);
         }
         [HttpPost]
@@ -29,7 +30,7 @@ namespace GraduationProject.Controllers
         {
 
             var order = await _context.Orders.FindAsync(id);
-            order.State = "1";
+            order.State = "2";
             _context.Update(order);
             _context.SaveChanges();
 
@@ -39,8 +40,11 @@ namespace GraduationProject.Controllers
 
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public async Task<IActionResult> AddComment(int? Orderid, string[] comments)
+        public async Task<IActionResult> Index(int? Orderid, string[] comments)
         {
+
+            var AnnualOrders = await _context.AnnualOrder.Where(o => o.OrderId == Orderid).ToListAsync();
+            var order = await _context.Orders.FindAsync(Orderid);
             bool check = false;
             foreach (var c in comments)
             {
@@ -54,12 +58,13 @@ namespace GraduationProject.Controllers
                     break;
                 }
             }
+            ViewBag.check = check;
             if (ModelState.IsValid && check)
             {
 
                 try
                 {
-                    var AnnualOrders = await _context.AnnualOrder.Where(o => o.OrderId == Orderid).ToListAsync();
+                   
                     using (var e1 = AnnualOrders.GetEnumerator())
                     {
 
@@ -75,8 +80,11 @@ namespace GraduationProject.Controllers
                             }
                         }
                     }
-
-                    return RedirectToAction("Index", new { Orderid });
+                    order.Complete = false;
+                    order.State = "0";
+                    _context.Orders.Update(order);
+                    _context.SaveChanges();
+                    return RedirectToAction("Annual","VPOrder");
                 }
 
                 catch
@@ -84,7 +92,8 @@ namespace GraduationProject.Controllers
                     return StatusCode(500, "Internal server error");
                 }
             }
-            return Ok("يجب إدخال تعليق واحد على الأقل حتى يتم إعادةإرسال الطلب!! ");
+            ViewBag.comment = "يجب ادخال تعليق واحد على الاقل ";
+            return View(AnnualOrders);
         }
     }
 }

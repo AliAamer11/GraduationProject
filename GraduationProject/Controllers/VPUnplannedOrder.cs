@@ -23,12 +23,8 @@ namespace GraduationProject.Controllers
 
         [HttpGet]
         public async Task<IActionResult> Index(int? OrderId)
-        {
-            var unplannedOrders = await _context.UnPlannedOrder.Where(o => o.OrderId == OrderId).ToListAsync();
-
-            ViewBag.Orderid = _context.UnPlannedOrder.Find(OrderId);
-
-
+        {   
+            var unplannedOrders = await _context.UnPlannedOrder.Where(o => o.OrderId == OrderId).ToListAsync();             
             return View(unplannedOrders);
         }
 
@@ -36,15 +32,20 @@ namespace GraduationProject.Controllers
         public async Task<IActionResult> ApproveOrder(int? id)
         {
             var order = await _context.Orders.FindAsync(id);
-            order.State = "1";
+            order.State = "2";
             _context.Update(order);
             _context.SaveChanges();
             return RedirectToAction("Unplanned", "VPOrder");
         }
+
+
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public async Task<IActionResult> AddComment(int? Orderid, string[] comments)
+        public async Task<IActionResult> Index(int? Orderid, string[] comments)
         {
+            var unplannedOrders = await _context.UnPlannedOrder.Where(o => o.OrderId == Orderid).ToListAsync();
+            var order = await _context.Orders.FindAsync(Orderid);
+
             bool check = false; 
             foreach(var c in comments)
             {
@@ -63,7 +64,6 @@ namespace GraduationProject.Controllers
 
                     try
                     {
-                        var unplannedOrders = await _context.UnPlannedOrder.Where(o => o.OrderId == Orderid).ToListAsync();
                         using (var e1 = unplannedOrders.GetEnumerator())
                         {
 
@@ -76,19 +76,27 @@ namespace GraduationProject.Controllers
                                     _context.UnPlannedOrder.Update(obj);
                                     _context.SaveChanges();
                                     e1.MoveNext();
+                                 
                                 }
                             }
                         }
+                    order.State = "0";
+                    order.Complete = false;
+                    _context.Orders.Update(order);
+                    _context.SaveChanges();
 
-                    return RedirectToAction("Index", new { Orderid });
-                    }
+                    return RedirectToAction("Unplanned", "VPOrder");
 
-                    catch
+                }
+
+                catch
                     {
                         return StatusCode(500, "Internal server error");
                     }
                 }
-            return Ok("يجب إدخال تعليق واحد على الأقل حتى يتم إعادةإرسال الطلب!! ");
+            ViewBag.comment = "يجب ادخال تعليق واحد على الاقل ";
+
+            return View(unplannedOrders);
             }
 
             

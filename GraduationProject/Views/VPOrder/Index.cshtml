@@ -1,8 +1,34 @@
-﻿<h1>الطلبات</h1>
+﻿@*<h1>الطلبات</h1>*@
 
 
-<div class="btn-group">
+@*<div class="btn-group">
 
-    <a asp-action="Unplanned"> <button class="btn btn-primary">الطلبات غير المخططة <button> </a>
-    <a asp-action="Annual"> <button class="btn btn-primary">الطلبات  السنوية</button></a>
+        <a asp-action="Unplanned"> <button class="btn btn-primary">الطلبات غير المخططة <button> </a>
+        <a asp-action="Annual"> <button class="btn btn-primary">الطلبات  السنوية</button></a>
+    </div>*@
+<link href="~/css/Cards.css" rel="stylesheet" />
+<div class="container">
+    <div class="card">
+        <div class="box">
+            <div class="content">
+                <h2>01</h2>
+                <h3>طلبات الإحتياجات السنوية</h3>
+                <p>طلبات الإحتياجات السنوية المقدمة لهذا العام من قبل جميع الجهات الطالبة </p>
+                <a asp-action="Annual">استعراض</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="box">
+            <div class="content">
+                <h2>02</h2>
+                <h3> الطلبات غير المخططة</h3>
+                <p>الطلبات غير المخططة المفدمة من قبل جميع الجهات الطالبة  </p>
+                <a asp-action="Unplanned">استعراض</a>
+            </div>
+        </div>
+    </div>
+
+
 </div>
