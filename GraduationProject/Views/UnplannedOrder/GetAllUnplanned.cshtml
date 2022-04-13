@@ -7,12 +7,13 @@
 <link href="~/css/button.css" rel="stylesheet" />
 <h1>طلبات المواد في الطلب غير المخطط</h1>
 <div>
-        <a title="إضافة مادة" class="create-icon-btn" asp-action="CreateAnnualNeedOrder"><i class="fa fa-plus"></i></a>
+    <a title="إضافة مادة" class="create-icon-btn" asp-action="Create"><i class="fa fa-plus"></i></a>
+
 </div>
 
 <div>
-    <a title="تأكيد الإحنياج السنوي" class="create-icon-btn" asp-action="CreateAnnualNeedOrder"><i class="fa fa-check"></i></a>
-</div>
+        <a style="left:80px" title="تأكيد الإحنياج السنوي" class="create-icon-btn" asp-action="CheckCompleteOrder" asp-controller="RPOrder"><i class="fa fa-check"></i></a>
+    </div>
 
 
 <table class="table">
@@ -24,10 +25,10 @@
             <th>سبب الطلب</th>
             <th></th>
         </tr>
-    </thead> 
-    
+    </thead>
+
     <tbody>
-        @if (Model != null)
+        @if (Model.Count()>0 )
         {
             @foreach (var upo in Model)
             {
@@ -38,9 +39,9 @@
                     <td>@upo.Reason</td>
                     <td>
                         <div class="d-inline-flex">
-                            <a asp-action="EditAnnualNeedOrder" title="تعديل" asp-route-id="@upo.UnPlannedOrderID" class="edit-icon-btn ml-1"><i class='far fa-edit'></i></a>
+                            <a asp-action="Edit" asp-controller="UnplannedOrder" title="تعديل" asp-route-id="@upo.UnPlannedOrderID" class="edit-icon-btn ml-1"><i class='far fa-edit'></i></a>
                             <form method="post" asp-action="Delete" asp-controller="UnplannedOrder" asp-route-id="@upo.UnPlannedOrderID">
-                                <button style="width:60px" onclick="return confirm('هل تود بالفعل حذف القياس @upo.Item.Name ؟ ')" type="submit" class="delete-icon-btn">
+                                <button style="width:60px" onclick="return confirm('هل تود بالفعل حذف المادة @upo.Item.Name ؟ ')" type="submit" class="delete-icon-btn">
                                     <i class='far fa-trash-alt'></i>
                                 </button>
                             </form>
@@ -52,11 +53,11 @@
         else
         {
             <tr>no</tr>
-            }
+}
 
-        
+
     </tbody>
-    
+
 </table>
 
 

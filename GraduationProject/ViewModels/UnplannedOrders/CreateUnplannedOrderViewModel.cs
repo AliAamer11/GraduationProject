@@ -16,7 +16,7 @@ namespace GraduationProject.ViewModels.UnplannedOrders
         [Required(ErrorMessage = "هذا الحقل مطلوب")]
         public int ItemId { get; set; }
 
-        [Range(0,int.MaxValue,ErrorMessage ="القيمة ليست ضمن المجال المحدد")]
+        //[Range(0,int.MaxValue,ErrorMessage ="القيمة ليست ضمن المجال المحدد")]
         [Required(ErrorMessage = "هذا الحقل مطلوب")]
         public int Quantity { set; get; }
 

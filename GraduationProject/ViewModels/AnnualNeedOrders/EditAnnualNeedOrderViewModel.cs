@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GraduationProject.Data.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -24,7 +25,10 @@ namespace GraduationProject.ViewModels.AnnualNeedOrders
         public int ThirdSemQuantity { get; set; }
         public int FlowRate { get; set; }
         public string Description { get; set; }
+        public string Comment { get; set; }
         public int ApproxRate { get; set; }
+        public Order Order { get; set; }
+
         public int OrderId { get; set; }
     }
 }

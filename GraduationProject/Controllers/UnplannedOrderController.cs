@@ -82,14 +82,30 @@ namespace GraduationProject.Controllers.RP
             return View(annualneeds);
         }
 
+        //Get All Unplanned to Order where it is still not complete
+        [HttpGet]
         public IActionResult GetAllUnplanned()
         {
             int id = GetUnplannedOrderid();
             var unplannedorders = _context.UnPlannedOrder
                 .Include(i => i.Item)
-                .Where(x => x.OrderId == id)
+                .Where(x => x.OrderId == id )
+                .Where(o => o.Order.Type == false && o.Order.Complete == false)
                 .ToList();
-            return View();
+            return View(unplannedorders);
+        }
+
+        //Get All Unplanned to Order where it is complete &needs alteration
+        [HttpGet]
+        public IActionResult GetAllUnplannedAltered()
+        {
+            int id = GetUnplannedOrderid();
+            var unplannedorders = _context.UnPlannedOrder
+                .Include(i => i.Item)
+                .Where(x => x.OrderId == id)
+                .Where(o => o.Order.Type == false && o.Order.Complete == true)
+                .ToList();
+            return View(unplannedorders);
         }
 
         //public IActionResult GetAllUnplanned(int id)
@@ -103,6 +119,7 @@ namespace GraduationProject.Controllers.RP
         [HttpGet]
         public IActionResult Create()
         {
+            ViewData["OrderId"] = GetUnplannedOrderid();
             ViewData["Item"] = new SelectList(BindListforItem(), "Value", "Text");
             return View();
         }
@@ -117,7 +134,7 @@ namespace GraduationProject.Controllers.RP
             {
                 try
                 {
-                    var unplannedorder = new CreateUnplannedOrderViewModel()
+                    var unplannedorder = new UnPlannedOrder
                     {
                         UnPlannedOrderID = viewModel.UnPlannedOrderID,
                         ItemId = viewModel.ItemId,
@@ -157,8 +174,10 @@ namespace GraduationProject.Controllers.RP
                 Quantity = unplannedorder.Quantity,
                 Description = unplannedorder.Description,
                 Reason = unplannedorder.Reason,
+                Comment = unplannedorder.Comment,
                 OrderId = unplannedorder.OrderId,
             };
+            ViewData["OrderId"] = GetUnplannedOrderid();
             ViewData["Item"] = new SelectList(BindListforItem(), "Value", "Text");
             return View(editunplannedorderViewModel);
         }
@@ -180,6 +199,7 @@ namespace GraduationProject.Controllers.RP
                         Quantity = viewModel.Quantity,
                         Reason = viewModel.Reason,
                         Description = viewModel.Description,
+                        Comment = viewModel.Comment,
                         OrderId = viewModel.OrderId,
                     };
                     _context.Update(unplannedorder);
@@ -196,8 +216,7 @@ namespace GraduationProject.Controllers.RP
                         throw;
                     }
                 }
-                int idd = id;
-                return RedirectToAction();
+                return RedirectToAction("GetAllUnplanned");
             }
             ModelState.AddModelError("", "تأكد من صحة الحقول");
             return View(viewModel);

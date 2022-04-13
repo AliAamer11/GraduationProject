@@ -1,0 +1,57 @@
+﻿@model IEnumerable<GraduationProject.Data.Models.AnnualOrder>;
+
+@{
+    ViewData["Title"] = "طلبات المواد في الإحتياج السنوي المراد تعديلها ";
+}
+<link href="~/css/button.css" rel="stylesheet" />
+<h1>طلبات المواد في الإحتياج السنوي</h1>
+
+<div>
+    <a style="left:80px" title="تأكيد الإحنياج السنوي" class="create-icon-btn" asp-action="CheckCompleteOrder" asp-controller="RPOrder"><i class="fa fa-check"></i></a>
+</div>
+
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>اسم المادة</th>
+            <th>كمية الفصل الأول</th>
+            <th>كمية الفصل الثاني</th>
+            <th>كمية الفصل الثالث</th>
+            <th>معدل التدفق</th>
+            <th>التدفق التقريبي</th>
+            <th>ملاحظات</th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var ano in Model)
+        {
+        <tr>
+            <td>@Html.DisplayFor(modelItem => ano.Item.Name)</td>
+            <td>@ano.FirstSemQuantity</td>
+            <td>@ano.SecondSemQuantity</td>
+            <td>@ano.ThirdSemQuantity</td>
+            <td>@ano.FlowRate</td>
+            <td>@ano.ApproxRate</td>
+            <td>@ano.Comment</td>
+
+            <td>
+                <div class="d-inline-flex">
+                    <a asp-action="EditAnnualNeedOrder" title="تعديل" asp-route-id="@ano.AnnualOrderID" class="edit-icon-btn ml-1"><i class='far fa-edit'></i></a>
+                    <form method="post" asp-action="DeleteAnnualNeedOrder" asp-controller="AnnualOrder" asp-route-id="@ano.AnnualOrderID">
+                        <button style="width:60px" onclick="return confirm('هل تود بالفعل حذف القياس @ano.Item.Name ؟ ')" type="submit" class="delete-icon-btn">
+                            <i class='far fa-trash-alt'></i>
+                        </button>
+                    </form>
+                </div>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+
+

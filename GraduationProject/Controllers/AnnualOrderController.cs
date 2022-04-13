@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+
+
 namespace GraduationProject.Controllers
 {
     public class AnnualOrderController : Controller
@@ -23,7 +25,27 @@ namespace GraduationProject.Controllers
             this.userManager = userManager;
             _context = context;
         }
+        public string CheckOrderState(int id)
+        {
+            var model = _context.Orders.Find(id);
 
+            //still in editing 
+            if (model.Complete == false && model.State == "0")
+                return "incomplete_rp_side";
+
+            //being reviewed
+            else if (model.Complete == true && model.State == "1")
+                return "complete_vp_side";
+
+            //being re-altered according to comments
+            else if (model.Complete == true && model.State == "0") // then i set it to incomplete manually on user side
+                return "complete_rp_side";
+
+            //archive
+            else if (model.Complete == true && model.State == "2")
+                return "complete_sk_side";
+            return "error";
+        }
         public int GetAnnualNeedOrderid()
         {
             var userid = userManager.GetUserId(User);
@@ -61,24 +83,36 @@ namespace GraduationProject.Controllers
             return View(annualneeds);
         }
 
-        //Get All AnnualNeed
+        //Get All AnnualNeed to Order where it is still not complete
         [HttpGet]
         public IActionResult getAnnualNeedOrders()
         {
-
             int id = GetAnnualNeedOrderid();
-            if (id > 0)
-            {
+            //if (id > 0)
+            //{
                 var annualneedorders = _context.AnnualOrder.Include(o => o.Order)
                     .Include(i => i.Item)
                     .Where(x => x.OrderId == id)
-                    .Where(o => o.Order.Type == false)
+                    .Where(o => o.Order.Type == false && o.Order.Complete == false)
                     .ToList();
+            ViewData["State"] = CheckOrderState(id);
                 return View(annualneedorders);
-            }
-            else
-                ///either return the user to home page or let him view the annual need withoput option of alteration
-                return RedirectToAction("Home", "Order");
+            //else
+            //    ///either return the user to home page or let him view the annual need withoput option of alteration
+            //    return RedirectToAction("Home", "Order");
+        }
+
+        //Get All AnnualNeed to Order where it is still  complete & needs alteration
+        public IActionResult GetAnnualNeedAltered()
+        {
+            int id = GetAnnualNeedOrderid();
+            var annualneedorders = _context.AnnualOrder.Include(o => o.Order)
+                    .Include(i => i.Item)
+                    .Where(x => x.OrderId == id)
+                    .Where(x=> x.Comment!=null)
+                    .Where(o => o.Order.Type == false && o.Order.Complete == true)
+                    .ToList();
+            return View(annualneedorders);
         }
 
         [HttpGet]
@@ -130,7 +164,7 @@ namespace GraduationProject.Controllers
             {
                 return NotFound();
             }
-            var annualorder = await _context.AnnualOrder.FindAsync(id);
+            var annualorder = await _context.AnnualOrder.Include(o=>o.Order).Where(i=>i.AnnualOrderID==id).FirstOrDefaultAsync();
             if (annualorder == null)
             {
                 return NotFound();
@@ -143,9 +177,12 @@ namespace GraduationProject.Controllers
                 SecondSemQuantity = annualorder.SecondSemQuantity,
                 ThirdSemQuantity = annualorder.ThirdSemQuantity,
                 Description = annualorder.Description,
+                Comment = annualorder.Comment,
                 FlowRate = annualorder.FlowRate,
                 ApproxRate = annualorder.ApproxRate,
                 OrderId = annualorder.OrderId,
+                Order = annualorder.Order,
+
             };
             ViewData["Item"] = new SelectList(BindListforItem(), "Value", "Text");
             return View(editannualorderViewModel);
@@ -161,20 +198,27 @@ namespace GraduationProject.Controllers
             {
                 try
                 {
-                    var annualorder = new AnnualOrder()
-                    {
-                        ItemId = viewModel.ItemId,
-                        AnnualOrderID = viewModel.AnnualOrderID,
-                        FirstSemQuantity = viewModel.FirstSemQuantity,
-                        SecondSemQuantity = viewModel.SecondSemQuantity,
-                        ThirdSemQuantity = viewModel.ThirdSemQuantity,
-                        Description = viewModel.Description,
-                        FlowRate = viewModel.FlowRate,
-                        ApproxRate = viewModel.ApproxRate,
-                        OrderId = viewModel.OrderId,
-                    };
+                    var annualorder = await _context.AnnualOrder.Include(o => o.Order).FirstOrDefaultAsync(i=>i.AnnualOrderID==viewModel.AnnualOrderID);
+
+                    annualorder.ItemId = viewModel.ItemId;
+                    annualorder.AnnualOrderID = viewModel.AnnualOrderID;
+                    annualorder.FirstSemQuantity = viewModel.FirstSemQuantity;
+                    annualorder.SecondSemQuantity = viewModel.SecondSemQuantity;
+                    annualorder.ThirdSemQuantity = viewModel.ThirdSemQuantity;
+                    annualorder.Description = viewModel.Description;
+                    annualorder.FlowRate = viewModel.FlowRate;
+                    annualorder.Comment = viewModel.Comment;
+                    annualorder.ApproxRate = viewModel.ApproxRate;
+                    annualorder.OrderId = viewModel.OrderId;
+                       
+
                     _context.Update(annualorder);
                     await _context.SaveChangesAsync();
+                    if (annualorder.Order.Complete == true)
+                    { return RedirectToAction("GetAnnualNeedAltered"); }
+                   
+                    return RedirectToAction(nameof(getAnnualNeedOrders));
+
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -187,7 +231,6 @@ namespace GraduationProject.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(getAnnualNeedOrders));
             }
             ModelState.AddModelError("", "تأكد من صحة الحقول");
             return View(viewModel);

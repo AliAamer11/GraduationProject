@@ -24,6 +24,8 @@ namespace GraduationProject.ViewModels.UnplannedOrders
 
         [Required(ErrorMessage = "هذا الحقل مطلوب")]
         public string Reason { get; set; }
+        public string Comment { get; set; }
+
         public int OrderId { get; set; }
     }
 }

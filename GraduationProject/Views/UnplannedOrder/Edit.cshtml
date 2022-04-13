@@ -9,6 +9,7 @@
         <form asp-action="Edit">
             <input type="hidden" asp-for="UnPlannedOrderID" />
             <input type="hidden" asp-for="OrderId" />
+            <input type="hidden" asp-for="Comment" />
 
             <div class="form-group">
                 <label class="control-label">اسم المادة</label>
@@ -20,7 +21,7 @@
                 <input asp-for="Quantity" class="form-control" />
                 <span asp-validation-for="Quantity" class="text-danger"></span>
             </div>
-         
+
             <div class="form-group">
                 <label class="control-label"> توصيف</label>
                 <input asp-for="Description" class="form-control" />
@@ -31,7 +32,7 @@
                 <input asp-for="Reason" class="form-control" />
                 <span asp-validation-for="Reason" class="text-danger"></span>
             </div>
-            
+
             <div class="form-group">
                 <input type="submit" value="تعديل" class="btn btn-primary" />
             </div>
