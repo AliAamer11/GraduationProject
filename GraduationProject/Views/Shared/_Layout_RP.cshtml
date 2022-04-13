@@ -127,8 +127,52 @@
             }
 
             <!--VicePres Operation-->
-            @if (User.IsInRole("VicePres"))
+            @if (User.IsInRole("VicePris"))
             {
+                <li>
+                    <a href="~/VPOrder/Index">
+                        <i class='bx bx-spreadsheet'></i>
+                        <span class="links_name">الطلبات  </span>
+                    </a>
+                    <span class="tooltip">الطلبات  </span>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class='bx bxs-store'></i>
+                        <span class="links_name">المستودع </span>
+                    </a>
+                    <span class="tooltip">المستودع</span>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class='bx bx-bar-chart'></i>
+                        <span class="links_name">التوزيع</span>
+                    </a>
+                    <span class="tooltip">التوزيع </span>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class='bx bx-archive'></i>
+                        <span class="links_name"> الأرشيف</span>
+                    </a>
+                    <span class="tooltip"> الأرشيف</span>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class='bx bx-notification'></i>
+                        <span class="links_name">الإشعارات</span>
+                    </a>
+                    <span class="tooltip">الإشعارات</span>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class='bx bxs-report'></i>
+                        <span class="links_name">التقارير</span>
+                    </a>
+                    <span class="tooltip">التقارير</span>
+                </li>
+
+            }
 
             }
             <li class="profile">

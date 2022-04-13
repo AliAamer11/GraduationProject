@@ -53,7 +53,7 @@ namespace GraduationProject.Controllers
                     }
                     else if (user.Type == "VicePris")
                     {
-                        return RedirectToAction("Index", "AnnualOrder"); //o Be fixed
+                        return RedirectToAction("Index", "VPOrder"); 
                     }
                     else if (user.Type == "StoreKeep")
                     {

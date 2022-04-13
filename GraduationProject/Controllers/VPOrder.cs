@@ -25,13 +25,14 @@ namespace GraduationProject.Controllers.VPControllers
 
         public async Task<IActionResult> Unplanned()
         {
-            var objlist = await _context.Orders.Where(o => o.Type == true & o.State == "0").ToListAsync();
+            var objlist = await _context.Orders.Where(o => o.Complete == true & o.State == "1" & o.Type == true ).ToListAsync();
+          
             return View(objlist);
         }
 
         public async Task<IActionResult> Annual()
         {
-            var objlist = await _context.Orders.Where(o => o.Type == false & o.State == "0").ToListAsync();
+            var objlist = await _context.Orders.Where(o => o.Type == false & o.State == "1" & o.Complete==true).ToListAsync();
             return View(objlist);
         }
 
