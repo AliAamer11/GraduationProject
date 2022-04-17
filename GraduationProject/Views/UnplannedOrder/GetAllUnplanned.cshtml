@@ -12,8 +12,8 @@
 </div>
 
 <div>
-        <a style="left:80px" title="تأكيد الإحنياج السنوي" class="create-icon-btn" asp-action="CheckCompleteOrder" asp-controller="RPOrder"><i class="fa fa-check"></i></a>
-    </div>
+    <a style="left:80px" title="تأكيد الطلب غير المخطط" class="create-icon-btn" asp-action="CheckCompleteOrder" asp-controller="RPOrder" asp-route-id="@ViewBag.id"><i class="fa fa-check"></i></a>
+</div>
 
 
 <table class="table">
@@ -28,7 +28,7 @@
     </thead>
 
     <tbody>
-        @if (Model.Count()>0 )
+        @if (Model.Count() > 0)
         {
             @foreach (var upo in Model)
             {
@@ -52,8 +52,8 @@
         }
         else
         {
-            <tr>no</tr>
-}
+            <tr>لا يوجد طلبات.</tr>
+ }
 
 
     </tbody>

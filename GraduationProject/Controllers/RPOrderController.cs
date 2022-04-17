@@ -7,9 +7,11 @@ using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Identity;
 using GraduationProject.Data.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GraduationProject.Controllers
 {
+    [Authorize(Roles = "Requester")]
     public class RPOrderController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -110,20 +112,24 @@ namespace GraduationProject.Controllers
         }
         public IActionResult CheckCompleteOrder(int id)
         {
-            var order = _context.Orders.Find(id);
+            //var order = _context.Orders.Find(id);
+            var order = _context.Orders.Where(o => o.OrderID == id).FirstOrDefault();
             if (order != null)
             {
                 try
                 {
                     order.Complete = true;    //the order has been complte from RP side
                     order.State = "1";        //the order is now on the VP side
-                    return RedirectToAction("Index", "Archive");
+                    _context.SaveChanges();
+                    if(order.Type == false)
+                        return RedirectToAction("GetAnnualNeedsDisplay", "AnnualOrder");
+                    return RedirectToAction("GetUnplannedNeedsDisplay", "UnplannedOrder");
                 }
                 catch
                 { return NotFound(); }
             }
             ModelState.AddModelError("", "الطلب غير موجود");
-            return View();
+            return RedirectToAction("Home", "RPOrder");
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using GraduationProject.Data;
 using GraduationProject.Data.Models;
 using GraduationProject.ViewModels.AnnualNeedOrders;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -14,6 +15,8 @@ using System.Threading.Tasks;
 
 namespace GraduationProject.Controllers
 {
+    [Authorize(Roles = "Requester")]
+
     public class AnnualOrderController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -78,8 +81,13 @@ namespace GraduationProject.Controllers
         }
         public IActionResult Index()
         {
+            var userid = userManager.GetUserId(User);
+
             var annualneeds = _context.Orders
-                .Where(x => x.Type == false).ToList();
+                .Where(x => x.Type == false)   //// annual order type
+                .Where(o => o.UserId == userid)    /// getting orders to this current user
+                .Where(o=> o.Complete==true && o.State =="2")  ///getting orders that are complete on StoreKeeper side
+                .ToList();
             return View(annualneeds);
         }
 
@@ -87,6 +95,8 @@ namespace GraduationProject.Controllers
         [HttpGet]
         public IActionResult getAnnualNeedOrders()
         {
+            var userid = userManager.GetUserId(User);
+
             int id = GetAnnualNeedOrderid();
             //if (id > 0)
             //{
@@ -94,9 +104,13 @@ namespace GraduationProject.Controllers
                     .Include(i => i.Item)
                     .Where(x => x.OrderId == id)
                     .Where(o => o.Order.Type == false && o.Order.Complete == false)
+                    .Where(o => o.Order.UserId == userid)
                     .ToList();
             ViewData["State"] = CheckOrderState(id);
-                return View(annualneedorders);
+            ViewData["id"] = id;
+
+            //ViewData["id"] = annualneedorders.FirstOrDefault().AnnualOrderID;
+            return View(annualneedorders);
             //else
             //    ///either return the user to home page or let him view the annual need withoput option of alteration
             //    return RedirectToAction("Home", "Order");
@@ -105,19 +119,39 @@ namespace GraduationProject.Controllers
         //Get All AnnualNeed to Order where it is still  complete & needs alteration
         public IActionResult GetAnnualNeedAltered()
         {
+            var userid = userManager.GetUserId(User);
             int id = GetAnnualNeedOrderid();
+
             var annualneedorders = _context.AnnualOrder.Include(o => o.Order)
                     .Include(i => i.Item)
                     .Where(x => x.OrderId == id)
                     .Where(x=> x.Comment!=null)
                     .Where(o => o.Order.Type == false && o.Order.Complete == true)
+                    .Where(o => o.Order.UserId == userid)
                     .ToList();
+            ViewData["id"] = id;
+            return View(annualneedorders);
+        }
+
+        public IActionResult GetAnnualNeedsDisplay()
+        {
+            var userid = userManager.GetUserId(User);
+            int id = GetAnnualNeedOrderid();
+
+            var annualneedorders = _context.AnnualOrder.Include(o => o.Order)
+                    .Include(i => i.Item)
+                    .Where(x => x.OrderId == id)
+                    .Where(o => o.Order.Type == false && o.Order.Complete == true && o.Order.State != "0")
+                    .Where(o => o.Order.UserId == userid)
+                    .ToList();
+            ViewData["id"] = id;
             return View(annualneedorders);
         }
 
         [HttpGet]
         public IActionResult CreateAnnualNeedOrder()
         {
+            ViewData["OrderId"] = GetAnnualNeedOrderid();
             ViewData["Item"] = new SelectList(BindListforItem(), "Value", "Text");
             return View();
         }

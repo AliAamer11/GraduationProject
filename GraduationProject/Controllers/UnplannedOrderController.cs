@@ -1,6 +1,7 @@
 ﻿using GraduationProject.Data;
 using GraduationProject.Data.Models;
 using GraduationProject.ViewModels.UnplannedOrders;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace GraduationProject.Controllers.RP
 {
+    [Authorize(Roles = "Requester")]
     public class UnplannedOrderController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -27,13 +29,13 @@ namespace GraduationProject.Controllers.RP
         public int GetUnplannedOrderid()
         {
             var userid = userManager.GetUserId(User);
-             
-            
-                var model = _context.Orders
-                .OrderBy(o => o.CreatedAt)
-                .Where(x=> x.Type == true && x.UserId == userid
-               ).LastOrDefault();
-           
+
+
+            var model = _context.Orders
+            .OrderBy(o => o.CreatedAt)
+            .Where(x => x.Type == true && x.UserId == userid
+           ).LastOrDefault();
+
             if (model == default) // no unplanned order 
             {
                 var order = new Order
@@ -77,21 +79,29 @@ namespace GraduationProject.Controllers.RP
 
         public IActionResult Index()
         {
-            var annualneeds = _context.Orders
-                .Where(x => x.Type == true).ToList();
-            return View(annualneeds);
+            var userid = userManager.GetUserId(User);
+
+            var unplannedorders = _context.Orders
+                .Where(x => x.Type == true)   //// unplanned order type
+                .Where(o => o.UserId == userid)    /// getting orders to this current user
+                .Where(o => o.Complete == true && o.State == "2")  ///getting orders that are complete on StoreKeeper side
+                .ToList();
+            return View(unplannedorders);
         }
 
         //Get All Unplanned to Order where it is still not complete
         [HttpGet]
         public IActionResult GetAllUnplanned()
         {
+            var userid = userManager.GetUserId(User);
             int id = GetUnplannedOrderid();
             var unplannedorders = _context.UnPlannedOrder
                 .Include(i => i.Item)
-                .Where(x => x.OrderId == id )
-                .Where(o => o.Order.Type == false && o.Order.Complete == false)
+                .Where(x => x.OrderId == id)
+                .Where(o => o.Order.Type == true && o.Order.Complete == false)
+                .Where(o => o.Order.UserId == userid)
                 .ToList();
+            ViewData["id"] = id;
             return View(unplannedorders);
         }
 
@@ -99,22 +109,34 @@ namespace GraduationProject.Controllers.RP
         [HttpGet]
         public IActionResult GetAllUnplannedAltered()
         {
+            var userid = userManager.GetUserId(User);
             int id = GetUnplannedOrderid();
             var unplannedorders = _context.UnPlannedOrder
                 .Include(i => i.Item)
                 .Where(x => x.OrderId == id)
-                .Where(o => o.Order.Type == false && o.Order.Complete == true)
+                .Where(x => x.Comment != null)
+                .Where(o => o.Order.Type == true && o.Order.Complete == true)
+                .Where(o => o.Order.UserId == userid)
                 .ToList();
+            ViewData["id"] = id;
             return View(unplannedorders);
         }
 
-        //public IActionResult GetAllUnplanned(int id)
-        //{
-        //    var unplannedorders = _context.UnPlannedOrder
-        //        .Where(x => x.OrderId == id)
-        //        .ToList();
-        //    return View();
-        //}
+        public IActionResult GetUnplannedNeedsDisplay()
+        {
+            var userid = userManager.GetUserId(User);
+            int id = GetUnplannedOrderid();
+
+            var unplannedorders = _context.UnPlannedOrder.Include(o => o.Order)
+                    .Include(i => i.Item)
+                    .Where(x => x.OrderId == id)
+                    .Where(o => o.Order.Type == true && o.Order.Complete == true && o.Order.State != "0")
+                    .Where(o => o.Order.UserId == userid)
+                    .ToList();
+            ViewData["id"] = id;
+            return View(unplannedorders);
+        }
+
 
         [HttpGet]
         public IActionResult Create()
@@ -162,7 +184,9 @@ namespace GraduationProject.Controllers.RP
             {
                 return NotFound();
             }
-            var unplannedorder = await _context.UnPlannedOrder.FindAsync(id);
+            //var unplannedorder = await _context.UnPlannedOrder.FindAsync(id);
+            var unplannedorder = await _context.UnPlannedOrder.Include(o => o.Order).Where(i => i.UnPlannedOrderID == id).FirstOrDefaultAsync();
+
             if (unplannedorder == null)
             {
                 return NotFound();
@@ -176,6 +200,7 @@ namespace GraduationProject.Controllers.RP
                 Reason = unplannedorder.Reason,
                 Comment = unplannedorder.Comment,
                 OrderId = unplannedorder.OrderId,
+                Order = unplannedorder.Order,
             };
             ViewData["OrderId"] = GetUnplannedOrderid();
             ViewData["Item"] = new SelectList(BindListforItem(), "Value", "Text");
@@ -192,18 +217,35 @@ namespace GraduationProject.Controllers.RP
             {
                 try
                 {
-                    var unplannedorder = new UnPlannedOrder()
-                    {
-                        ItemId = viewModel.ItemId,
-                        UnPlannedOrderID = viewModel.UnPlannedOrderID,
-                        Quantity = viewModel.Quantity,
-                        Reason = viewModel.Reason,
-                        Description = viewModel.Description,
-                        Comment = viewModel.Comment,
-                        OrderId = viewModel.OrderId,
-                    };
+                    var unplannedorder = await _context.UnPlannedOrder.Include(o => o.Order)
+                        .FirstOrDefaultAsync(i => i.UnPlannedOrderID == viewModel.UnPlannedOrderID);
+
+                    unplannedorder.ItemId = viewModel.ItemId;
+                    unplannedorder.UnPlannedOrderID = viewModel.UnPlannedOrderID;
+                    unplannedorder.Quantity = viewModel.Quantity;
+                    unplannedorder.Description = viewModel.Description;
+                    unplannedorder.Reason = viewModel.Reason;
+                    unplannedorder.OrderId = viewModel.OrderId;
+                    unplannedorder.Comment = viewModel.Comment;
+
+
+                    //var unplannedorder = new UnPlannedOrder()
+                    //{
+                    //    ItemId = viewModel.ItemId,
+                    //    UnPlannedOrderID = viewModel.UnPlannedOrderID,
+                    //    Quantity = viewModel.Quantity,
+                    //    Reason = viewModel.Reason,
+                    //    Description = viewModel.Description,
+                    //    Comment = viewModel.Comment,
+                    //    OrderId = viewModel.OrderId,
+                    //};
                     _context.Update(unplannedorder);
                     await _context.SaveChangesAsync();
+
+                    if (unplannedorder.Order.Complete == true)
+                    { return RedirectToAction("GetAllUnplannedAltered"); }
+
+                    return RedirectToAction(nameof(GetAllUnplanned));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -216,7 +258,6 @@ namespace GraduationProject.Controllers.RP
                         throw;
                     }
                 }
-                return RedirectToAction("GetAllUnplanned");
             }
             ModelState.AddModelError("", "تأكد من صحة الحقول");
             return View(viewModel);

@@ -1,0 +1,46 @@
+﻿@model IEnumerable<GraduationProject.Data.Models.UnPlannedOrder>;
+
+@{
+    ViewData["Title"] = "طلبات المواد في الطلب غير المخطط";
+}
+
+<link href="~/css/button.css" rel="stylesheet" />
+<h1>طلبات المواد في الطلب غير المخطط</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>اسم المادة</th>
+            <th>كمية المادة</th>
+            <th>توصيف</th>
+            <th>سبب الطلب</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @if (Model.Count() > 0)
+        {
+            @foreach (var upo in Model)
+            {
+                <tr>
+                    <td>@upo.Item.Name</td>
+                    <td>@upo.Quantity</td>
+                    <td>@upo.Description</td>
+                    <td>@upo.Reason</td>
+                    
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>لا يوجد طلبات.</tr>
+        }
+
+
+    </tbody>
+
+</table>
+
+
+
