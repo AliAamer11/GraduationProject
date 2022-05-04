@@ -28,7 +28,8 @@ namespace GraduationProject.Controllers
             this.userManager = userManager;
             _context = context;
         }
-        public string CheckOrderState(int id)
+
+        internal string CheckOrderState(int id)
         {
             var model = _context.Orders.Find(id);
 
@@ -115,6 +116,8 @@ namespace GraduationProject.Controllers
             //    ///either return the user to home page or let him view the annual need withoput option of alteration
             //    return RedirectToAction("Home", "Order");
         }
+
+
 
         //Get All AnnualNeed to Order where it is still  complete & needs alteration
         public IActionResult GetAnnualNeedAltered()

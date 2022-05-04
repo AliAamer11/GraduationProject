@@ -1,11 +1,28 @@
-﻿<div class="container">
-        <a asp-action="AlLAnnualOrders">
-            جميع الاحتياجات السنوية
-        </a>
+﻿<link href="~/css/Cards.css" rel="stylesheet" />
 
 
-    <button asp-action="AllUnplannedOrders">
-        جميع الطلبات غير المخططة
-    </button>
+<div class="container">
+    <div class="card">
+        <div class="box">
+            <div class="content">
+                <h2>@ViewBag.AnnualCount</h2>
+                <h3>طلبات الإحتياجات السنوية</h3>
+                <p>جميع طلبات الإحتياجات السنوية المقدمة </p>
+                <a asp-action="AlLAnnualOrders">استعراض</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="box">
+            <div class="content">
+                <h2>@ViewBag.UnplannedCount</h2>
+                <h3> الطلبات غير المخططة</h3>
+                <p>جميع الطلبات غير المخططة المفدمة  </p>
+                <a asp-action="AllUnplannedOrders">استعراض</a>
+            </div>
+        </div>
+    </div>
+
+
 </div>
-

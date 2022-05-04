@@ -1,4 +1,4 @@
-﻿@model List<GraduationProject.Data.Models.AnnualOrder>;
+﻿@model List<GraduationProject.ViewModels.AnnualNeedOrders.AnnualNeedOrderViewModel>;
 
 @{
     ViewData["Title"] = "طلبات المواد في الإحتياج السنوي";
@@ -7,6 +7,7 @@
 <link href="~/css/tableformanagment.css" rel="stylesheet" />
 
 <h1 class="tableheader">طلبات المواد في الإحتياج السنوي</h1>
+<a>إعادة استخدام المواد في هذا الطلب</a>
 <div class="table-responsive">
     <table class="styled-table">
         <thead >
@@ -20,23 +21,27 @@
                 <th>التوصيف</th>
                 <th>معدل التدفق</th>
                 <th>التدفق التقريبي</th>
+                <th> </th>
             </tr>
         </thead>
         <tbody>
 
-            @foreach (var ano in Model)
+            @for (int i = 0; i < Model.Count; i++)
             {
-            <tr>
-                <td>@ano.AnnualOrderID</td>
-                <td>@ano.Item.Name</td>
-                <td>@ano.FirstSemQuantity</td>
-                <td>@ano.SecondSemQuantity</td>
-                <td>@ano.ThirdSemQuantity</td>
-                <td>@ano.Description</td>
-                <td>@ano.FlowRate</td>
-                <td>@ano.ApproxRate</td>
+                <tr>
+                    <td>@Model[i].AnnualOrderID</td>
+                    <td>@Model[i].Item.Name</td>
+                    <td>@Model[i].FirstSemQuantity</td>
+                    <td>@Model[i].SecondSemQuantity</td>
+                    <td>@Model[i].ThirdSemQuantity</td>
+                    <td>@Model[i].Description</td>
+                    <td>@Model[i].FlowRate</td>
+                    <td>@Model[i].ApproxRate</td>
+                    <td>
+                        <input asp-for="@Model[i].IsSelected" class="form-check-input" style="margin-top: 13px;" />
+                    </td>
 
-            </tr>
+                </tr>
             }
 
         </tbody>

@@ -49,7 +49,7 @@ namespace GraduationProject.Controllers
                     }
                     else if (user.Type == "Requester")
                     {
-                        return RedirectToAction("Index", "AnnualOrder");
+                        return RedirectToAction("Home", "RPOrder");
                     }
                     else if (user.Type == "VicePris")
                     {
@@ -86,7 +86,7 @@ namespace GraduationProject.Controllers
                             }
                             else if (user.Type == "Requester")
                             {
-                                return RedirectToAction("Index", "AnnualOrder");
+                                return RedirectToAction("Home", "RPOrder");
                             }
                             else if (user.Type == "VicePris")
                             {
