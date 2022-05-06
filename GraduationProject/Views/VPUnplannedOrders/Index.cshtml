@@ -1,64 +1,55 @@
-﻿@model IEnumerable<GraduationProject.Data.Models.UnPlannedOrder>
+﻿@model List<GraduationProject.ViewModels.UnplannedCommentsViewModel>
 @{
-    ViewData["Title"] = "الطلبات الغير مخططه";
+    var OrderId = ViewBag.OrderId;
 }
 <link href="~/css/button.css" rel="stylesheet" />
 <link href="~/css/tableformanagment.css" rel="stylesheet" />
-<h1 class="tableheader">تفاصيل الطلبات غير مخططة  </h1>
-@if (Model.Count() > 0)//مشكلة انو بعد ما يبعت عم يضل الاوردرز مو جودين =)
-{
+<h1 class="tableheader">تفاصيل طلب الإحتياج غير المخطط</h1>
 
-    <form method="post" asp-action="Index" asp-route-id=@Model.First().OrderId>
-        <div class="table-responsive">
-            <table class="styled-table">
-                <thead>
+
+<form method="post" asp-action="Index" asp-route-OrderId="@OrderId">
+    <div class="table-responsive">
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <td> المادة </td>
+                    <td> المواصفات </td>
+                    <td> الكمية</td>
+                    <td> السبب </td>
+                    <td>  التعليقات </td>
+                    <td></td>
+
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.Count; i++)
+                {
                     <tr>
-                        <td> المواصفات </td>
-                        <td> الكمية</td>
-                        <td> السبب </td>
-                        <td>  التعليقات </td>
-                        <td></td>
-
+                        <td>@Model[i].ItemName</td>
+                        <td>@Model[i].Description</td>
+                        <td>@Model[i].Quantity</td>
+                        <td>@Model[i].Reason</td>
+                        <td><input asp-for="@Model[i].Comment" /></td>
+                        <td><input hidden asp-for="@Model[i].UnplannedOrderID" /></td>
                     </tr>
-                </thead>
-                <tbody>
-                    @foreach (var obj in Model)
-                    {
-                        <tr>
-                            <td>@obj.Description</td>
-                            <td>@obj.Quantity</td>
-                            <td>@obj.Reason</td>
-                            <td><input asp-for="@obj.Comment" value="@obj.Comment" name="comments" /></td>
-                            <span asp-validation-for="@obj.Comment" class="text-danger"></span>
+                }
+            </tbody>
+        </table>
 
-                            <td><input type="hidden" value="@obj.OrderId" name="Orderid" /></td>
-
-                        </tr>
-                    }
-                </tbody>
-            </table>
-
-        </div>
-        <br />
-        <button class="btn btn-outline-danger" type="submit"> إضافة التعليقات وإعادة إرسال الطلب </button>
-
-    </form>
-
+    </div>
     <br />
-    <form method="post" asp-action="ApproveOrder" asp-route-id=@Model.First().OrderId>
-        <button class="btn btn-outline-success" type="submit">الموافقة </button>
-    </form>
-    <br />
+    <button class="edit-icon-btn" type="submit"> إضافة التعليقات وإعادة إرسال الطلب </button>
 
-    <button class="btn btn-outline-light" type="submit"><a asp-controller="VPOrder" asp-action="Unplanned">العودة إلى الطلبات</a> </button>
+</form>
 
-}
+<br />
+<form method="post" asp-action="ApproveOrder" asp-route-id=@OrderId>
+    <button class="create-icon-btn" type="submit">الموافقة </button>
+</form>
+<br />
 
+<button class="edit-icon-btn" type="submit"><a asp-controller="VPOrder" asp-action="Unplanned">العودة إلى الطلبات</a> </button>
 
-else
-{ <h6>لا يوجد طلبات</h6>}
-
-<h1>@ViewBag.comment</h1>
 
 
 
