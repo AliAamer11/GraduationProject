@@ -23,7 +23,7 @@
 
             <li>
                 <i class='bx bx-search'></i>
-                <input type="text" placeholder="ابحث هنا...">
+                <input type="text" id="searchTable" placeholder="ابحث هنا..." onkeyup="searchTable()">
                 <span class="tooltip">ابحث</span>
             </li>
             <!--to check if user was sign in or not to show to him the loging or logout-->
@@ -71,7 +71,7 @@
                     <span class="tooltip">سندات الإدخال</span>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="~/OutPutDocument/Orders">
                         <i class='bx bx-cart-alt'></i>
                         <span class="links_name">الطلبات</span>
                     </a>
@@ -117,6 +117,9 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/searchTable.js"></script>
+    <script src="~/js/sortTable.js"></script>
+    @await Component.InvokeAsync("Notyf")
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

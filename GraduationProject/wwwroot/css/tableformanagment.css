@@ -60,7 +60,7 @@ th {
                 background-color: var(--sub-blue);
                 font-weight: bold;
                 color: var(--white);
-                border: 2px solid var(--main-orange);
+                /*border: 2px solid var(--main-orange);*/
             }
 
         .styled-table tbody tr:nth-of-type(odd) {
@@ -72,7 +72,7 @@ th {
                 background-color: var(--main-orange);
                 font-weight: bold;
                 color: var(--white);
-                border:2px solid var(--main-blue);
+               /* border:2px solid var(--main-blue);*/
 
             }
 

@@ -1,0 +1,64 @@
+﻿@model List<GraduationProject.Data.Models.OutPutDocumentDetails>
+@{
+    ViewData["Title"] = "تفاصيل السند";
+}
+@{
+    string commissaryName = "";
+    string createdAt = "";
+    foreach (var item in Model)
+    {
+        commissaryName = item.CommissaryName;
+        createdAt = item.CreatedAt.Date.ToString("dd/M/yyyy");
+    }
+}
+<link href="~/css/button.css" rel="stylesheet" />
+<link href="~/css/DetailsInputDocumentDetails.css" rel="stylesheet" />
+<h1 class="tableheader"> سند إخراج المواد في تاريخ @createdAt</h1>
+<h5 class="tableheader-left ml-5">
+    اسم المندوب : <span>@commissaryName</span>
+</h5>
+<div>
+    <div class="table-responsive">
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th style="padding-left:80px">
+                        رمز المادة
+                    </th>
+                    <th>
+                        اسم المادة
+                    </th>
+                    <th>
+                        الكمية
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    string statuscode = item.Item.BarCode.Substring(0, 1);
+                    string maincategory = item.Item.BarCode.Substring(1, 2);
+                    string subcategory = item.Item.BarCode.Substring(3, 3);
+                    string serial = item.Item.BarCode.Substring(6, 4);
+                    string barcode = serial + " " + subcategory + " " + maincategory + " " + statuscode;
+                    <tr>
+                        <td>
+                            @barcode
+                        </td>
+                        <td>
+                            @item.Item.Name
+                        </td>
+                        <td>
+                            @item.Quantity
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

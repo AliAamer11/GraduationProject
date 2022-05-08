@@ -1,0 +1,34 @@
+﻿@model List<GraduationProject.Data.Models.Order>
+
+@{
+    ViewData["Title"] = "الطلبات غير المخططة";
+}
+
+<link href="~/css/button.css" rel="stylesheet" />
+<link href="~/css/tableformanagment.css" rel="stylesheet" />
+<h1 class="tableheader">الطلبات غير المخططة</h1>
+<div class="table-responsive">
+    <table class="styled-table">
+        <thead>
+            <tr>
+                <th>تفاصيل الطلب</th>
+                <th>اسم الجهة الطالبة</th>
+                <th>تاريخ الإنشاء</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <a asp-action="UnPlannedOrderDetails" title="تعديل" asp-route-orderId="@item.OrderID" class="edit-icon-btn ml-1">
+                            <i class='far fa-file'></i>
+                        </a>
+                    </td>
+                    <td>@item.User.RequstingParty</td>
+                    <td>@item.CreatedAt.Date.ToString("dd/M/yyyy")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
