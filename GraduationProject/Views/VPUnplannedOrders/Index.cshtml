@@ -1,0 +1,57 @@
+﻿@model List<GraduationProject.ViewModels.UnplannedCommentsViewModel>
+@{
+    var OrderId = ViewBag.OrderId;
+}
+<link href="~/css/button.css" rel="stylesheet" />
+<link href="~/css/tableformanagment.css" rel="stylesheet" />
+<h1 class="tableheader">تفاصيل طلب الإحتياج غير المخطط</h1>
+
+
+<form method="post" asp-action="Index" asp-route-OrderId="@OrderId">
+    <div class="table-responsive">
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <td> المادة </td>
+                    <td> المواصفات </td>
+                    <td> الكمية</td>
+                    <td> السبب </td>
+                    <td>  التعليقات </td>
+                    <td></td>
+
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.Count; i++)
+                {
+                    <tr>
+                        <td>@Model[i].ItemName</td>
+                        <td>@Model[i].Description</td>
+                        <td>@Model[i].Quantity</td>
+                        <td>@Model[i].Reason</td>
+                        <td><input asp-for="@Model[i].Comment" /></td>
+                        <td><input hidden asp-for="@Model[i].UnplannedOrderID" /></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+    <br />
+    <button class="edit-icon-btn" type="submit"> إضافة التعليقات وإعادة إرسال الطلب </button>
+
+</form>
+
+<br />
+<form method="post" asp-action="ApproveOrder" asp-route-id=@OrderId>
+    <button class="create-icon-btn" type="submit">الموافقة </button>
+</form>
+<br />
+
+<button class="edit-icon-btn" type="submit"><a asp-controller="VPOrder" asp-action="Unplanned">العودة إلى الطلبات</a> </button>
+
+
+
+
+
+

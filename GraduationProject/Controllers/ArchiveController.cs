@@ -1,5 +1,6 @@
 ﻿using GraduationProject.Data;
 using GraduationProject.Data.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ using System.Linq;
 
 namespace GraduationProject.Controllers
 {
+    [Authorize(Roles = "Requester")]
     public class ArchiveController : Controller
     {
         private readonly UserManager<ApplicationUser> userManager;
@@ -53,8 +55,8 @@ namespace GraduationProject.Controllers
             var annualneedorders = _context.AnnualOrder.Include(o => o.Order)
                 .Include(i => i.Item)
                 .Where(x => x.OrderId == id)
-                //.Where(o=>o.Order.Complete == true && o.Order.State =="2")
-                .Where(o => o.Order.UserId == "1")
+                .Where(o=>o.Order.Complete == true && o.Order.State =="2")
+                .Where(o => o.Order.UserId == userid)
                 .ToList();
             return View(annualneedorders);
         }

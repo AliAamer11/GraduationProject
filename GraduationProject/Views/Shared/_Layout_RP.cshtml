@@ -81,12 +81,99 @@
             <!--Requester Operation-->
             @if (User.IsInRole("Requester"))
             {
+                <li>
+                    <a href="~/RPOrder/Home">
+                        <i class='bx bxs-dashboard'></i>
+                        <span class="links_name">الرئيسية</span>
+                    </a>
+                    <span class="tooltip">الرئيسية</span>
+                </li>
+                <li>
+                    <a href="~/AnnualOrder/Index">
+                        <i class='bx bx-spreadsheet'></i>
+                        <span class="links_name">الإحتياجات السنوية</span>
+                    </a>
+                    <span class="tooltip">الإحتياجات السنوية</span>
+                </li>
+                <li>
+                    <a href="~/UnplannedOrder/Index">
+                        <i class='bx bx-spreadsheet'></i>
+                        <span class="links_name">الطلبات غير المخططة</span>
+                    </a>
+                    <span class="tooltip">الطلبات غير المخططة</span>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class='bx bx-paper-plane'></i>
+                        <span class="links_name">الطلبات المراد تعديلها</span>
+                    </a>
+                    <span class="tooltip">الطلبات المراد تعديلها</span>
+                </li>
+                <li>
+                    <a href="~/Archive/Index">
+                        <i class='bx bx-archive'></i>
+                        <span class="links_name">الأرشيف</span>
+                    </a>
+                    <span class="tooltip">الأرشيف</span>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class='bx bx-notification'></i>
+                        <span class="links_name">الإشعارات</span>
+                    </a>
+                    <span class="tooltip">الإشعارات</span>
+                </li>
 
             }
 
             <!--VicePres Operation-->
-            @if (User.IsInRole("VicePres"))
+            @if (User.IsInRole("VicePris"))
             {
+
+                <li>
+                    <a href="~/VPOrder/Index">
+                        <i class='bx bx-spreadsheet'></i>
+                        <span class="links_name">طلبات الإحتياجات  </span>
+                    </a>
+                    <span class="tooltip">طلبات الإحتياجات  </span>
+                </li>
+                <li>
+                    <a href="~/VPOrder/ManualDistributionIndex">
+                        <i class='bx bx-bar-chart'></i>
+                        <span class="links_name">التوزيع</span>
+                    </a>
+                    <span class="tooltip">التوزيع </span>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class='bx bx-archive'></i>
+                        <span class="links_name"> الأرشيف</span>
+                    </a>
+                    <span class="tooltip"> الأرشيف</span>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class='bx bxs-store'></i>
+                        <span class="links_name">المستودع </span>
+                    </a>
+                    <span class="tooltip">المستودع</span>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class='bx bxs-report'></i>
+                        <span class="links_name">التقارير</span>
+                    </a>
+                    <span class="tooltip">التقارير</span>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class='bx bx-notification'></i>
+                        <span class="links_name">الإشعارات</span>
+                    </a>
+                    <span class="tooltip">الإشعارات</span>
+                </li>
+
+            }
 
             }
             <li class="profile">

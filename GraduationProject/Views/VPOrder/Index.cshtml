@@ -1,8 +1,40 @@
-﻿<h1>الطلبات</h1>
+﻿<link href="~/css/Cards.css" rel="stylesheet" />
+<div class="container">
+    <div class="card">
+        <div class="box">
+            <div class="content">
+                <h2>@ViewBag.AnnualCount</h2>
+                <h3>طلبات الإحتياجات السنوية</h3>
+                <p>طلبات الإحتياجات السنوية المقدمة لهذا العام من قبل جميع الجهات الطالبة </p>
+                @if (ViewBag.AnnualCount > 0)
+                {
+                    <a asp-action="Annual">استعراض</a>
+                }
+                else
+                {
+                    <a>لايوجد طلبات</a>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="box">
+            <div class="content">
+                <h2>@ViewBag.UnplannedCount</h2>
+                <h3> طلبات الإحتياجات غير المخططة</h3>
+                <p>الطلبات غير المخططة المفدمة من قبل جميع الجهات الطالبة  </p>
+                @if (ViewBag.UnplannedCount > 0)
+                {
+                    <a asp-action="Unplanned">استعراض</a>
+                }
+                else
+                {
+                    <a>لايوجد طلبات</a>
+                }
+            </div>
+        </div>
+    </div>
 
 
-<div class="btn-group">
-
-    <a asp-action="Unplanned"> <button class="btn btn-primary">الطلبات غير المخططة <button> </a>
-    <a asp-action="Annual"> <button class="btn btn-primary">الطلبات  السنوية</button></a>
 </div>
