@@ -11,11 +11,12 @@
         <table class="styled-table">
             <thead>
                 <tr>
-                    <td>المادة</td>
-                    <td>كمية الفصل الاول </td>
-                    <td>كمية الفصل الثاني  </td>
-                    <td>كمية الفصل الصيفي</td>
-                    <td>الكمية الكلية</td>
+                    <th>المادة</th>
+                    <th>كمية الفصل الاول </th>
+                    <th>كمية الفصل الثاني  </th>
+                    <th>كمية الفصل الصيفي</th>
+                    <th>الكمية الكلية</th>
+                    <th></th>
                 </tr>
             </thead>
             @for (int i = 0; i < Model.Count; i++)
@@ -37,6 +38,6 @@
     <button class="create-icon-btn" asp-route-OrderId="@OrderId" type="submit"> توزيع الكميات الجديدة </button>
 </form>
 <br />
-<button class="edit-icon-btn" type="submit"><a asp-controller="VPOrder" asp-action="ManualDistributionIndex">العودة إلى الطلبات</a> </button>
+<a class="edit-icon-btn" asp-controller="VPOrder" asp-action="ManualDistributionIndex">العودة إلى الطلبات</a> 
 
 

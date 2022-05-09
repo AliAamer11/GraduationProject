@@ -1,5 +1,4 @@
-﻿
-@model List<GraduationProject.ViewModels.AnnualCommentsViewModel>
+﻿@model List<GraduationProject.ViewModels.AnnualCommentsViewModel>
 <link href="~/css/button.css" rel="stylesheet" />
 <link href="~/css/tableformanagment.css" rel="stylesheet" />
 <link href="~/css/button.css" rel="stylesheet" />
@@ -37,7 +36,7 @@
                         <td>@Model[i].ApproxRate</td>
                         <td>@Model[i].FlowRate</td>
                         <td>@Model[i].Description</td>
-                        <td><input asp-for="@Model[i].Comment" /></td>
+                        <td><input name="myinput" asp-for="@Model[i].Comment" /></td>
                         <td><input hidden asp-for="@Model[i].AnnualOrderID" /></td>
                     </tr>
                 </tbody>
@@ -45,7 +44,7 @@
         </table>
     </div>
     <br />
-    <button class="edit-icon-btn" type="submit"> إضافة التعليقات وإعادة إرسال الطلب </button>
+    <button class="edit-icon-btn" onclick="check()" type="submit"> إضافة التعليقات وإعادة إرسال الطلب </button>
 </form>
 
 <br />
@@ -56,15 +55,25 @@
 <br />
 
 
-<button class="edit-icon-btn" type="submit"><a asp-controller="VPOrder" asp-action="Annual">العودة إلى الطلبات</a> </button>
+<a class="edit-icon-btn" asp-controller="VPOrder" asp-action="Annual">العودة إلى الطلبات</a>
 
-@*<script>
-        //<form method="post" name="myForm" onsubmit="return validateForm()" asp-action="Index">
-        function validateForm() {
-            let x = document.forms["myForm"]["comment"].value;
-            if (x == "") {
-                alert("يجب إضافة تعليق واحد على الأقل");
-                return false;
+
+<script type="text/javascript">
+    function check() {
+        var input = document.getElementsByName('myinput');
+        var isvalid = true;
+        for (var i = 0; i < input.length; i++) {
+            if (input[i].value === '') {
+                continue;
+            }
+            else {
+                isvalid = false;
             }
         }
-    </script>*@
+        if (isvalid) {
+            alert("يجب إدخال تعليق واحد على الأقل")
+            return false;
+        }
+    }
+
+</script>

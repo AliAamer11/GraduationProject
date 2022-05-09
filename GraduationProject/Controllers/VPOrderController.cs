@@ -173,23 +173,45 @@ namespace GraduationProject.Controllers.VPControllers
                 model.SecondSemQuantity = item.SecondSemQuantity;
                 model.ThirdSemQuantity = item.ThirdSemQuantity;
                 model.TotalQuantity = item.FirstSemQuantity + item.SecondSemQuantity + item.ThirdSemQuantity;
-
                 manualDistributions.Add(model);
             }
             return View(manualDistributions);
         }
 
+
+        private int distribution(int sem , int oldtotal, int newtotal)
+        {
+            float semester = (float)sem;
+            float oldtot = (float)oldtotal;
+            float division = semester / oldtot;
+            double result = Math.Floor(division * newtotal);
+            return (int)result;
+        }
         [HttpPost]
         public async Task<IActionResult> ManualDistribution(List<ManualDistributionViewModel> models, int? OrderId)
         {
             foreach (var item in models)
             {
                 AnnualOrder model = await _context.AnnualOrder.FirstOrDefaultAsync(a => a.AnnualOrderID == item.AnnualOrderID);
+                int oldtotal = model.FirstSemQuantity + model.SecondSemQuantity + model.ThirdSemQuantity;
+                //if only a new semester quantity is updated (total quantity not updated)
                 model.FirstSemQuantity = item.FirstSemQuantity;
                 model.SecondSemQuantity = item.SecondSemQuantity;
                 model.ThirdSemQuantity = item.ThirdSemQuantity;
                 _context.Update(model);
                 await _context.SaveChangesAsync();
+                //if a new semester quantity  and the total is updated too 
+                //then the above code will be executed anyways then the new total quantity will be distributed on the three semesters
+                int newtotal = item.TotalQuantity;
+                if (newtotal != oldtotal)
+                {
+
+                    model.FirstSemQuantity = distribution(model.FirstSemQuantity, oldtotal, newtotal); 
+                    model.SecondSemQuantity = distribution(model.SecondSemQuantity, oldtotal, newtotal);
+                    model.ThirdSemQuantity = distribution(model.ThirdSemQuantity, oldtotal, newtotal);
+                    _context.Update(model);
+                    await _context.SaveChangesAsync();
+                }
             }
             var order = await _context.Orders.FirstOrDefaultAsync(o => o.OrderID == OrderId);
             order.State = "1";
