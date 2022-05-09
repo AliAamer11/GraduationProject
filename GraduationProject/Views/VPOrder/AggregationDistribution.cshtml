@@ -1,0 +1,39 @@
+﻿@model List<GraduationProject.ViewModels.AggregationDitributionViewModel>
+<link href="~/css/button.css" rel="stylesheet" />
+<link href="~/css/tableformanagment.css" rel="stylesheet" />
+<h1 class="tableheader">المواد   </h1>
+
+<form method="post" asp-action="ManualDistribution">
+    <div class="table-responsive">
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <td>المادة</td>
+                    <td>كمية الفصل الاول </td>
+                    <td>كمية الفصل الثاني  </td>
+                    <td>كمية الفصل الصيفي</td>
+                    <td>الكمية الكلية</td>
+                </tr>
+            </thead>
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                <tbody>
+                    <tr>
+                        <input hidden asp-for="@Model[i].ItemName" />
+                        <td>@Model[i].ItemName</td>
+                        <td><input asp-for="@Model[i].FirstSemQuantity" /></td>
+                        <td><input asp-for="@Model[i].SecondSemQuantity" /></td>
+                        <td><input asp-for="@Model[i].ThirdSemQuantity" /></td>
+                        <td><input asp-for="@Model[i].TotalQuantity" /></td>
+                    </tr>
+                </tbody>
+            }
+        </table>
+    </div>
+    <br />
+    <button class="create-icon-btn" asp-action="AggregationDistribution" type="submit"> توزيع الكميات الجديدة </button>
+</form>
+<br />
+<button class="edit-icon-btn" type="submit"><a asp-controller="VPOrder" asp-action="DistributionIndex">العودة الى الاختيارات</a> </button>
+
+

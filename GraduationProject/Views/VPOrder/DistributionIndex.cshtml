@@ -1,0 +1,40 @@
+﻿<link href="~/css/Cards.css" rel="stylesheet" />
+<div class="container">
+    <div class="card">
+        <div class="box">
+            <div class="content">
+                <h2>@ViewBag.AnnualCount</h2>
+                <h3>التوزيع اليدوي</h3>
+                <p>توزيع كميات الفصول في الاحتياج السنوي يدويا اي كمية كل فصل تتوزع على حدى </p>
+                @if (ViewBag.AnnualCount > 0)
+                {
+                    <a asp-action="ManualDistributionIndex">استعراض</a>
+                }
+                else
+                {
+                    <a>لايوجد طلبات</a>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="box">
+            <div class="content">
+                <h2>@ViewBag.AnnualCount</h2>
+                <h3> التوزيع بالتجميع</h3>
+                <p> التوزيع بالتناسب بعد تجميع كميات المواد بجميع طلبات الاحتياجات السنوية </p>
+                @if (ViewBag.AnnualCount > 0)
+                {
+                    <a asp-action="AggregationDistribution">استعراض</a>
+                }
+                else
+                {
+                    <a>لايوجد طلبات</a>
+                }
+            </div>
+        </div>
+    </div>
+
+
+</div>
