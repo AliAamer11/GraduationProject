@@ -68,7 +68,7 @@ namespace GraduationProject.Controllers
                 await _context.SaveChangesAsync();
             }
             var order = await _context.Orders.FirstOrDefaultAsync(o => o.OrderID == OrderId);
-            order.State = "1";
+            order.State = "0";
             _context.Update(order);
             await _context.SaveChangesAsync();
 
@@ -76,7 +76,6 @@ namespace GraduationProject.Controllers
         }
     }
 }
-
 
 
 //[ValidateAntiForgeryToken]

@@ -6,21 +6,22 @@
 @{
     var OrderId = ViewBag.OrderId;
 }
+
 <form method="post" asp-action="Index" asp-route-OrderId="@OrderId">
     <div class="table-responsive">
         <table class="styled-table">
             <thead>
                 <tr>
-                    <td>المادة</td>
-                    <td>كمية الفصل الاول </td>
-                    <td>كمية الفصل الثاني  </td>
-                    <td>كمية الفصل الصيفي</td>
-                    <td>الكمية الكلية</td>
-                    <td>المعدل التقريبي</td>
-                    <td>معدل التدفق </td>
-                    <td>الوصف</td>
-                    <td>التعليق</td>
-                    <td></td>
+                    <th>المادة</th>
+                    <th>كمية الفصل الاول </th>
+                    <th>كمية الفصل الثاني  </th>
+                    <th>كمية الفصل الصيفي</th>
+                    <th>الكمية الكلية</th>
+                    <th>المعدل التقريبي</th>
+                    <th>معدل التدفق </th>
+                    <th>الوصف</th>
+                    <th>التعليق</th>
+                    <th></th>
                 </tr>
 
             </thead>
@@ -36,7 +37,7 @@
                         <td>@Model[i].ApproxRate</td>
                         <td>@Model[i].FlowRate</td>
                         <td>@Model[i].Description</td>
-                        <td><input name="myinput" asp-for="@Model[i].Comment" /></td>
+                        <td><input class="inputs" asp-for="@Model[i].Comment" /></td>
                         <td><input hidden asp-for="@Model[i].AnnualOrderID" /></td>
                     </tr>
                 </tbody>
@@ -44,36 +45,68 @@
         </table>
     </div>
     <br />
-    <button class="edit-icon-btn" onclick="check()" type="submit"> إضافة التعليقات وإعادة إرسال الطلب </button>
+    <button class="update-icon-btn" id="submit" type="submit">إضافة التعليقات<h1 class="update-btn-text">وإعادة إرسال الطلب</h1></button>
 </form>
 
-<br />
+<div class="alert alert-danger" id="error-div" style="color:black; text-align:center; width:50%; right:25%; display:none;">
+    <span id="view-err">
 
+    </span>
+</div>
+<br />
 <form method="post" asp-action="ApproveOrder" asp-route-id=@OrderId>
     <button class="create-icon-btn" type="submit">الموافقة </button>
 </form>
 <br />
 
 
-<a class="edit-icon-btn" asp-controller="VPOrder" asp-action="Annual">العودة إلى الطلبات</a>
+<a class="back-icon-btn" asp-controller="VPOrder" asp-action="Annual">العودة إلى الطلبات</a>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        var inputs = document.getElementsByClassName("inputs");
+        $(function () {
+            $("#submit").click(function () {
+                var isvalid = true;
+                for (var i = 0; i < inputs.length; i++) {
+                    if (inputs[i].value == "") {
+                        continue;
+                    }
+                    else {
+                        isvalid = false;
+                    }
+                }
+                var div = document.getElementById('error-div');
+                if (isvalid) {
+                    div.innerHTML = 'يجب إدخال تعليق واحد على الأقل';
+                    $("#error-div").fadeIn();
+                    return false;
+                }
+            });
+        });
+    </script>
+}
 
 
-<script type="text/javascript">
-    function check() {
-        var input = document.getElementsByName('myinput');
-        var isvalid = true;
-        for (var i = 0; i < input.length; i++) {
-            if (input[i].value === '') {
-                continue;
+
+@*<script type="text/javascript">
+        function check() {
+            var input = document.getElementsByName('myinput');
+            var isvalid = true;
+            for (var i = 0; i < input.length; i++) {
+                if (input[i].value === '') {
+                    continue;
+                }
+                else {
+                    isvalid = false;
+                }
             }
-            else {
-                isvalid = false;
+            if (isvalid) {
+                alert("يجب إدخال تعليق واحد على الأقل")
+                return false;
             }
         }
-        if (isvalid) {
-            alert("يجب إدخال تعليق واحد على الأقل")
-            return false;
-        }
-    }
 
-</script>
+    </script>*@
+

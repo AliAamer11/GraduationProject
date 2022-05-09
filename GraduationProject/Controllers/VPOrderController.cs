@@ -42,9 +42,6 @@ namespace GraduationProject.Controllers.VPControllers
             var UnplannedOrders = await _context.Orders.Include(u => u.User).Where(o => o.State == "1" & o.Type == true).ToListAsync();
             return View(UnplannedOrders);
         }
-        /// <summary>
-        /// distribution function
-        /// </summary>
 
         [HttpGet]
         public async Task<IActionResult> DistributionIndex()
@@ -69,7 +66,6 @@ namespace GraduationProject.Controllers.VPControllers
                 model.SecondSemQuantity = item.sum2;
                 model.ThirdSemQuantity = item.sum3;
                 model.TotalQuantity = item.sum1 + item.sum2 + item.sum3;
-
                 AggregationDistribution.Add(model);
             }
 
@@ -81,7 +77,7 @@ namespace GraduationProject.Controllers.VPControllers
         {
             var items = await _context.AnnualOrder.Where(AO => AO.Order.State == "1").GroupBy(m => m.Item.Name).Select(m => new { name = m.Key, itemcount = m.Count(), sum1 = m.Sum(m => m.FirstSemQuantity), sum2 = m.Sum(m => m.SecondSemQuantity), sum3 = m.Sum(m => m.ThirdSemQuantity) }).ToListAsync();
 
-            //القيم الجديدة المجمعه 
+            //القيم الجديدة المجعة 
             foreach (var m in models)
             {
                 IEnumerable<AnnualOrder>annualorders = await _context.AnnualOrder.Where(AO => AO.Order.State == "1").Include(i=>i.Item).ToListAsync();
@@ -97,31 +93,19 @@ namespace GraduationProject.Controllers.VPControllers
                         int Total = FirstSem + SecondSem + ThirdSem;
                         if (FirstSem != m.FirstSemQuantity)
                         {
-                            //float percentage =((float)m.FirstSemQuantity / FirstSem);
-                            //float NewSemQuantity = (percentage * (float)obj.FirstSemQuantity);
-                            //obj.FirstSemQuantity =(int) NewSemQuantity;
-
                             obj.FirstSemQuantity = (int)SemDistrebution(m.FirstSemQuantity, obj.FirstSemQuantity, FirstSem);
                             _context.Update(obj);
                         }
                         else if (SecondSem != m.SecondSemQuantity)
                         {
-                            //float percentage = ((float)m.SecondSemQuantity / SecondSem);
-                            //float NewSemQuantity = percentage * (float)obj.SecondSemQuantity;
-                            //obj.SecondSemQuantity =(int)NewSemQuantity;
-
                             obj.SecondSemQuantity = (int)SemDistrebution(m.SecondSemQuantity, obj.SecondSemQuantity, SecondSem);
                             _context.Update(obj);
                         }
                         else if (ThirdSem != m.ThirdSemQuantity)
                         {
-                            //float percentage = ((float)m.ThirdSemQuantity / ThirdSem);
-                            //float NewSemQuantity = percentage * (float)obj.ThirdSemQuantity;
-                            //obj.ThirdSemQuantity =(int)NewSemQuantity;
                             obj.ThirdSemQuantity = (int)SemDistrebution(m.ThirdSemQuantity, obj.ThirdSemQuantity, ThirdSem);
                             _context.Update(obj);
                         }
-
                         else if (Total != m.TotalQuantity)
                         {
                             float TotalObjQuantity = obj.FirstSemQuantity + obj.SecondSemQuantity + obj.ThirdSemQuantity;
@@ -135,7 +119,6 @@ namespace GraduationProject.Controllers.VPControllers
                             obj.ThirdSemQuantity = (int)ThirdSemsterDistribution;
                             _context.Update(obj);
                         }
-
                     }
                 }
                 await _context.SaveChangesAsync();
@@ -178,7 +161,6 @@ namespace GraduationProject.Controllers.VPControllers
             return View(manualDistributions);
         }
 
-
         private int distribution(int sem , int oldtotal, int newtotal)
         {
             float semester = (float)sem;
@@ -187,6 +169,7 @@ namespace GraduationProject.Controllers.VPControllers
             double result = Math.Floor(division * newtotal);
             return (int)result;
         }
+
         [HttpPost]
         public async Task<IActionResult> ManualDistribution(List<ManualDistributionViewModel> models, int? OrderId)
         {
@@ -201,11 +184,11 @@ namespace GraduationProject.Controllers.VPControllers
                 _context.Update(model);
                 await _context.SaveChangesAsync();
                 //if a new semester quantity  and the total is updated too 
-                //then the above code will be executed anyways then the new total quantity will be distributed on the three semesters
+                //then the above code will be executed anyways then
+                //the new total quantity will be distributed on the three semesters equally
                 int newtotal = item.TotalQuantity;
                 if (newtotal != oldtotal)
                 {
-
                     model.FirstSemQuantity = distribution(model.FirstSemQuantity, oldtotal, newtotal); 
                     model.SecondSemQuantity = distribution(model.SecondSemQuantity, oldtotal, newtotal);
                     model.ThirdSemQuantity = distribution(model.ThirdSemQuantity, oldtotal, newtotal);
