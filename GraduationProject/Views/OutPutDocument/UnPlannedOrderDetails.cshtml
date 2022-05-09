@@ -1,0 +1,68 @@
+﻿@model GraduationProject.ViewModels.OutPutDocument.UnPlannedOrderViewModel
+
+@{
+    ViewData["Title"] = "تفاصيل الطلب غير المخطط";
+}
+<link href="~/css/button.css" rel="stylesheet" />
+<link href="~/css/tableformanagment.css" rel="stylesheet" />
+<link href="~/css/OrdersDetails.css" rel="stylesheet" />
+<h1 class="tableheader">تفاصيل الطلب غير المخطط</h1>
+@if (ViewBag.isnotSuccess)
+{
+    <div class="alert alert-warning alert-dismissible">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+        <strong style="color:#0c5c82;">لا يمكن الموافقة لأن كمية المادة @ViewBag.itemName الموجودة في المستودع أقل من المطلوب</strong>
+    </div>
+
+}
+
+<div class="table-responsive">
+    <table class="styled-table">
+        <thead>
+            <tr>
+                <th style="padding-left:80px">
+                    ترميز المادة
+                </th>
+                <th>اسم المادة</th>
+                <th>الكمية المطلوبة</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.UnPlannedOrderList)
+            {
+                string statuscode = item.Item.BarCode.Substring(0, 1);
+                string maincategory = item.Item.BarCode.Substring(1, 2);
+                string subcategory = item.Item.BarCode.Substring(3, 3);
+                string serial = item.Item.BarCode.Substring(6, 4);
+                string barcode = serial + " " + subcategory + " " + maincategory + " " + statuscode;
+                <tr>
+                    <td>@barcode</td>
+                    <td>@item.Item.Name</td>
+                    <td>@item.Quantity</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div style="height:20px"></div>
+
+
+<form method="post" asp-action="CreateOutPutDoucmentForUnPlannedOrder" asp-controller="OutPutDocument">
+    <div class="row">
+        <div>
+            <button id="submit" type="submit" class="">
+                إنشاء سند الإخراج
+                <i class="bx bx-add-to-queue mr-3"></i>
+            </button>
+        </div>
+
+        <input asp-for="CommisaryName" placeholder="اسم المندوب" required class="commissaryName" />
+        <span asp-validation-for="CommisaryName" class="err text-danger"></span>
+        <input type="hidden" asp-for="OrderId" />
+
+    </div>
+</form>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}

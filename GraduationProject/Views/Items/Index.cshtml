@@ -9,35 +9,35 @@
 
 <a title="إضافة صنف" class="create-icon-btn" asp-action="Create"><i class="fa fa-plus"></i></a>
 <div class="table-responsive">
-    <table class="styled-table">
+    <table class="styled-table" id="managmentTable">
         <thead>
             <tr>
-                <th style="padding-left:80px">
+                <th style="padding-left:80px" onclick="sortTable(1)" >
                     ترميز المادة
                 </th>
-                <th>
+                <th onclick="sortTable(2)">
                     اسم المادة
                 </th>
-                <th>
+                <th onclick="sortTable(3)">
                     الكمية
                 </th>
-                <th>
+                <th onclick="sortTable(4)">
                     حالة المادة
                 </th>
-                <th>
+                <th onclick="sortTable(5)">
                     العلامة
                 </th>
-                <th>
+                <th onclick="sortTable(6)">
                     الحد الأدنى
                 </th>
                 <th>
                     ملاحظات
                 </th>
-                <th>
+                <th onclick="sortTable(8)">
                     صنف المادة
                 </th>
-                <th>
-                    ودحدة القياس
+                <th onclick="sortTable(9)">
+                    وحدة القياس
                 </th>
                 @*<th></th>*@
             </tr>

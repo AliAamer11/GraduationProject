@@ -21,11 +21,11 @@ namespace GraduationProject.Controllers
         {
             _context = context;
         }
-        
+
         [HttpGet]
         public IActionResult Index()
         {
-            var inputDocuments = _context.InputDocument.ToList().OrderByDescending(i=>i.InputDocumentID);
+            var inputDocuments = _context.InputDocument.ToList().OrderByDescending(i => i.InputDocumentID);
             return View(inputDocuments);
         }
 
@@ -33,7 +33,7 @@ namespace GraduationProject.Controllers
         public IActionResult AddMorePartialView()
         {
             AddMoreItemForInputDocument model = new AddMoreItemForInputDocument();
-            ViewData["Item"] = new SelectList(_context.Items, "ItemID", "BarCode");
+            ViewData["Item"] = new SelectList(bindListforItems(), "Value", "Text");
             return PartialView("_AddMorePartialView", model);
         }
         [HttpGet]
@@ -50,14 +50,14 @@ namespace GraduationProject.Controllers
             {
                 try
                 {
-                    if (viewModel.AddMoreList==null)
+                    if (viewModel.AddMoreList == null)
                     {
                         ViewBag.errorMessage = "طيب عبيلك شي شغلة";
                         return View(viewModel);
                     }
                     foreach (var item in viewModel.AddMoreList)
                     {
-                        if (item!=null)
+                        if (item != null)
                         {
                             if (item.Quantity < 1)
                             {
@@ -75,7 +75,7 @@ namespace GraduationProject.Controllers
 
                     foreach (var item in viewModel.AddMoreList)
                     {
-                        if (item!=null)
+                        if (item != null)
                         {
                             var inputDocumentDetail = new InputDocumentDetails()
                             {
@@ -91,7 +91,7 @@ namespace GraduationProject.Controllers
                             _context.Update(updateditem);
                             await _context.SaveChangesAsync();
                         }
-                       
+
                     }
                     return RedirectToAction("Index", "InputDocument");
                 }
@@ -100,7 +100,7 @@ namespace GraduationProject.Controllers
                     throw;
                 }
             }
-            return RedirectToAction("Index","InputDocument");
+            return RedirectToAction("Index", "InputDocument");
         }
 
         [HttpGet]
@@ -108,12 +108,12 @@ namespace GraduationProject.Controllers
         {
             try
             {
-                if (inputDocumentId==null)
+                if (inputDocumentId == null)
                 {
                     return NotFound();
                 }
                 var inputDoucment = await _context.InputDocument.FirstOrDefaultAsync(i => i.InputDocumentID == inputDocumentId);
-                var inputDoumentDetails =await _context.InputDocumentDetails.Include(d=>d.Item).Where(d => d.InputDocumentId == inputDocumentId).ToListAsync();
+                var inputDoumentDetails = await _context.InputDocumentDetails.Include(d => d.Item).Where(d => d.InputDocumentId == inputDocumentId).ToListAsync();
 
                 var inputDocumnetDetailsViewModel = new InputDocumnetDetailsViewModel()
                 {
@@ -126,8 +126,18 @@ namespace GraduationProject.Controllers
             {
                 throw;
             }
-            
+
         }
 
+        private List<SelectListItem> bindListforItems()
+        {
+            List<SelectListItem> list = new List<SelectListItem>();
+            var items = _context.Items.ToList();
+            foreach (var item in items)
+            {
+                list.Add(new SelectListItem { Text = item.BarCode + "  " + item.Name, Value = item.ItemID.ToString() });
+            }
+            return list;
+        }
     }
 }

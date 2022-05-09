@@ -1,0 +1,134 @@
+﻿@model GraduationProject.ViewModels.OutPutDocument.OrdersViewModels
+
+@{
+    ViewData["Title"] = "الطلبات وسندات الإخراج";
+}
+
+<link href="~/css/tableformanagment.css" rel="stylesheet" />
+<link href="~/css/StoreKeeperOrders.css" rel="stylesheet" />
+<div class="cardBox">
+    <a asp-action="AnnualOrder">
+        <div class="card-a">
+
+            <div>
+                <div class="numbers" data-goal="@Model.countAnnualOrder">-1</div>
+                <div class="cardName">الطلبات السنوية</div>
+            </div>
+            <div class="iconBox">
+                <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+            </div>
+        </div>
+    </a>
+    <a asp-action="UnPlannedOrder">
+        <div class="card-a">
+            <div>
+                <div class="numbers" data-goal="@Model.countUnPlannedOrder">-1</div>
+                <div class="cardName">الطلبات غير المخططة</div>
+            </div>
+            <div class="iconBox">
+                <i class="fa fa-shopping-basket" aria-hidden="true"></i>
+            </div>
+        </div>
+    </a>
+
+</div>
+
+<div class="details">
+    <div class="UnPlannedOrders radius">
+        <div class="cardHeader">
+            <h4>سندات الإخراج للطلبات السنوية</h4>
+        </div>
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th>تاريخ الإنشاء</th>
+                    <th>الجهة الطالبة</th>
+                    <th>المندوب</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.OutPutDocumentViewModelsAnnual.Count > 0)
+                {
+                    @foreach (var item in Model.OutPutDocumentViewModelsAnnual)
+                    {
+                        <tr>
+                            <td>
+                                @item.CreatedAt.Date.ToString("dd/M/yyyy")
+                            </td>
+                            <td>
+                                @item.RequestingParty
+
+                            </td>
+                            <td>
+                                @item.CommissaryName
+                            </td>
+                            <td>
+                                <a asp-action="OutPutDocumentDetailsForUnPlannedOrders" title="تفاصيل السند" asp-route-outPutDocumentId="@item.OutPutDocumentID" class="edit-icon-btn ml-1"><i class='far fa-file'></i></a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="4" style="text-align:center;font-size:2rem;">لا يوجد سندات إلى الآن</td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+
+    </div>
+    <div class="AnnualOrders radius">
+        <div class="cardHeader">
+            <h4>سندات الإخراج للطلبات غير المخططة</h4>
+
+        </div>
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th>تاريخ الإنشاء</th>
+                    <th>الجهة الطالبة</th>
+                    <th>المندوب</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.OutPutDocumentViewModelsUnPlanned.Count > 0)
+                {
+                    @foreach (var item in Model.OutPutDocumentViewModelsUnPlanned)
+                    {
+                        <tr>
+                            <td>
+                                @item.CreatedAt.Date.ToString("dd/M/yyyy")
+                            </td>
+                            <td>
+                                @item.RequestingParty
+
+                            </td>
+                            <td>
+                                @item.CommissaryName
+                            </td>
+                            <td>
+                                <a asp-action="OutPutDocumentDetailsForUnPlannedOrders" title="تفاصيل السند" asp-route-outPutDocumentId="@item.OutPutDocumentID" class="edit-icon-btn ml-1"><i class='far fa-file'></i></a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="4" style="text-align:center;font-size:2rem;">لا يوجد سندات إلى الآن</td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+
+
+</div>
+@section Scripts{
+    <script src="~/js/IncreaseNumber.js"></script>
+}

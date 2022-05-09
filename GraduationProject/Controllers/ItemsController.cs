@@ -9,22 +9,38 @@ using GraduationProject.ViewModels.Items;
 using Microsoft.EntityFrameworkCore;
 using GraduationProject.Data.Models;
 using Microsoft.AspNetCore.Authorization;
+using AspNetCoreHero.ToastNotification.Abstractions;
 
 namespace GraduationProject.Controllers
 {
     [Authorize(Roles = "StoreKeep")]
     public class ItemsController : Controller
     {
+        private readonly INotyfService _notyf;
         private readonly ApplicationDbContext _context;
-        public ItemsController(ApplicationDbContext context)
+        public ItemsController(ApplicationDbContext context,
+                               INotyfService notyf)
         {
             _context = context;
+            _notyf = notyf;
         }
+
+        //get a list Items
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var items = _context.Items.Include(i => i.Category).Include(i => i.Measurement);
-            return View(await items.ToListAsync());
+            var items = await _context.Items.Include(i => i.Category).Include(i => i.Measurement).ToListAsync();
+            foreach (var item in items)
+            {
+                if (item.MinimumRange > item.Quantity)
+                {
+                    _notyf.Error("إن كمية المادة" + " " + item.Name + " " + "ذات الرمز" + " " + item.BarCode +" "+"تخطت الحد الأدنى");
+                }
+            }
+            return View(items);
         }
+
+
 
         [HttpGet]
         public IActionResult Create()

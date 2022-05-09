@@ -23,7 +23,7 @@
 
             <li>
                 <i class='bx bx-search'></i>
-                <input type="text" placeholder="ابحث هنا...">
+                <input type="text" id="searchTable" placeholder="ابحث هنا..." onkeyup="searchTable()">
                 <span class="tooltip">ابحث</span>
             </li>
             <!--to check if user was sign in or not to show to him the loging or logout-->
@@ -71,7 +71,7 @@
                     <span class="tooltip">سندات الإدخال</span>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="~/OutPutDocument/Orders">
                         <i class='bx bx-cart-alt'></i>
                         <span class="links_name">الطلبات</span>
                     </a>
@@ -129,22 +129,16 @@
             <!--VicePres Operation-->
             @if (User.IsInRole("VicePris"))
             {
+
                 <li>
                     <a href="~/VPOrder/Index">
                         <i class='bx bx-spreadsheet'></i>
-                        <span class="links_name">الطلبات  </span>
+                        <span class="links_name">طلبات الإحتياجات  </span>
                     </a>
-                    <span class="tooltip">الطلبات  </span>
+                    <span class="tooltip">طلبات الإحتياجات  </span>
                 </li>
                 <li>
-                    <a href="#">
-                        <i class='bx bxs-store'></i>
-                        <span class="links_name">المستودع </span>
-                    </a>
-                    <span class="tooltip">المستودع</span>
-                </li>
-                <li>
-                    <a href="#">
+                    <a href="~/VPOrder/DistributionIndex">
                         <i class='bx bx-bar-chart'></i>
                         <span class="links_name">التوزيع</span>
                     </a>
@@ -159,10 +153,10 @@
                 </li>
                 <li>
                     <a href="#">
-                        <i class='bx bx-notification'></i>
-                        <span class="links_name">الإشعارات</span>
+                        <i class='bx bxs-store'></i>
+                        <span class="links_name">المستودع </span>
                     </a>
-                    <span class="tooltip">الإشعارات</span>
+                    <span class="tooltip">المستودع</span>
                 </li>
                 <li>
                     <a href="#">
@@ -170,6 +164,13 @@
                         <span class="links_name">التقارير</span>
                     </a>
                     <span class="tooltip">التقارير</span>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class='bx bx-notification'></i>
+                        <span class="links_name">الإشعارات</span>
+                    </a>
+                    <span class="tooltip">الإشعارات</span>
                 </li>
 
             }
@@ -203,6 +204,9 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/searchTable.js"></script>
+    <script src="~/js/sortTable.js"></script>
+    @await Component.InvokeAsync("Notyf")
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

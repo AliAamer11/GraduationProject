@@ -1,48 +1,37 @@
-﻿@model IEnumerable<GraduationProject.Data.Models.Order>
-    <link href="~/css/button.css" rel="stylesheet" />
-    <link href="~/css/tableformanagment.css" rel="stylesheet" />
-    <h1 class="tableheader">طلبات الاحتياجات السنويه  </h1>
-    <body>
-        @if (Model.Count() > 0)
-        {
-            <div class="table-responsive">
-                <table class="styled-table">
-                    <thead>
+﻿
+@model IEnumerable<GraduationProject.Data.Models.Order>
+<link href="~/css/button.css" rel="stylesheet" />
+<link href="~/css/tableformanagment.css" rel="stylesheet" />
+<h1 class="tableheader">طلبات الاحتياجات السنوية  </h1>
+<body>
+    @if (Model.Count() > 0)
+    {
+        <div class="table-responsive">
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <td>الجهة الطالبة</td>
+                        <td>تاريخ الطلب</td>
+                        <td>
+                        </td>
+                    </tr>
+
+                </thead>
+                @foreach (var obj in Model)
+                {
+                    <tbody>
                         <tr>
-                            <td>تاريخ الطلب</td>
-                            <td>نوع الطلب</td>
-                            <td>
-                            </td>
+                            <td>@obj.User.RequstingParty </td>
+                            <td>@obj.CreatedAt.Day/@obj.CreatedAt.Month/@obj.CreatedAt.Year </td>
+                            <td> <a asp-action="Index" asp-controller="VPAnnualOrder" asp-route-OrderId="@obj.OrderID">تفاصيل الطلب</a></td>
+
                         </tr>
-
-                    </thead>
-                    @foreach (var obj in Model)
-                    {
-                        <tbody>
-                            <tr>
-                                <td>@obj.CreatedAt </td>
-                                <td>@obj.Type </td>
-                                <td> <a asp-action="Index" asp-controller="VPAnnualOrder" asp-route-OrderId="@obj.OrderID">تفاصيل الطلب</a></td>
-
-                            </tr>
-                        </tbody>
-                    }
-                </table>
-                </div>
+                    </tbody>
                 }
-                else
-                { <h6>لا يوجد طلبات</h6>}
-        </body>
-
-
-
-
-
-
-
-
-
-
-
-
+            </table>
+        </div>
+    }
+    else
+    {<h4>لا يوجد طلبات</h4>}
+</body>
 

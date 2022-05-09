@@ -1,0 +1,193 @@
+﻿:root {
+    /*this for navigation*/
+    --main-blue: #11101D;
+    --sub-blue: #1d1b31;
+    --background: #E4E9F7;
+    --main-orange: #FF5733;
+    /*special use*/
+    /*main color*/
+    --white: #fff;
+    --black: #000;
+    --gray: #e7e7e7;
+    --background-gray: #c7c7c7;
+    --red: #b2323d;
+    --black-hover: #171a20;
+    --red-hover: #92474d;
+}
+
+.cardBox {
+    position: relative;
+    width: 100%;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    grid-gap: 20px;
+}
+
+    .cardBox .card-a {
+        position: relative;
+        background: var(--main-blue);
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+        cursor: pointer;
+        border-radius: 20px;
+    }
+
+        .cardBox .card-a .numbers {
+            position: relative;
+            font-size: 2em;
+            color: var(--white);
+        }
+
+        .cardBox .card-a .cardName {
+            color: var(--main-orange);
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        .cardBox .card-a .iconBox {
+            font-size: 2.5em;
+            color: var(--white);
+        }
+
+        .cardBox .card-a:hover {
+            transform: scale(1.07);
+            transition: all 1s ease;
+            text-decoration: none;
+        }
+
+    .cardBox a:hover {
+        text-decoration: none;
+    }
+
+.details {
+    position: relative;
+    width: 100%;
+    padding: 20px;
+    padding-top: 0;
+    display: block;
+    display: grid;
+    grid-gap: 20px;
+    margin-top: 15px;
+    grid-template-columns: 4fr 4fr;
+}
+
+    .details .UnPlannedOrders {
+        position: relative;
+        min-height: 530px;
+        background: #fff;
+    }
+
+.cardHeader {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+    .cardHeader h4 {
+        font-weight: bold;
+        font-size: 2rem;
+        color: var(--main-orange);
+        text-align: center;
+        margin-top: 15px;
+    }
+
+.create-icon-btn {
+    background: var(--main-orange);
+    border: 1px solid var(--main-blue);
+    box-shadow: 0px 5px 10px rgba(0,0,0,.2);
+    padding: 7px 14px;
+    color: var(--white);
+    cursor: pointer;
+    transition: all .4s ease-in-out;
+    font-weight: bold;
+    border-radius: 30px;
+    width: auto;
+    text-decoration: none;
+    margin-top: 15px;
+    margin-right: 10px;
+    font-size: 20px;
+}
+
+    .create-icon-btn:hover {
+        background: #fff;
+        color: var(--main-blue);
+        border: 1px solid var(--main-orange);
+        transform: scale(1.05);
+        text-decoration: none;
+    }
+
+.details table {
+    /* width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;*/
+
+    margin-top: 20px;
+    margin-left: 10px;
+    margin-right: 12px;
+    border-collapse: collapse;
+    width: 95%;
+}
+.details .AnnualOrders {
+    position: relative;
+    min-height: 530px;
+    background: #fff;
+}
+.radius {
+    border-radius: 20px;
+}
+
+
+.edit-icon-btn {
+    background: var(--white);
+    border: 1px solid var(--main-blue);
+    box-shadow: 0px 5px 10px rgba(0,0,0,.2);
+    font-size: 16px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 17px;
+    margin-right: 10px;
+    padding-right: 17px;
+    color: var(--main-blue);
+    cursor: pointer;
+    transition: all .4s ease-in-out;
+    font-weight: bold;
+    border-radius: 20px;
+    width: auto;
+    text-decoration: none;
+}
+
+    .edit-icon-btn:hover {
+        background: var(--main-blue);
+        color: var(--white);
+        border: 1px solid var(--white);
+        transform: scale(1.05);
+        text-decoration: none;
+    }
+/*Make it respon*/
+@media(max-width:992px) {
+    .cardBox {
+        grid-template-columns: repeat(1,1fr);
+    }
+}
+
+@media(max-width:758px) {
+    .details {
+        grid-template-columns: repeat(1,1fr);
+    }
+}
+
+@media(max-width:480px) {
+    .cardBox {
+        grid-template-columns: repeat(1,1fr);
+    }
+
+    .details .users {
+        overflow-x: auto;
+    }
+
+        .details .users table {
+            width: 600px;
+        }
+}

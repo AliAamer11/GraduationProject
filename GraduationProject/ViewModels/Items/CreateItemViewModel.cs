@@ -27,7 +27,7 @@ namespace GraduationProject.ViewModels.Items
 
         [Required(ErrorMessage ="هذا الحقل مطلوب")]
         [Display(Name = "الحد الأدنى")]
-        [Range(1, 1000, ErrorMessage = "أدخل العدد بشكله الصحيح")]
+        [Range(0, 1000, ErrorMessage = "أدخل العدد بشكله الصحيح")]
         public int MinimumRange { get; set; }
 
         [Display(Name = "ملاحظات")]

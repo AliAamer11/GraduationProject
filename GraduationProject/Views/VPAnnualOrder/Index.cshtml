@@ -1,58 +1,79 @@
-﻿@model IEnumerable<GraduationProject.Data.Models.AnnualOrder>
+﻿@model List<GraduationProject.ViewModels.AnnualCommentsViewModel>
 <link href="~/css/button.css" rel="stylesheet" />
 <link href="~/css/tableformanagment.css" rel="stylesheet" />
-<h1 class="tableheader">تفاصيل طلبات الإحتياجات السنويه  </h1>
-
-@if (Model.Count() > 0)
-{
-    <form method="post" asp-action="Index" asp-route-id=@Model.First().OrderId>
-        <div class="table-responsive">
-            <table class="styled-table">
-                <thead>
-                    <tr>
-                        <td>كمية الفصل الاول </td>
-                        <td>كمية الفصل الثاني  </td>
-                        <td>كمية الفصل الصيفي</td>
-                        <td>معدل التدفق </td>
-                        <td>المعدل التقريبي</td>
-                        <td>تعليق</td>
-                        <td></td>
-                    </tr>
-
-                </thead>
-                @foreach (var obj in Model)
-                {
-
-                    <tbody>
-                        <tr>
-                            <td>@obj.FirstSemQuantity</td>
-                            <td>@obj.SecondSemQuantity</td>
-                            <td>@obj.ThirdSemQuantity</td>
-                            <td>@obj.FlowRate</td>
-                            <td>@obj.ApproxRate</td>
-                            <td><input asp-for="@obj.Comment" value="@obj.Comment" name="comments" /></td>
-                            <span asp-validation-for="@obj.Comment" class="text-danger"></span>
-                            <td><input type="hidden" value="@obj.OrderId" name="Orderid" /></td>
-
-                        </tr>
-                    </tbody>
-                }
-            </table>
-        </div>
-        <br />
-        <button class="btn btn-outline-danger" type="submit"> إضافة التعليقات وإعادة إرسال الطلب </button>
-    </form>
-
-    <br />
-
-    <form method="post" asp-action="ApproveOrder" asp-route-id=@Model.First().OrderId>
-        <button class="btn btn-outline-success" type="submit">الموافقة </button>
-    </form>
-    <br />
-
-    <button class="btn btn-outline-light" type="submit"><a asp-controller="VPOrder" asp-action="Annual">العودة إلى الطلبات</a> </button>
+<link href="~/css/button.css" rel="stylesheet" />
+<h1 class="tableheader">تفاصيل طلب الإحتياج السنوي  </h1>
+@{
+    var OrderId = ViewBag.OrderId;
 }
-else
-{ <h6>لا يوجد طلبات</h6>}
+<form method="post" asp-action="Index" asp-route-OrderId="@OrderId">
+    <div class="table-responsive">
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <td>المادة</td>
+                    <td>كمية الفصل الاول </td>
+                    <td>كمية الفصل الثاني  </td>
+                    <td>كمية الفصل الصيفي</td>
+                    <td>الكمية الكلية</td>
+                    <td>المعدل التقريبي</td>
+                    <td>معدل التدفق </td>
+                    <td>الوصف</td>
+                    <td>التعليق</td>
+                    <td></td>
+                </tr>
 
-<h1>@ViewBag.comment</h1>
+            </thead>
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                <tbody>
+                    <tr>
+                        <td>@Model[i].ItemName</td>
+                        <td>@Model[i].FirstSemQuantity</td>
+                        <td>@Model[i].SecondSemQuantity</td>
+                        <td>@Model[i].ThirdSemQuantity</td>
+                        <td>@Model[i].TotalQuantity</td>
+                        <td>@Model[i].ApproxRate</td>
+                        <td>@Model[i].FlowRate</td>
+                        <td>@Model[i].Description</td>
+                        <td><input name="myinput" asp-for="@Model[i].Comment" /></td>
+                        <td><input hidden asp-for="@Model[i].AnnualOrderID" /></td>
+                    </tr>
+                </tbody>
+            }
+        </table>
+    </div>
+    <br />
+    <button class="edit-icon-btn" onclick="check()" type="submit"> إضافة التعليقات وإعادة إرسال الطلب </button>
+</form>
+
+<br />
+
+<form method="post" asp-action="ApproveOrder" asp-route-id=@OrderId>
+    <button class="create-icon-btn" type="submit">الموافقة </button>
+</form>
+<br />
+
+
+<a class="edit-icon-btn" asp-controller="VPOrder" asp-action="Annual">العودة إلى الطلبات</a>
+
+
+<script type="text/javascript">
+    function check() {
+        var input = document.getElementsByName('myinput');
+        var isvalid = true;
+        for (var i = 0; i < input.length; i++) {
+            if (input[i].value === '') {
+                continue;
+            }
+            else {
+                isvalid = false;
+            }
+        }
+        if (isvalid) {
+            alert("يجب إدخال تعليق واحد على الأقل")
+            return false;
+        }
+    }
+
+</script>

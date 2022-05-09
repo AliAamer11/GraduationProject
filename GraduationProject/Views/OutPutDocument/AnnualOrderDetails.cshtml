@@ -1,0 +1,107 @@
+﻿@model GraduationProject.ViewModels.OutPutDocument.AnnualOrderViewModel
+
+@{
+    ViewData["Title"] = "تفاصيل الطلب السنوي";
+}
+<link href="~/css/button.css" rel="stylesheet" />
+<link href="~/css/tableformanagment.css" rel="stylesheet" />
+<link href="~/css/OrdersDetails.css" rel="stylesheet" />
+<h1 class="tableheader">تفاصيل الطلب السنوي</h1>
+
+@if (ViewBag.isnotSuccess)
+{
+    <div class="alert alert-warning alert-dismissible">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+        <strong style="color:#0c5c82;">لا يمكن الموافقة لأن كمية المادة @ViewBag.itemName الموجودة في المستودع أقل من المطلوب</strong>
+    </div>
+}
+
+<div class="alert alert-danger" id="error-div" style="display:none;">
+    <span id="view-err">
+
+    </span>
+</div>
+
+<form method="post" asp-action="CreateOutPutDoucmentForAnnualOrder" asp-controller="OutPutDocument">
+
+    <div class="table-responsive">
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th style="padding-left:80px">
+                        ترميز المادة
+                    </th>
+                    <th>اسم المادة</th>
+                    <th>كمية الفصل الأول</th>
+                    <th>كمية الفصل الثاني</th>
+                    <th>كمية الفصل الصيفي</th>
+                    <th>الكمية الإجمالية</th>
+                    <th>الكمية المأخوذة</th>
+                    <th>الكمية المتبقية</th>
+                    <th>الكمية المراد إخراجها</th>
+                    <th></th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.AnnualOrders.Count; i++)
+                {
+                    int totalQuantity = Model.AnnualOrders[i].FirstSemQuantity + Model.AnnualOrders[i].SecondSemQuantity + Model.AnnualOrders[i].ThirdSemQuantity;
+                    int recentQuantity = totalQuantity - Model.QuantityModel[i].TakenQuantity;
+                    <tr>
+                        <td>@Model.AnnualOrders[i].Item.BarCode</td>
+                        <td>@Model.AnnualOrders[i].Item.Name</td>
+                        <td>@Model.AnnualOrders[i].FirstSemQuantity</td>
+                        <td>@Model.AnnualOrders[i].SecondSemQuantity</td>
+                        <td>@Model.AnnualOrders[i].ThirdSemQuantity</td>
+                        <td>@totalQuantity</td>
+                        <td>@Model.QuantityModel[i].TakenQuantity</td>
+                        <td><span class="recents">@recentQuantity</span></td>
+                        <td><input asp-for="@Model.QuantityModel[i].InputQuantity" value="@recentQuantity" class="inputs" /></td>
+                        <td><input asp-for="@Model.QuantityModel[i].ItemId" type="hidden" /></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div style="height:20px"></div>
+
+    <div class="row">
+        <div>
+            <button id="submit" type="submit" class="">
+                إنشاء سند الإخراج
+                <i class="bx bx-add-to-queue mr-3"></i>
+            </button>
+        </div>
+
+        <input asp-for="CommisaryName" placeholder="اسم المندوب" required class="commissaryName" />
+        <span asp-validation-for="CommisaryName" class="err text-danger"></span>
+        <input type="hidden" asp-for="OrderId" />
+
+    </div>
+</form>
+<button onclick="checkinputValidation()">check</button>
+
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        var inputs = document.getElementsByClassName("inputs");
+        var recents = document.getElementsByClassName("recents");
+        $(function () {
+            $("#submit").click(function () {
+
+                for (var i = 0; i < inputs.length; i++) {
+                    var recent = parseInt(recents[i].innerHTML);
+                    if (inputs[i].value > recent) {
+                        var div = document.getElementById('error-div');
+                        div.innerHTML = 'القيمة المخرجة أكبر من القيمة المتبقية';
+                        $("#error-div").fadeIn();
+                        return false;
+                    }
+                }
+            });
+
+        });
+    </script>
+}
