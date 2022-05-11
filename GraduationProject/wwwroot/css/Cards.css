@@ -23,6 +23,7 @@ body {
             transition: 0.5s;
         }
 
+
             body .container .card:nth-child(1) .box .content a {
                 background: #FF5733;
             }
