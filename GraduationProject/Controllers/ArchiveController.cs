@@ -106,30 +106,38 @@ namespace GraduationProject.Controllers
 
             var userid = userManager.GetUserId(User);
             //List<AnnualNeedOrderViewModel> AnnualOrderstoAdd = new();
-            for (int i = 0; i < model.Count(); i++)
+            if (orderid != id)
             {
-                if(model[i].IsSelected ==true)
+                for (int i = 0; i < model.Count(); i++)
                 {
-                    var annualorderx = new AnnualOrder
+                    if (model[i].IsSelected == true)
                     {
-                        //AnnualOrderID = model[i].AnnualOrderID,
-                        ItemId = model[i].ItemId,
-                        FirstSemQuantity = model[i].FirstSemQuantity,
-                        SecondSemQuantity = model[i].SecondSemQuantity,
-                        ThirdSemQuantity = model[i].ThirdSemQuantity,
-                        Description = model[i].Description,
-                        FlowRate = model[i].FlowRate,
-                        ApproxRate = model[i].ApproxRate,
-                        OrderId = orderid,
+                        var annualorderx = new AnnualOrder
+                        {
+                            //AnnualOrderID = model[i].AnnualOrderID,
+                            ItemId = model[i].ItemId,
+                            FirstSemQuantity = model[i].FirstSemQuantity,
+                            SecondSemQuantity = model[i].SecondSemQuantity,
+                            ThirdSemQuantity = model[i].ThirdSemQuantity,
+                            Description = model[i].Description,
+                            FlowRate = model[i].FlowRate,
+                            ApproxRate = model[i].ApproxRate,
+                            OrderId = orderid,
 
-                    };
-                     _context.Add(annualorderx);
-                     _context.SaveChanges();
+                        };
+                        _context.Add(annualorderx);
+                        _context.SaveChanges();
 
-                   //AnnualOrderstoAdd.Add(model[i]);
+                        //AnnualOrderstoAdd.Add(model[i]);
+                    }
                 }
             }
-            
+            else
+            {
+                ViewBag.errorMessage = "طلب الإحتياج السنوي لا يمكن التعديل عليه.";
+                return View(model);
+            }
+
             return RedirectToAction("GetAnnualNeedOrders", "AnnualOrder");
 
         }

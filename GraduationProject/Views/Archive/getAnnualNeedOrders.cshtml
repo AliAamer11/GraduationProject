@@ -5,10 +5,39 @@
 }
 <link href="~/css/button.css" rel="stylesheet" />
 <link href="~/css/tableformanagment.css" rel="stylesheet" />
+<style>
+    button {
+        position: relative;
+        display: inline-block;
+        padding: 8px 20px;
+        background: black;
+        border-radius: 5px;
+        text-decoration: none;
+        color: white;
+        margin-top: 20px;
+        right: 35%;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        transition: 0.5s;
+        background: #11101D;
+    }
 
+        button:hover {
+            box-shadow: 0 10px 20px #11101D;
+            background: #FF5733;
+            color: #fff;
+        }
+</style>
 <h1 class="tableheader">طلبات المواد في الإحتياج السنوي</h1>
 <form method="post" asp-action="GetAnnualNeedOrders" asp-route-id="@Model.First().OrderId">
-    <button type="submit">إعادة استخدام المواد في هذا الطلب</button>
+    @if (ViewBag.errorMassage != null)
+    {
+        <div class="alert alert-danger" id="error-div" style="color:black; text-align:center; width:50%; right:25%; display:none;">
+            <span id="view-err">
+                @ViewBag.errorMassage
+            </span>
+        </div>
+    }    
+    <button id="submit" type="submit">إعادة استخدام المواد في هذا الطلب</button>
 
     <div class="table-responsive">
         <table class="styled-table">
@@ -30,33 +59,65 @@
 
                 @for (int i = 0; i < Model.Count; i++)
                 {
-                <tr>
-                    <input type="hidden" asp-for="@Model[i].AnnualOrderID" />
-                    <input type="hidden" asp-for="@Model[i].ItemId" />
-                    <input type="hidden" asp-for="@Model[i].FirstSemQuantity" />
-                    <input type="hidden" asp-for="@Model[i].SecondSemQuantity" />
-                    <input type="hidden" asp-for="@Model[i].ThirdSemQuantity" />
-                    <input type="hidden" asp-for="@Model[i].Description" />
-                    <input type="hidden" asp-for="@Model[i].FlowRate" />
-                    <input type="hidden" asp-for="@Model[i].ApproxRate" />
-                    <input type="hidden" asp-for="@Model[i].OrderId" />
+                    <tr>
+                        <input type="hidden" asp-for="@Model[i].AnnualOrderID" />
+                        <input type="hidden" asp-for="@Model[i].ItemId" />
+                        <input type="hidden" asp-for="@Model[i].FirstSemQuantity" />
+                        <input type="hidden" asp-for="@Model[i].SecondSemQuantity" />
+                        <input type="hidden" asp-for="@Model[i].ThirdSemQuantity" />
+                        <input type="hidden" asp-for="@Model[i].Description" />
+                        <input type="hidden" asp-for="@Model[i].FlowRate" />
+                        <input type="hidden" asp-for="@Model[i].ApproxRate" />
+                        <input type="hidden" asp-for="@Model[i].OrderId" />
 
-                    <td>@Model[i].AnnualOrderID</td>
-                    <td>@Model[i].Item.Name</td>
-                    <td>@Model[i].FirstSemQuantity</td>
-                    <td>@Model[i].SecondSemQuantity</td>
-                    <td>@Model[i].ThirdSemQuantity</td>
-                    <td>@Model[i].Description</td>
-                    <td>@Model[i].FlowRate</td>
-                    <td>@Model[i].ApproxRate</td>
-                    <td>
-                        <input asp-for="@Model[i].IsSelected" class="form-check-input" style="margin-top: 13px;" />
-                    </td>
+                        <td>@Model[i].AnnualOrderID</td>
+                        <td>@Model[i].Item.Name</td>
+                        <td>@Model[i].FirstSemQuantity</td>
+                        <td>@Model[i].SecondSemQuantity</td>
+                        <td>@Model[i].ThirdSemQuantity</td>
+                        <td>@Model[i].Description</td>
+                        <td>@Model[i].FlowRate</td>
+                        <td>@Model[i].ApproxRate</td>
+                        <td>
+                            <input class="inputs" type="checkbox" asp-for="@Model[i].IsSelected" style="margin-top: 13px;" />
+                        </td>
 
-                </tr>
+                    </tr>
                 }
 
             </tbody>
         </table>
     </div>
-</form> 
+</form>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        var inputs = document.getElementsByClassName("inputs");
+        var checkedx = false;
+
+        $(function () {
+
+            $("#submit").click(function () {
+                for (var i = 0; i < inputs.length; i++) {
+                    if (inputs[i].checked) {
+                        checkedx = false;
+                        continue;
+                    }
+                    else {
+                        checkedx = false;
+                    }
+                }
+                if (!checkedx) {
+                    div.innerHTML = ' يجب إختيار مادة واحدة على الأقل ';
+                    $("#error-div").fadeIn();
+                    return false;
+                }
+                return true;
+
+            });
+
+        });
+
+    </script>
+}
