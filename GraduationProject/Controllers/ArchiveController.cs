@@ -60,9 +60,10 @@ namespace GraduationProject.Controllers
         //Get All AnnualNeed To Specific Order///// from archive
         [HttpGet]
         public IActionResult GetAnnualNeedOrders(int id)
-                {
+        
+        {
             //var user = await _userManager.GetUserAsync(User);
-
+            ViewBag.orderid = id;
             var model = new List<AnnualNeedOrderViewModel>();  ///model list of ano for seecting thwm ot use as template
 
             var userid = userManager.GetUserId(User);
@@ -134,8 +135,10 @@ namespace GraduationProject.Controllers
             }
             else
             {
-                ViewBag.errorMessage = "طلب الإحتياج السنوي لا يمكن التعديل عليه.";
-                return View(model);
+                //ViewBag.errorMessage = "طلب الإحتياج السنوي لا يمكن التعديل عليه.";
+                //return View(model);
+                return RedirectToAction("GetAnnualNeedOrders", "Archive");
+
             }
 
             return RedirectToAction("GetAnnualNeedOrders", "AnnualOrder");

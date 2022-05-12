@@ -6,7 +6,7 @@
 <link href="~/css/button.css" rel="stylesheet" />
 <link href="~/css/tableformanagment.css" rel="stylesheet" />
 <style>
-    button {
+    #submit {
         position: relative;
         display: inline-block;
         padding: 8px 20px;
@@ -21,14 +21,17 @@
         background: #11101D;
     }
 
-        button:hover {
+        #submit:hover {
             box-shadow: 0 10px 20px #11101D;
             background: #FF5733;
             color: #fff;
         }
+
+
+
 </style>
 <h1 class="tableheader">طلبات المواد في الإحتياج السنوي</h1>
-<form method="post" asp-action="GetAnnualNeedOrders" asp-route-id="@Model.First().OrderId">
+<form method="post" asp-action="GetAnnualNeedOrders" asp-route-id="@ViewBag.orderid">
     @if (ViewBag.errorMassage != null)
     {
         <div class="alert alert-danger" id="error-div" style="color:black; text-align:center; width:50%; right:25%; display:none;">
@@ -59,7 +62,7 @@
 
                 @for (int i = 0; i < Model.Count; i++)
                 {
-                    <tr>
+                    <tr >
                         <input type="hidden" asp-for="@Model[i].AnnualOrderID" />
                         <input type="hidden" asp-for="@Model[i].ItemId" />
                         <input type="hidden" asp-for="@Model[i].FirstSemQuantity" />
@@ -78,8 +81,9 @@
                         <td>@Model[i].Description</td>
                         <td>@Model[i].FlowRate</td>
                         <td>@Model[i].ApproxRate</td>
-                        <td>
-                            <input class="inputs" type="checkbox" asp-for="@Model[i].IsSelected" style="margin-top: 13px;" />
+                        <td class="containerx"> 
+                            <input class="inputs chckbox" type="checkbox" asp-for="@Model[i].IsSelected" style="margin-top: 13px;" />
+
                         </td>
 
                     </tr>
