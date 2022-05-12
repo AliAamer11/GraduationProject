@@ -5,6 +5,7 @@
 }
 
 <link href="~/css/button.css" rel="stylesheet" />
+<link href="~/css/tableformanagment.css" rel="stylesheet" />
 <h1>طلبات المواد في الطلب غير المخطط</h1>
 <div>
     <a title="إضافة مادة" class="create-icon-btn" asp-action="Create"><i class="fa fa-plus"></i></a>
@@ -16,7 +17,7 @@
 </div>
 
 
-<table class="table">
+<table class="styled-table">
     <thead>
         <tr>
             <th>اسم المادة</th>
@@ -53,7 +54,7 @@
         else
         {
             <tr>لا يوجد طلبات.</tr>
- }
+        }
 
 
     </tbody>
