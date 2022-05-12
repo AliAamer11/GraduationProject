@@ -14,6 +14,11 @@
     <None Remove="Controllers\StockKeeper\**" />
     <None Remove="Controllers\VP\**" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\img\avatar.svg" />
+    <None Include="wwwroot\img\bg.svg" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AspNetCoreHero.ToastNotification" Version="1.1.0" />
     <PackageReference Include="HTMX" Version="0.0.15" />
