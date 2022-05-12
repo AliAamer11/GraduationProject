@@ -2,14 +2,14 @@
 
 <link href="~/css/AnnualNeedCreateEditCard.css" rel="stylesheet" />
 
-<h1 style="left:50%;">تعديل طلب مادة</h1>
+<h1 class="headingg">تعديل طلب مادة</h1>
 <hr />
 <form asp-action="EditAnnualNeedOrder">
     <input type="hidden" asp-for="AnnualOrderID" />
     <input type="hidden" asp-for="OrderId" />
     <input asp-for="Comment" class="form-control" hidden />
 
-    <div class="form-container">
+    <div class="form-container" style=" position: relative; ">
         <div class="col-xs-12 col-sm-12 form-group">
             <div class="row">
                 <div class="col-md-12">
@@ -62,8 +62,9 @@
             <br />
 
             <div class="form-group text-left">
-                <input type="submit" value="تعديل" class="btn btn-primary btn-lg btn1" />
-
+                <button type="submit"  class="btn btn-primary btn-lg btn1" >تعديل
+                    <i class="icon-edit"></i>
+                </button>
             </div>
 
         </div>
