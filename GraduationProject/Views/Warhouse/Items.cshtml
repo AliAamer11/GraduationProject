@@ -1,0 +1,96 @@
+﻿@model IEnumerable<GraduationProject.Data.Models.Items>
+
+@{
+    ViewData["Title"] = "المواد";
+}
+<link href="~/css/button.css" rel="stylesheet" />
+<link href="~/css/tableformanagment.css" rel="stylesheet" />
+<h1 class="tableheader">المواد</h1>
+<div class="table-responsive">
+    <table class="styled-table" id="managmentTable">
+        <thead>
+            <tr>
+                <th onclick="sortTable(2)">
+                    اسم المادة
+                </th>
+                <th onclick="sortTable(3)">
+                    الكمية
+                </th>
+                <th onclick="sortTable(4)">
+                    حالة المادة
+                </th>
+                <th onclick="sortTable(5)">
+                    العلامة
+                </th>
+                <th onclick="sortTable(6)">
+                    الحد الأدنى
+                </th>
+                <th>
+                    ملاحظات
+                </th>
+                <th onclick="sortTable(8)">
+                    صنف المادة
+                </th>
+                <th onclick="sortTable(9)">
+                    وحدة القياس
+                </th>
+                @*<th></th>*@
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                string statuscode = item.BarCode.Substring(0, 1);
+                string maincategory = item.BarCode.Substring(1, 2);
+                string subcategory = item.BarCode.Substring(3, 3);
+                string serial = item.BarCode.Substring(6, 4);
+                string barcode = serial + " " + subcategory + " " + maincategory + " " + statuscode;
+                <tr>
+                    <td>
+                        @item.Name
+                    </td>
+                    <td>
+                        @item.Quantity
+                    </td>
+
+                    @if (item.Status == "1")
+                    {
+                        <td>
+                            مستهلكة
+                        </td>
+                    }
+                    else if (item.Status == "2")
+                    {
+                        <td>
+                            ثابتة
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+                            تالفة
+                        </td>
+                    }
+
+                    <td>
+                        @item.Brand
+                    </td>
+                    <td>
+                        @item.MinimumRange
+                    </td>
+                    <td>
+                        @item.Note
+                    </td>
+                    <td>
+                        @item.Category.Name
+                    </td>
+                    <td>
+                        @item.Measurement.Name
+                    </td>
+                </tr>
+
+            }
+        </tbody>
+    </table>
+</div>
+

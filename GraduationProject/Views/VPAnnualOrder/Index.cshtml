@@ -9,7 +9,7 @@
 
 <form method="post" asp-action="Index" asp-route-OrderId="@OrderId">
     <div class="table-responsive">
-        <table class="styled-table">
+        <table class="styled-table" id="managmentTable">
             <thead>
                 <tr>
                     <th>المادة</th>
@@ -55,12 +55,12 @@
 </div>
 <br />
 <form method="post" asp-action="ApproveOrder" asp-route-id=@OrderId>
-    <button class="create-icon-btn" type="submit">الموافقة </button>
+    <button class="create-icon-btn" type="submit" style="height:8%; width:8%;">الموافقة </button>
 </form>
 <br />
 
 
-<a class="back-icon-btn" asp-controller="VPOrder" asp-action="Annual">العودة إلى الطلبات</a>
+<a class="back-icon-btn " asp-controller="VPOrder" asp-action="Annual" >العودة إلى الطلبات</a>
 
 @section Scripts{
     <partial name="_ValidationScriptsPartial" />
