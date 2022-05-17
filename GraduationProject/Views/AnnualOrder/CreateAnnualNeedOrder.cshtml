@@ -1,37 +1,12 @@
 ﻿@model GraduationProject.ViewModels.AnnualNeedOrders.CreateAnnualNeedOrderViewModel;
 
-<h1>إنشاء طلب مادة</h1>
-<style>
-    .form-container {
-        background-color: rgb(31 30 42 / 0.95);
-        font-family: 'Titillium Web', sans-serif;
-        font-size: 0;
-        padding: 30px;
-        border-radius: 20px;
-        box-shadow: 0 0 25px -15px rgba(0, 0, 0, 0.3);
-    }
+    <link href="~/css/AnnualNeedCreateEditCard.css" rel="stylesheet" />
 
-        .form-container  {
-            color: #fff;
-            font-size: 18px;
-            font-weight: 600;
-            text-transform: capitalize;
-            margin: 0 0 25px;
-        }
-    .clr {
-        background-color: #FF5733;
-        border-color: #ec3913;
-    }
-            
-
-     
-    
-</style>
-
+<h1 class="headingg">إنشاء طلب مادة</h1>
 <hr />
 
 <form asp-action="CreateAnnualNeedOrder" method="post">
-    <div class="form-container">
+    <div class="form-container" style=" position: relative; ">
         <div class="col-xs-12 col-sm-12 form-group">
             <div class="row">
                 <div class="col-md-12">
@@ -85,12 +60,9 @@
             <div>
                 <input asp-for="OrderId" value="@ViewBag.OrderId" class="form-control" hidden />
             </div>
-            <div class="form-group">
-                <input type="submit" value="إنشاء" class="btn btn-primary clr" />
+            <div class="form-group text-left ">
+                <button type="submit" class="btn btn-primary btn-lg btn1">إنشاء<i class="bx bx-add-to-queue mr-3"></i></button>
             </div>
-
-
-
 
             </div>
         </div>

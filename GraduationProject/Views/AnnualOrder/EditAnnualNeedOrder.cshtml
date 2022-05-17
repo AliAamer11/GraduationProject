@@ -1,37 +1,15 @@
 ﻿@model GraduationProject.ViewModels.AnnualNeedOrders.EditAnnualNeedOrderViewModel;
 
-    <style>
-        .form-container {
-            background-color: rgb(31 30 42 / 0.95);
-            font-family: 'Titillium Web', sans-serif;
-            font-size: 0;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 0 25px -15px rgba(0, 0, 0, 0.3);
-        }
+<link href="~/css/AnnualNeedCreateEditCard.css" rel="stylesheet" />
 
-        .form-container {
-            color: #fff;
-            font-size: 18px;
-            font-weight: 600;
-            text-transform: capitalize;
-            margin: 0 0 25px;
-        }
-
-        .clr {
-            background-color: #FF5733;
-            border-color: #ec3913;
-        }
-    </style>
-
-<h1>تعديل طلب مادة</h1>
+<h1 class="headingg">تعديل طلب مادة</h1>
 <hr />
 <form asp-action="EditAnnualNeedOrder">
     <input type="hidden" asp-for="AnnualOrderID" />
     <input type="hidden" asp-for="OrderId" />
     <input asp-for="Comment" class="form-control" hidden />
 
-    <div class="form-container">
+    <div class="form-container" style=" position: relative; ">
         <div class="col-xs-12 col-sm-12 form-group">
             <div class="row">
                 <div class="col-md-12">
@@ -83,9 +61,10 @@
             </div>
             <br />
 
-            <div class="form-group">
-                <input type="submit" value="تعديل" class="btn btn-primary" />
-
+            <div class="form-group text-left">
+                <button type="submit"  class="btn btn-primary btn-lg btn1" >تعديل
+                    <i class="icon-edit"></i>
+                </button>
             </div>
 
         </div>

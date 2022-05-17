@@ -4,9 +4,11 @@
     ViewData["Title"] = "طلبات المواد في الإحتياج السنوي ";
 }
 <link href="~/css/button.css" rel="stylesheet" />
+<link href="~/css/tableformanagment.css" rel="stylesheet" />
+
 <h1>طلبات المواد في الإحتياج السنوي</h1>
 
-<table class="table">
+<table class="styled-table">
     <thead>
         <tr>
             <th>اسم المادة</th>
@@ -27,7 +29,7 @@
                 <td>@ano.ThirdSemQuantity</td>
                 <td>@ano.FlowRate</td>
                 <td>@ano.ApproxRate</td>
-                
+
             </tr>
         }
     </tbody>
