@@ -1,10 +1,7 @@
-﻿@model List<GraduationProject.ViewModels.ManualDistributionViewModel>
-@{
-    var OrderId = ViewBag.OrderId;
-}
+﻿@model List<GraduationProject.ViewModels.AggregationDitributionViewModel>
 <link href="~/css/button.css" rel="stylesheet" />
 <link href="~/css/tableformanagment.css" rel="stylesheet" />
-<h1 class="tableheader">تفاصيل طلبات الإحتياجات السنوية  </h1>
+<h1 class="tableheader">المواد   </h1>
 
 <form method="post" asp-action="ManualDistribution">
     <div class="table-responsive">
@@ -16,28 +13,27 @@
                     <th>كمية الفصل الثاني  </th>
                     <th>كمية الفصل الصيفي</th>
                     <th>الكمية الكلية</th>
-                    <th></th>
                 </tr>
             </thead>
             @for (int i = 0; i < Model.Count; i++)
             {
                 <tbody>
                     <tr>
+                        <input hidden asp-for="@Model[i].ItemName" />
                         <td>@Model[i].ItemName</td>
                         <td><input asp-for="@Model[i].FirstSemQuantity" /></td>
                         <td><input asp-for="@Model[i].SecondSemQuantity" /></td>
                         <td><input asp-for="@Model[i].ThirdSemQuantity" /></td>
                         <td><input asp-for="@Model[i].TotalQuantity" /></td>
-                        <td><input type="hidden" asp-for="@Model[i].AnnualOrderID" /></td>
                     </tr>
                 </tbody>
             }
         </table>
     </div>
     <br />
-    <button class="create-icon-btn" asp-route-OrderId="@OrderId" type="submit"> توزيع الكميات الجديدة </button>
+    <button class="create-icon-btn" asp-action="AggregationDistribution" type="submit"> توزيع الكميات الجديدة </button>
 </form>
 <br />
-<a class="back-icon-btn" asp-controller="VPOrder" asp-action="ManualDistributionIndex">العودة إلى الطلبات</a> 
+<a class="back-icon-btn" asp-controller="VPOrder" asp-action="DistributionIndex">العودة الى الاختيارات</a>
 
 

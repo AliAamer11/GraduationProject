@@ -1,45 +1,54 @@
 ﻿@model GraduationProject.ViewModels.UnplannedOrders.EditUnplannedOrderViewModel;
 
-<h1>تعديل طلب مادة</h1>
+    <link href="~/css/AnnualNeedCreateEditCard.css" rel="stylesheet" />
 
+    <h1 class="headingg">تعديل طلب مادة</h1>
+    <hr />
 
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <input type="hidden" asp-for="UnPlannedOrderID" />
-            <input type="hidden" asp-for="OrderId" />
-            <input type="hidden" asp-for="Comment" />
+    <form asp-action="Edit">
 
-            <div class="form-group">
-                <label class="control-label">اسم المادة</label>
-                <select asp-for="ItemId" asp-items="ViewBag.Item"></select>
-                <span asp-validation-for="ItemId" class="text-danger"></span>
+        <div class="form-container" style="width: 55%; right: 300px; ">
+            <div class="col-xs-12 col-sm-12 form-group">
+
+                <div class="col-md-12">
+                    <input type="hidden" asp-for="UnPlannedOrderID" />
+                    <input type="hidden" asp-for="OrderId" />
+                    <input type="hidden" asp-for="Comment" />
+                </div>
+
+                <div class="col-md-12">
+                    <label >اسم المادة</label>
+                    <select asp-for="ItemId" asp-items="ViewBag.Item"  class="form-control"></select>
+                    <span asp-validation-for="ItemId" class="text-danger"></span>
+                </div>
+                <div class="col-md-12">
+                    <label>كمية المادة</label>
+                    <input asp-for="Quantity" class="form-control" />
+                    <span asp-validation-for="Quantity" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-12">
+                    <label > توصيف</label>
+                    <input asp-for="Description" class="form-control" />
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+                <div class="col-md-12">
+                    <label class="control-label"> سبب الطلب</label>
+                    <input asp-for="Reason" class="form-control" />
+                    <span asp-validation-for="Reason" class="text-danger"></span>
+                </div>
+                <br />
+                <div class="form-group text-left">
+
+                    <button type="submit"  class="btn btn-primary btn-lg btn1" >تعديل
+                        <i class="icon-edit"></i>
+                    </button>
+                </div>
+
             </div>
-            <div class="form-group">
-                <label class="control-label">كمية المادة</label>
-                <input asp-for="Quantity" class="form-control" />
-                <span asp-validation-for="Quantity" class="text-danger"></span>
-            </div>
+                </div>
+    </form>
 
-            <div class="form-group">
-                <label class="control-label"> توصيف</label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label class="control-label"> سبب الطلب</label>
-                <input asp-for="Reason" class="form-control" />
-                <span asp-validation-for="Reason" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <input type="submit" value="تعديل" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
-
-@section Scripts{
-    <partial name="_ValidationScriptsPartial" />
-}
+    @section Scripts{
+        <partial name="_ValidationScriptsPartial" />
+    }

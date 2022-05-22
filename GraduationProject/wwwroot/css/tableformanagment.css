@@ -80,3 +80,13 @@ th {
         .styled-table tbody tr:last-of-type {
             border-bottom: 2px solid var(--main-blue);
         }
+
+td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+th {
+    text-align: center;
+    vertical-align: middle;
+}

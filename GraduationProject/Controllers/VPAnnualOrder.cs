@@ -1,6 +1,7 @@
 ﻿using GraduationProject.Data;
 using GraduationProject.Data.Models;
 using GraduationProject.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace GraduationProject.Controllers
 {
+    [Authorize(Roles = "VicePris")]
     public class VPAnnualOrderController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -47,7 +49,7 @@ namespace GraduationProject.Controllers
         public async Task<IActionResult> ApproveOrder(int? id)
         {
             var order = await _context.Orders.FindAsync(id);
-            order.State = "2";
+            order.State = OrderState.NeedOutPutDocmnet;
             _context.Update(order);
             _context.SaveChanges();
 
@@ -68,7 +70,7 @@ namespace GraduationProject.Controllers
                 await _context.SaveChangesAsync();
             }
             var order = await _context.Orders.FirstOrDefaultAsync(o => o.OrderID == OrderId);
-            order.State = "0";
+            order.State = OrderState.RequestingParty;
             _context.Update(order);
             await _context.SaveChangesAsync();
 
@@ -76,7 +78,6 @@ namespace GraduationProject.Controllers
         }
     }
 }
-
 
 
 //[ValidateAntiForgeryToken]

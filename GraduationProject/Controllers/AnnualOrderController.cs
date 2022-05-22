@@ -1,5 +1,6 @@
 ﻿using GraduationProject.Data;
 using GraduationProject.Data.Models;
+using GraduationProject.Service;
 using GraduationProject.ViewModels.AnnualNeedOrders;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -21,14 +22,20 @@ namespace GraduationProject.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly IUserService userService;
+
 
         public AnnualOrderController(ApplicationDbContext context,
-                    UserManager<ApplicationUser> userManager)
+                    UserManager<ApplicationUser> userManager,
+                                IUserService userService)
         {
             this.userManager = userManager;
+            this.userService = userService;
+
             _context = context;
         }
-        public string CheckOrderState(int id)
+
+        internal string CheckOrderState(int id)
         {
             var model = _context.Orders.Find(id);
 
@@ -51,7 +58,7 @@ namespace GraduationProject.Controllers
         }
         public int GetAnnualNeedOrderid()
         {
-            var userid = userManager.GetUserId(User);
+            var userid = userService.GetUserId();
             DateTime CurrentDate = DateTime.Now;
             int CurrentYear = CurrentDate.Year;
 
@@ -115,6 +122,8 @@ namespace GraduationProject.Controllers
             //    ///either return the user to home page or let him view the annual need withoput option of alteration
             //    return RedirectToAction("Home", "Order");
         }
+
+
 
         //Get All AnnualNeed to Order where it is still  complete & needs alteration
         public IActionResult GetAnnualNeedAltered()

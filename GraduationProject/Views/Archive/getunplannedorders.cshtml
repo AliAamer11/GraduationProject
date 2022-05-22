@@ -4,30 +4,33 @@
     ViewData["Title"] = "طلبات المواد في الطلب غير المخطط ";
 }
 <link href="~/css/button.css" rel="stylesheet" />
+<link href="~/css/tableformanagment.css" rel="stylesheet" />
 <h1>طلبات المواد في الطلب غير المخطط</h1>
 <h1></h1>
+<div class="table-responsive">
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>اسم المادة</th>
-            <th>الكمية المطلوبة</th>
-            <th>توصيف</th>
-            <th>سبب الطلب</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var uo in Model)
-        {
+    <table class="styled-table">
+        <thead>
             <tr>
-                <td>@Html.DisplayFor(modelItem => uo.Item.Name)</td>
-                <td>@uo.Quantity</td>
-                <td>@uo.Description</td>
-                <td>@uo.Reason</td>
-
-                
+                <th>اسم المادة</th>
+                <th>الكمية المطلوبة</th>
+                <th>توصيف</th>
+                <th>سبب الطلب</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var uo in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => uo.Item.Name)</td>
+                    <td>@uo.Quantity</td>
+                    <td>@uo.Description</td>
+                    <td>@uo.Reason</td>
 
+
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>

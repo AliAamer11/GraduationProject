@@ -4,51 +4,57 @@
 }
 
 
-<link href="~/css/createItem.css" rel="stylesheet" />
-<div class="container">
-    <form id='create-form' asp-action="Create">
-        <p id='description' class="header">
-            إضافة مادة لطلب غير مخطط
-        </p>
-        @if (ViewBag.errorMassage != null)
-        {
-            <h4 class="alert alert-danger">@ViewBag.errorMassage</h4>
-        }
+<link href="~/css/AnnualNeedCreateEditCard.css" rel="stylesheet" />
 
-        <div class="form-input">
-            <label class="control-label">اسم المادة</label>
-            <select asp-for="ItemId" asp-items="ViewBag.Item"></select>
-            <span asp-validation-for="ItemId" class="text-danger"></span>
+<h1 class="headingg">
+    إضافة مادة لطلب غير مخطط
+</h1>
+<hr />
+<form id='create-form' asp-action="Create">
+
+    <div class="form-container" style="width: 55%; right: 300px; ">
+        <div class="col-xs-12 col-sm-12 form-group">
+
+            @if (ViewBag.errorMassage != null)
+            {
+                <h4 class="alert alert-danger">@ViewBag.errorMassage</h4>
+            }
+
+            <div class="col-md-12">
+                <label >اسم المادة</label>
+                <select asp-for="ItemId" asp-items="ViewBag.Item" class="form-control"></select>
+                <span asp-validation-for="ItemId" class="text-danger"></span>
+            </div>
+            <div class="col-md-12">
+                <label>كمية المادة</label>
+                <input asp-for="Quantity" class="form-control" />
+                <span asp-validation-for="Quantity" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-12">
+                <label>توصيف</label>
+                <input asp-for="Description"  class="form-control"/>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-12">
+                <label>سبب إحتياج المادة</label>
+                <input asp-for="Reason" class="form-control" />
+                <span asp-validation-for="Reason" class="text-danger"></span>
+            </div>
+
+            <div>
+                <input asp-for="OrderId" value="@ViewBag.OrderId" class="form-control" hidden />
+            </div>
+            <br />
+            <div class="form-group text-left">
+                <button type='submit' id='submit' class="btn btn-primary btn-lg btn1">إضافة مادة<i class="bx bx-add-to-queue mr-3"></i></button>
+            </div>
         </div>
-        <div class='form-input'>
-            <label>كمية المادة</label>
-            <input asp-for="Quantity" class='form-input-size' />
-            <span asp-validation-for="Quantity" class="text-danger"></span>
         </div>
-
-        <div class="form-input">
-            <label>توصيف</label>
-            <input asp-for="Description" class="form-input-size" />
-            <span asp-validation-for="Description" class="text-danger"></span>
-        </div>
-
-        <div class="form-input">
-            <label>سبب إحتياج المادة</label>
-            <input asp-for="Reason" class="form-input-size" />
-            <span asp-validation-for="Reason" class="text-danger"></span>
-        </div>
-
-        <div>
-            <input asp-for="OrderId" value="@ViewBag.OrderId" class="form-control" hidden />
-        </div>
-
-        <div class='form-input'>
-            <button type='submit' id='submit'>إضافة مادة<i class="bx bx-add-to-queue mr-3"></i></button>
-        </div>
-    </form>
-</div>
+</form>
 
 
-@section Scripts{
-    <partial name="_ValidationScriptsPartial" />
-}
+    @section Scripts{
+        <partial name="_ValidationScriptsPartial" />
+    }
