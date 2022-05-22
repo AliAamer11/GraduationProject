@@ -14,6 +14,22 @@
 
 <h1 class="tableheader-right mr-4" style="color: #FF5733">القياسات</h1>
 
+@if (ViewBag.isnotDeleted)
+{
+    <div class="alert alert-warning alert-dismissible">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+        <strong style="color:#0c5c82;">لا يمكن حذف هذا القياس لأنه يحتوي على مواد </strong>
+    </div>
+}
+
+@if (ViewBag.isDeleted)
+{
+    <div class="alert alert-success alert-dismissible">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+        <strong style="color:#0c5c82;">تم حذف القياس بنجاح </strong>
+    </div>
+}
+
 <button type="button" title="إضافة قياس" class="create-icon-btn" data-toggle="ajax-modal" data-target="#addMeasurement"
         data-url="@Url.Action("Create")">
     <i class="fa fa-plus"></i>
@@ -21,10 +37,10 @@
 
 <div id="PlaceHolderHer"></div>
 <div class="table-responsive">
-    <table class="styled-table">
+    <table class="styled-table" id="managmentTable">
         <thead>
             <tr>
-                <th>
+                <th onclick="sortTable(0)">
                     اسم القياس
                 </th>
                 <th></th>
@@ -41,8 +57,10 @@
                         <div class="d-inline-flex">
                             <button type="button" title="تعديل" class="edit-icon-btn ml-1" data-toggle="ajax-modal" data-target="#addMeasurement"
                                     data-url="@Url.Action($"Edit/{item.MeasurmentID}")">
-                                <i class="fa fa-edit"></i>
+                                <i class="far fa-edit"></i>
                             </button>
+                            <a asp-action="ExistedItems" title="المواد الموجودة" asp-route-measurementId="@item.MeasurmentID" class="detailslist-icon-btn mr-1 ml-2"><i class='far fa-file' style="margin-top:7px"></i></a>
+
                             <form method="post" asp-action="Delete" asp-controller="Measurements" asp-route-id="@item.MeasurmentID">
                                 <button style="width:60px" onclick="return confirm('هل تود بالفعل حذف القياس @item.Name ؟ ')" type="submit" class="delete-icon-btn">
                                     <i class='far fa-trash-alt'></i>

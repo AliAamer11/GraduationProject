@@ -34,6 +34,7 @@ namespace GraduationProject.Controllers
         {
             AddMoreItemForInputDocument model = new AddMoreItemForInputDocument();
             ViewData["Item"] = new SelectList(bindListforItems(), "Value", "Text");
+            ViewData["source"] = new SelectList(bindListforsource(), "Value", "Text");
             return PartialView("_AddMorePartialView", model);
         }
         [HttpGet]
@@ -83,6 +84,8 @@ namespace GraduationProject.Controllers
                                 ItemId = item.ItemId,
                                 Quantity = item.Quantity,
                                 Source = item.source,
+                                Brand = item.Brand,
+                                Supplier = item.Supplier,
                             };
                             _context.Add(inputDocumentDetail);
                             await _context.SaveChangesAsync();
@@ -137,6 +140,15 @@ namespace GraduationProject.Controllers
             {
                 list.Add(new SelectListItem { Text = item.BarCode + "  " + item.Name, Value = item.ItemID.ToString() });
             }
+            return list;
+        }
+
+        private List<SelectListItem> bindListforsource()
+        {
+            List<SelectListItem> list = new List<SelectListItem>();
+            list.Add(new SelectListItem { Text = "هبة", Value = "هبة" });
+            list.Add(new SelectListItem { Text = "شراء", Value = "شراء" });
+            list.Add(new SelectListItem { Text = "تبرع", Value = "تبرع" });
             return list;
         }
     }

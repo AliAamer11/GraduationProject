@@ -47,12 +47,12 @@
             <h2>المستخدمين</h2>
             <a title="إضافة مستخدم" class="create-icon-btn" asp-action="CreateUser"><i class="fa fa-plus"></i></a>
         </div>
-        <table class="styled-table">
+        <table class="styled-table" id="managmentTable">
             <thead>
                 <tr>
-                    <th>اسم المستخدم</th>
-                    <th>البريد</th>
-                    <th>النوع </th>
+                    <th onclick="sortTable(0)">اسم المستخدم</th>
+                    <th onclick="sortTable(1)">البريد</th>
+                    <th onclick="sortTable(2)">النوع </th>
                     <th></th>
                 </tr>
             </thead>

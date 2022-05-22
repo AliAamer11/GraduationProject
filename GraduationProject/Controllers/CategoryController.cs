@@ -21,8 +21,10 @@ namespace GraduationProject.Controllers
         {
             _context = context;
         }
-        public IActionResult Index()
+        public IActionResult Index(bool isDeleted = false, bool isnotDeleted = false)
         {
+            ViewBag.isDeleted = isDeleted;
+            ViewBag.isnotDeleted = isnotDeleted;
             var Categories = _context.Category.Include(c => c.Category).ToList();
             return View(Categories);
         }
@@ -186,11 +188,28 @@ namespace GraduationProject.Controllers
                 // TODO make this logic better
                 return RedirectToAction(nameof(Index));
             }
+            if (checkifCategoryHasItems(category.CategoryID))
+            {
+                return RedirectToAction(nameof(Index), new { isnotDeleted = true, isDeleted = false });
+            }
             _context.Category.Remove(category);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new { isnotDeleted = false, isDeleted = true });
         }
 
+        //get the items that below to measurment
+        [HttpGet]
+        public IActionResult ExistedItems(int? categoryId)
+        {
+            if (categoryId == null)
+            {
+                return NotFound();
+            }
+            var category = _context.Category.FirstOrDefault(c => c.CategoryID == categoryId);
+            var items = _context.Items.Include(i => i.Measurement).Include(i => i.Category).Where(i => i.CategoryId == categoryId).ToList();
+            ViewBag.measurmentName = category.Name;
+            return View(items);
+        }
 
         /// <summary>
         /// this method to check if CategoryName Duplicate or not
@@ -215,6 +234,17 @@ namespace GraduationProject.Controllers
             }
             return check;
         }
+
+        /// <summary>
+        /// when delete the category we will check if this category has items or not 
+        /// </summary>
+        /// <param name="categoryId"></param>
+        /// <returns>true if category has items otherwise false</returns>
+        private bool checkifCategoryHasItems(int categoryId)
+        {
+            return _context.Items.Any(i => i.CategoryId == categoryId);
+        }
+
 
         /// <summary>
         /// this method to check if CategoryName Duplicate or not for Update 
@@ -317,7 +347,7 @@ namespace GraduationProject.Controllers
             List<SelectListItem> list = new List<SelectListItem>();
             list.Add(new SelectListItem { Text = " ", Value = "-1" });
 
-            var category = _context.Category.Where(c=>c.MainCategoryId==null).ToList();
+            var category = _context.Category.Where(c => c.MainCategoryId == null).ToList();
             foreach (var item in category)
             {
                 list.Add(new SelectListItem { Text = item.Name, Value = item.CategoryID.ToString() });
@@ -333,7 +363,7 @@ namespace GraduationProject.Controllers
             List<SelectListItem> list = new List<SelectListItem>();
             list.Add(new SelectListItem { Text = " ", Value = "-1" });
 
-            var category = _context.Category.Where(c => c.CategoryID != id && c.MainCategoryId==null).ToList();
+            var category = _context.Category.Where(c => c.CategoryID != id && c.MainCategoryId == null).ToList();
             foreach (var item in category)
             {
                 list.Add(new SelectListItem { Text = item.Name, Value = item.CategoryID.ToString() });

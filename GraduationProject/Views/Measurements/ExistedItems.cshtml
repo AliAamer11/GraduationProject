@@ -1,39 +1,11 @@
 ﻿@model IEnumerable<GraduationProject.Data.Models.Items>
 
 @{
-    ViewData["Title"] = "المواد";
+    ViewData["Title"] = "المواد الموجودة للقياس";
 }
-<style>
-    .exceded-icon-btn {
-        background: var(--white);
-        border: 2px solid var(--main-blue);
-        box-shadow: 0px 5px 5px var(--main-blue);
-        padding: 5px 11px;
-        color: var(--main-blue);
-        cursor: pointer;
-        transition: all .4s ease-in-out;
-        font-weight: bold;
-        border-radius: 30px;
-        width: auto;
-        text-decoration: none;
-        bottom: 83px;
-        left: 20px;
-        position: fixed;
-        font-size: 20px;
-    }
-
-        .exceded-icon-btn:hover {
-            background: var(--main-blue);
-            color: var(--white);
-            border: 1px solid var(--white);
-            transform: scale(1.05);
-            text-decoration: none;
-        }
-</style>
 <link href="~/css/button.css" rel="stylesheet" />
 <link href="~/css/tableformanagment.css" rel="stylesheet" />
-<h1 class="tableheader">المواد</h1>
-<a asp-action="ExcededMinimumRange" title="المواد التي تخطت الحد الأدنى" class="exceded-icon-btn"> <i class='fas fa-chart-pie'></i></a>
+<h1 class="tableheader">المواد التي لها القياس @ViewBag.measurmentName</h1>
 
 <a title="إضافة صنف" class="create-icon-btn" asp-action="Create"><i class="fa fa-plus"></i></a>
 <div class="table-responsive">
@@ -63,9 +35,6 @@
                 </th>
                 <th onclick="sortTable(7)">
                     وحدة القياس
-                </th>
-                <th>
-
                 </th>
                 @*<th></th>*@
             </tr>
@@ -107,6 +76,7 @@
                             تالفة
                         </td>
                     }
+
                     <td>
                         @item.MinimumRange
                     </td>
@@ -119,10 +89,6 @@
                     <td>
                         @item.Measurement.Name
                     </td>
-                    <td>
-                        <a asp-action="Edit" title="تعديل" asp-route-itemId="@item.ItemID" class="edit-icon-btn ml-1"><i class='far fa-edit'></i></a>
-                    </td>
-
                 </tr>
 
             }

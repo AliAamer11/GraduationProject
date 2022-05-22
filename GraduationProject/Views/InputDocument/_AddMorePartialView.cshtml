@@ -9,22 +9,31 @@
     <!-------"AddMoreList"----- this is AddMoreViewModel List Object wich is define ViewModel file -->
     <div id="removeAddMoreDiv" class="col-xs-12 col-sm-12 form-group">
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <label>المادة</label>
                 <select style="height:auto" asp-for="ItemId" class="form-control" asp-items="ViewBag.Item" required></select>
                 <span asp-validation-for="ItemId" class="text-danger"></span>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <label>الكمية</label>
                 <input asp-for="Quantity" class="form-control" required />
                 <span asp-validation-for="Quantity" class="text-danger"></span>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-2">
                 <label>المصدر</label>
-                <input asp-for="source" class="form-control" required />
+                <select style="height:auto" asp-for="source" class="form-control" asp-items="ViewBag.source" required></select>
                 <span asp-validation-for="source" class="text-danger"></span>
             </div>
-
+            <div class="col-md-2">
+                <label>المورد</label>
+                <input asp-for="Supplier" class="form-control" required />
+                <span asp-validation-for="Supplier" class="text-danger"></span>
+            </div>
+            <div class="col-md-2">
+                <label>العلامة التجارية</label>
+                <input asp-for="Brand" class="form-control" required />
+                <span asp-validation-for="Brand" class="text-danger"></span>
+            </div>
             <div class="col-md-1">
                 <button type="button" class="delete-icon-btn btn-sm removeDiv">
                     <i class='far fa-trash-alt'></i>

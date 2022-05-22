@@ -1,0 +1,35 @@
+﻿@model GraduationProject.ViewModels.Items.editItemViewModel
+
+@{
+    ViewData["Title"] = "تعديل المادة";
+}
+<link href="~/css/button.css" rel="stylesheet" />
+<link href="~/css/createItem.css" rel="stylesheet" />
+<div class="container">
+    <form id='create-form' asp-action="Edit">
+        <p id='description' class="header">
+            تعديل المادة
+        </p>
+        <input type="hidden" asp-for="ItemID" />
+        <div class='form-input'>
+            <label>الحد الأدنى</label>
+            <input asp-for="MinimumRange" class='form-input-size' onkeypress="return onlyNumberKey(event)" />
+            <span asp-validation-for="MinimumRange" class="text-danger"></span>
+        </div>
+        <div class='form-input'>
+            <label>ملاحظات عن المادة</label>
+            <textarea asp-for="Note"></textarea>
+            <span asp-validation-for="Note" class="text-danger"></span>
+        </div>
+        <div class='form-input'>
+            <button type='submit' id='submit'>تعديل المادة<i class="bx bx-edit mr-3"></i></button>
+        </div>
+    </form>
+</div>
+
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/enternumber.js"></script>
+}
+

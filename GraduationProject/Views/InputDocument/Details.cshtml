@@ -8,20 +8,26 @@
 <h1 class="tableheader"> سند إدخال المواد في تاريخ @Model.CreatedAt.Date.ToString("dd/M/yyyy")</h1>
 <div>
     <div class="table-responsive">
-        <table class="styled-table">
+        <table class="styled-table" id="managmentTable">
             <thead>
                 <tr>
-                    <th style="padding-left:80px">
+                    <th style="padding-left:80px" onclick="sortTable(0)">
                         رمز المادة
                     </th>
-                    <th>
+                    <th onclick="sortTable(1)">
                         اسم المادة
                     </th>
-                    <th>
+                    <th onclick="sortTable(2)">
                         الكمية
                     </th>
-                    <th>
+                    <th onclick="sortTable(3)">
                         المصدر
+                    </th>
+                    <th onclick="sortTable(4)">
+                        المورد
+                    </th>
+                    <th onclick="sortTable(5)">
+                        العلامة التجارية
                     </th>
                 </tr>
             </thead>
@@ -33,21 +39,29 @@
                     string subcategory = item.Item.BarCode.Substring(3, 3);
                     string serial = item.Item.BarCode.Substring(6, 4);
                     string barcode = serial + " " + subcategory + " " + maincategory + " " + statuscode;
+                <tr>
+                    <td>
+                        @barcode
+                    </td>
+                    <td>
+                        @item.Item.Name
+                    </td>
+                    <td>
+                        @item.Quantity
+                    </td>
+                    <td>
+                        @item.Source
+                    </td>
+                    <td>
+                        @item.Supplier
+                    </td>
+                    <td>
+                        @item.Brand
+                    </td>
+                </tr>
                     <tr>
-                        <td>
-                            @barcode
-                        </td>
-                        <td>
-                            @item.Item.Name
-                        </td>
-                        <td>
-                            @item.Quantity
-                        </td>
-                        <td>
-                            @item.Source
-                        </td>
-                    </tr>
-                    <tr>
+                        <td></td>
+                        <td></td>
                         <td></td>
                         <td></td>
                         <td></td>
