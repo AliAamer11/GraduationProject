@@ -20,8 +20,12 @@ namespace GraduationProject.Controllers
         {
             _context = context;
         }
-        public IActionResult Index()
+
+        [HttpGet]
+        public IActionResult Index(bool isDeleted = false, bool isnotDeleted = false)
         {
+            ViewBag.isDeleted = isDeleted;
+            ViewBag.isnotDeleted = isnotDeleted;
             var measurements = _context.Measurements.ToList();
             return View(measurements);
         }
@@ -30,7 +34,7 @@ namespace GraduationProject.Controllers
         public IActionResult Create()
         {
             CreateMeasurementViewModel model = new CreateMeasurementViewModel();
-            return PartialView("_MeasurementModelPartial",model);
+            return PartialView("_MeasurementModelPartial", model);
         }
 
         [HttpPost]
@@ -89,7 +93,7 @@ namespace GraduationProject.Controllers
             {
                 return NotFound();
             }
-            var measurement =  _context.Measurements.Find(id);
+            var measurement = _context.Measurements.Find(id);
             if (measurement == null)
             {
                 return NotFound();
@@ -97,9 +101,9 @@ namespace GraduationProject.Controllers
             var editmeasurmentviewmodel = new EditMeasurementViewModel()
             {
                 MeasurementID = measurement.MeasurmentID,
-               Name = measurement.Name
+                Name = measurement.Name
             };
-            return PartialView("_EditMeasurementModelPartial",editmeasurmentviewmodel);
+            return PartialView("_EditMeasurementModelPartial", editmeasurmentviewmodel);
             //return View(editmeasurmentviewmodel);
         }
 
@@ -183,14 +187,41 @@ namespace GraduationProject.Controllers
             {
                 //so the category isn't found
                 // TODO make this logic better
+
                 return RedirectToAction(nameof(Index));
+            }
+            if (checkifMeasurmentHasItems(measurement.MeasurmentID))
+            {
+                return RedirectToAction(nameof(Index), new { isnotDeleted = true, isDeleted = false });
             }
             _context.Measurements.Remove(measurement);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new { isnotDeleted = false, isDeleted = true });
         }
 
+        //get the items that below to measurment
+        [HttpGet]
+        public IActionResult ExistedItems(int? measurementId)
+        {
+            if (measurementId == null)
+            {
+                return NotFound();
+            }
+            var measument = _context.Measurements.FirstOrDefault(m => m.MeasurmentID == measurementId);
+            var items = _context.Items.Include(i => i.Measurement).Include(i => i.Category).Where(i => i.MeasurementId == measurementId).ToList();
+            ViewBag.measurmentName = measument.Name;
+            return View(items);
+        }
 
+        /// <summary>
+        /// when delete the category we will check if this category has items or not 
+        /// </summary>
+        /// <param name="measurementId"></param>
+        /// <returns>true if category has items otherwise false</returns>
+        private bool checkifMeasurmentHasItems(int measurmentId)
+        {
+            return _context.Items.Any(i => i.MeasurementId == measurmentId);
+        }
 
 
         /// <summary>
@@ -222,10 +253,10 @@ namespace GraduationProject.Controllers
         /// </summary>
         /// <param name="name"></param>
         /// <returns>true if Duplicate otherwise false</returns>
-        private bool checkMeasurementyName(string name,int id)
+        private bool checkMeasurementyName(string name, int id)
         {
             bool check = false;
-            var measurementsName = _context.Measurements.Where(m=>m.MeasurmentID!=id).Select(x => new
+            var measurementsName = _context.Measurements.Where(m => m.MeasurmentID != id).Select(x => new
             {
                 measurementName = x.Name
             });

@@ -209,6 +209,11 @@ namespace GraduationProject.Controllers
                     // we need to Update Item Quantity
                     Items item = await _context.Items.FirstOrDefaultAsync(i => i.ItemID == element.ItemId);
                     item.Quantity = item.Quantity - element.InputQuantity;
+                    //check if item Exceded the MiniumumRange
+                    if (item.MinimumRange > item.Quantity)
+                    {
+                        item.ExceededMinimumRange = item.ExceededMinimumRange + 1;
+                    }
                     _context.Update(item);
                     await _context.SaveChangesAsync();
 
@@ -218,7 +223,6 @@ namespace GraduationProject.Controllers
                 }
                 //_4_
                 // we need to Check Order if Done or Not 
-                //Create Method
                 if (checkifAnnualOrderDone(viewModel.OrderId))
                 {
                     // if check was true we need to Update The OrderStatus
@@ -260,6 +264,34 @@ namespace GraduationProject.Controllers
             viewModel.CommisaryName = "";
             viewModel.OrderId = orderId;
             viewModel.UnPlannedOrderList = unPlannedOrderDetails;
+            //
+            //this for Taken Quantity
+            List<OutPutDocumnetForAnnualViewModel> TakenQuantity = new List<OutPutDocumnetForAnnualViewModel>();
+            foreach (var item in unPlannedOrderDetails)
+            {
+                OutPutDocumnetForAnnualViewModel model = new OutPutDocumnetForAnnualViewModel();
+                model.TakenQuantity = 0;
+                model.InputQuantity = 0;
+                model.ItemId = item.ItemId;
+                TakenQuantity.Add(model);
+            }
+
+            var outPutDoument = await _context.OutPutDocument.Where(o => o.OrderId == orderId).ToListAsync();
+            if (outPutDoument == null)
+            {
+                viewModel.QuantityModel = TakenQuantity;
+                return View(viewModel);
+            }
+
+            foreach (var element in outPutDoument)
+            {
+                var OutPutDocumnetDetails = await _context.OutPutDocumentDetails.Where(o => o.OutPutDocumentId == element.OutPutDocumentID).ToListAsync();
+                for (int i = 0; i < OutPutDocumnetDetails.Count; i++)
+                {
+                    TakenQuantity[i].TakenQuantity += OutPutDocumnetDetails[i].Quantity;
+                }
+            }
+            viewModel.QuantityModel = TakenQuantity;
             return View(viewModel);
         }
 
@@ -309,21 +341,26 @@ namespace GraduationProject.Controllers
                 await _context.SaveChangesAsync();
 
                 // then we need to create the details for OutPutDocument
-                foreach (var element in UnPlannedOrders)
+                foreach (var element in viewModel.QuantityModel)
                 {
                     OutPutDocumentDetails outPutDocumentDetails = new OutPutDocumentDetails()
                     {
                         CommissaryName = viewModel.CommisaryName,
                         CreatedAt = DateTime.Now.Date,
-                        Quantity = element.Quantity,
+                        Quantity = element.InputQuantity,
                         OutPutDocumentId = outPutDocument.OutPutDocumentID,
                         ItemId = element.ItemId,
                     };
 
                     //_3_
-                    // we need to Update Item Quantity
+                    // we need to Update Item Quantity 
                     Items item = await _context.Items.FirstOrDefaultAsync(i => i.ItemID == element.ItemId);
-                    item.Quantity = item.Quantity - element.Quantity;
+                    item.Quantity = item.Quantity - element.InputQuantity;
+                    //check if item Exceded the MiniumumRange
+                    if (item.MinimumRange > item.Quantity)
+                    {
+                        item.ExceededMinimumRange = item.ExceededMinimumRange + 1;
+                    }
                     _context.Update(item);
                     await _context.SaveChangesAsync();
 
@@ -333,10 +370,14 @@ namespace GraduationProject.Controllers
                 }
                 //_4_
                 // we need to Update Order State 
-                var order = await _context.Orders.FirstOrDefaultAsync(o => o.OrderID == viewModel.OrderId);
-                order.State = OrderState.Finishid;
-                _context.Update(order);
-                await _context.SaveChangesAsync();
+                if (checkifUnPlannedOrderDone(viewModel.OrderId))
+                {
+                    //if check method was true we need to Update OrderState
+                    var order = await _context.Orders.FirstOrDefaultAsync(o => o.OrderID == viewModel.OrderId);
+                    order.State = OrderState.Finishid;
+                    _context.Update(order);
+                    await _context.SaveChangesAsync();
+                }
                 return RedirectToAction("Orders", "OutPutDocument");
             }
             catch
@@ -358,6 +399,50 @@ namespace GraduationProject.Controllers
         }
 
 
+        /// <summary>
+        /// this method for check if the Annual Order was Done or not 
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns>flase if not otherwise true</returns>
+        private bool checkifUnPlannedOrderDone(int orderId)
+        {
+            var outPutDoument = _context.OutPutDocument.Where(o => o.OrderId == orderId).ToList();
+            var unPlannedOrder = _context.UnPlannedOrder.Where(o => o.OrderId == orderId).ToList();
+            bool check = false;
+
+            List<OutPutDocumnetForAnnualViewModel> TakenQuantity = new List<OutPutDocumnetForAnnualViewModel>();
+            foreach (var item in unPlannedOrder)
+            {
+                OutPutDocumnetForAnnualViewModel model = new OutPutDocumnetForAnnualViewModel();
+                model.TakenQuantity = 0;
+                model.InputQuantity = 0;
+                model.ItemId = item.ItemId;
+                TakenQuantity.Add(model);
+            }
+            foreach (var element in outPutDoument)
+            {
+                var OutPutDocumnetDetails = _context.OutPutDocumentDetails.Where(o => o.OutPutDocumentId == element.OutPutDocumentID).ToList();
+                for (int i = 0; i < OutPutDocumnetDetails.Count; i++)
+                {
+                    TakenQuantity[i].TakenQuantity += OutPutDocumnetDetails[i].Quantity;
+                }
+            }
+
+            for (int i = 0; i < unPlannedOrder.Count; i++)
+            {
+                int totalQuantity = unPlannedOrder[i].Quantity;
+                if (TakenQuantity[i].TakenQuantity != totalQuantity)
+                {
+                    check = false;
+                    break;
+                }
+                else
+                {
+                    check = true;
+                }
+            }
+            return check;
+        }
 
 
         /// <summary>
@@ -369,7 +454,7 @@ namespace GraduationProject.Controllers
         {
             var outPutDoument = _context.OutPutDocument.Where(o => o.OrderId == orderId).ToList();
             var annualOrder = _context.AnnualOrder.Where(o => o.OrderId == orderId).ToList();
-            bool check = false;
+            bool check = true;
 
             List<OutPutDocumnetForAnnualViewModel> TakenQuantity = new List<OutPutDocumnetForAnnualViewModel>();
             foreach (var item in annualOrder)
@@ -396,10 +481,6 @@ namespace GraduationProject.Controllers
                 {
                     check = false;
                     break;
-                }
-                else
-                {
-                    check = true;
                 }
             }
             return check;

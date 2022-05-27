@@ -8,17 +8,33 @@
 <h1 class="tableheader-right mr-4" style="color: #FF5733">الأصناف</h1>
 <a title="إضافة صنف" class="create-icon-btn" asp-action="Create"><i class="fa fa-plus"></i></a>
 
+@if (ViewBag.isnotDeleted)
+{
+    <div class="alert alert-warning alert-dismissible">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+        <strong style="color:#0c5c82;">لا يمكن حذف هذا الصنف لأنه يحتوي على مواد </strong>
+    </div>
+}
+
+@if (ViewBag.isDeleted)
+{
+    <div class="alert alert-success alert-dismissible">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+        <strong style="color:#0c5c82;">تم حذف الصنف بنجاح </strong>
+    </div>
+}
+
 <div class="table-responsive">
-    <table class="styled-table">
+    <table class="styled-table" id="managmentTable">
         <thead>
             <tr>
-                <th>
+                <th onclick="sortTable(0)">
                     اسم الصنف
                 </th>
-                <th>
+                <th onclick="sortTable(1)">
                     ترميز الصنف
                 </th>
-                <th>
+                <th onclick="sortTable(2)">
                     الصنف الرئيسي
                 </th>
                 <th></th>
@@ -50,6 +66,8 @@
                     <td>
                         <div class="d-inline-flex">
                             <a asp-action="Edit" title="تعديل" asp-route-id="@item.CategoryID" class="edit-icon-btn ml-1"><i class='far fa-edit'></i></a>
+                            <a asp-action="ExistedItems" title="المواد الموجودة" asp-route-categoryId="@item.CategoryID" class="detailslist-icon-btn mr-1 ml-2"><i class='far fa-file' style="margin-top:7px"></i></a>
+
                             <form method="post" asp-action="Delete" asp-controller="Category" asp-route-id="@item.CategoryID">
                                 <button style="width:60px" onclick="return confirm('هل تود بالفعل حذف الصنف @item.Name ؟ ')" type="submit" class="delete-icon-btn">
                                     <i class='far fa-trash-alt'></i>

@@ -11,14 +11,17 @@ namespace GraduationProject.ViewModels.OutPutDocument
     {
         public int OrderId { get; set; }
 
-        [Required(ErrorMessage ="هذا الحقل مطلوب")]
-        [StringLength(20,ErrorMessage ="اسم المندوب طويل للغاية")]
+        [Required(ErrorMessage = "هذا الحقل مطلوب")]
+        [StringLength(20, ErrorMessage = "اسم المندوب طويل للغاية")]
         public string CommisaryName { get; set; }
 
         public List<UnPlannedOrder> UnPlannedOrderList { get; set; }
+        public List<OutPutDocumnetForAnnualViewModel> QuantityModel { get; set; }
+
         public UnPlannedOrderViewModel()
         {
             UnPlannedOrderList = new List<UnPlannedOrder>();
+            QuantityModel = new List<OutPutDocumnetForAnnualViewModel>();
         }
     }
 }

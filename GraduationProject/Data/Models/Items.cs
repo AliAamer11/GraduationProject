@@ -20,12 +20,12 @@ namespace GraduationProject.Data.Models
         [StringLength(30)]
         public string Name { get; set; }
 
-        public int Quantity { get; set; }
-
-        [StringLength(20)]
-        public string Brand { get; set; }
+        public int Quantity { get; set; } 
 
         public int MinimumRange { get; set; }
+
+        // this for Know how many times the item was exceeded the minimum Range to showen in reports
+        public int ExceededMinimumRange { get; set; }
 
         public string Note { get; set; }
 

@@ -1,37 +1,26 @@
 ﻿@model GraduationProject.ViewModels.Account.LoginViewModel;
 
-@{
+@{ 
     Layout = "";
 }
-<html>
-<head>
-    <title>تسجيل الدخول</title>
-    <link href="https://fonts.googleapis.com/css?family=Poppins:600&display=swap" rel="stylesheet">
-    <script src="https://kit.fontawesome.com/a81368914c.js"></script>
-    <link href="~/css/Login.css" rel="stylesheet" />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-</head>
-<body>
-    <img class="wave" src="img/darkblue-wave.png">
-    <div class="container">
-        <div class="img">
-            <img src="img/Warwhouse-animated-img.gif">
-        </div>
+
+    <link href="~/css/loginPage.css" rel="stylesheet" />
+    <!--<img class="wave" src="~/serverimages/waveorange.png">-->
+    <div class="container" style=" background: #fff;">
         <div class="login-content">
             <form method="post">
+
                 <div asp-validation-summary="ModelOnly" class="serverresponce"></div>
-                <img class="logo" src="img/KALASTORDER_Logo.gif">
-                <h2 class="title"> </h2>
                 <div class="input-div one">
                     <div class="i">
-                        <i class="fas fa-user"></i>
+                        <i class="fa fa-envelope"></i>
                     </div>
                     <div class="div">
                         <h5>البريد الإلكتروني</h5>
                         <input asp-for="Email" id="email" class="input">
+                        <span asp-validation-for="Email" class="err"></span>
                     </div>
                 </div>
-                <span asp-validation-for="Email" class="err"></span>
                 <div class="input-div pass">
                     <div class="i">
                         <i onclick="visibilPassword()" class="fas fa-lock"></i>
@@ -39,19 +28,23 @@
                     <div class="div">
                         <h5>كلمة السر</h5>
                         <input asp-for="Password" class="input" id="passwordInput" type="password">
+                        <span asp-validation-for="Password" class="err"></span>
                     </div>
+
                 </div>
-                <span asp-validation-for="Password" class="err"></span>
-                <button type="submit" class="btn">
+                <button type="submit" class="login-btn" style="margin-top:30px;">
+                    <i class='fas fa-sign-in-alt' style="text-align:start"></i>
                     تسجيل الدخول
                 </button>
+
+
             </form>
         </div>
+        <div class="img">
+        </div>
     </div>
-</body>
-</html>
-<script src="~/js/Login.js"></script>
 
 @section Scripts{
-    <script src="~/js/Login.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/loginpage1.js"></script>
 }

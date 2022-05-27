@@ -16,6 +16,12 @@ namespace GraduationProject.Data.Models
         [StringLength(20)]
         public string Source { get; set; }
 
+        [StringLength(45)]
+        public string Supplier { get; set; }
+
+        [StringLength(20)]
+        public string Brand { get; set; }
+
         //Navigation Prop
         //this for InputDocument
         public int InputDocumentId { get; set; }

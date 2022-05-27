@@ -21,6 +21,10 @@
     {
       "library": "boxicons@2.0.9",
       "destination": "wwwroot/lib/boxicons/"
+    },
+    {
+      "library": "Chart.js@3.7.1",
+      "destination": "wwwroot/lib/Chart.js/"
     }
   ]
 }

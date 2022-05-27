@@ -1,0 +1,83 @@
+﻿@model GraduationProject.ViewModels.Items.ExcededMinimumRangeViewModel
+
+@{
+    ViewData["Title"] = "المواد التي تخطت الحد الأدنى";
+}
+
+<style>
+    .center {
+        /*border: 5px solid #FFFF00;*/
+        display: flex;
+        justify-content: center;
+    }
+</style>
+<script src="~/lib/Chart.js/chart.min.js"></script>
+
+
+<div class="center">
+    <canvas id="myChart" style="width:100%;max-width:800px"></canvas>
+</div>
+<script>
+    Chart.defaults.font.size = 20;
+    var xValues = [];
+
+    @foreach (var d in Model.Itemsname)
+    {
+        @:xValues.push("@d");
+    }
+    var yValues = [];
+    @foreach (var d in Model.ItemsCountofExcededMinimumRange)
+    {
+        @:yValues.push("@d");
+    }
+
+    new Chart("myChart", {
+        type: "bar",
+        // to flip bar 
+        //options: {
+        //    indexAxis: 'y',
+        //},
+        data: {
+            labels: xValues,
+            datasets: [{
+                label: 'المواد التي تخطت الحد الأدنى',
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.3)',
+                    'rgba(255, 159, 64, 0.3)',
+                    'rgba(255, 205, 86, 0.3)',
+                    'rgba(75, 192, 192, 0.3)',
+                    'rgba(54, 162, 235, 0.3)',
+                    'rgba(153, 102, 255, 0.3)',
+                    'rgba(201, 203, 207, 0.3)',
+                'rgba(17, 77, 16, 1)',
+                'rgba(25, 25, 112, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(255, 87, 51, 1)',
+                    'rgba(184, 28, 28, 1)',
+                    'rgba(17, 77, 16, 1)',
+                    'rgba(25, 25, 112, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(255, 87, 51, 1)',
+                    'rgba(184, 28, 28, 1)',
+                    'rgba(17, 77, 16, 1)',
+                    'rgba(25, 25, 112, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(255, 87, 51, 1)',
+                    'rgba(184, 28, 28, 1)',
+                ],
+                data: yValues,
+                borderColor: '#777',
+                hoverBorderWidth: 2,
+                hoverBorderColor: '#000',
+                borderWidth: 2
+            }]
+        },
+        //options: {
+        //    legend: { display: false },
+        //    title: {
+        //        display: true,
+        //        text: "المواد التي تخطت الحد الأدنى",
+        //    },
+        //}
+    });
+</script>

@@ -34,13 +34,33 @@ namespace GraduationProject.Controllers
             {
                 if (item.MinimumRange > item.Quantity)
                 {
-                    _notyf.Error("إن كمية المادة" + " " + item.Name + " " + "ذات الرمز" + " " + item.BarCode +" "+"تخطت الحد الأدنى");
+                    _notyf.Error("إن كمية المادة" + " " + item.Name + " " + "ذات الرمز" + " " + item.BarCode + " " + "تخطت الحد الأدنى");
                 }
             }
             return View(items);
         }
+        //show how many time items was ExcededMinimumRange
+        [HttpGet]
+        public IActionResult ExcededMinimumRange()
+        {
+            ExcededMinimumRangeViewModel viewModel = new ExcededMinimumRangeViewModel();
+            var items = _context.Items.Where(i => i.ExceededMinimumRange > 0).Select(i => new
+            {
+                Name = i.Name,
+                ExceededMinimumRange = i.ExceededMinimumRange,
+            }).OrderBy(i => i.ExceededMinimumRange).ToList();
 
-
+            if (items == null)
+            {
+                return View(viewModel);
+            }
+            foreach (var item in items)
+            {
+                viewModel.Itemsname.Add(item.Name);
+                viewModel.ItemsCountofExcededMinimumRange.Add(item.ExceededMinimumRange);
+            }
+            return View(viewModel);
+        }
 
         [HttpGet]
         public IActionResult Create()
@@ -64,9 +84,15 @@ namespace GraduationProject.Controllers
             {
                 try
                 {
+                    if (existedItem(viewModel.Name))
+                    {
+                        ViewBag.errorMassage = "إن المادة" + " " + viewModel.Name + " " + "موجودة مسبقاً";
+                        return View(viewModel);
+                    }
                     string barCode = genereteBarCode(viewModel.Status, viewModel.CategoryId);
                     string serialNumber = generetSerialNumber(barCode);
                     barCode = barCode + "" + serialNumber;
+
 
                     var item = new Items()
                     {
@@ -74,8 +100,8 @@ namespace GraduationProject.Controllers
                         BarCode = barCode,
                         Status = viewModel.Status,
                         Quantity = 0,
-                        Brand = viewModel.Brand,
                         MinimumRange = viewModel.MinimumRange,
+                        ExceededMinimumRange = 0,
                         Note = viewModel.Note,
                         CategoryId = viewModel.CategoryId,
                         MeasurementId = viewModel.MeasurementId,
@@ -91,6 +117,53 @@ namespace GraduationProject.Controllers
                 }
             }
             ModelState.AddModelError("", "الحقول هذه مطلوبة");
+            return View(viewModel);
+        }
+
+        // GET: item/Edit/5
+        [HttpGet]
+        public async Task<IActionResult> Edit(int? itemId)
+        {
+            if (itemId == null)
+            {
+                return NotFound();
+            }
+            var item = await _context.Items.FindAsync(itemId);
+            if (item == null)
+            {
+                return NotFound();
+            }
+
+            var editItemViewModel = new editItemViewModel
+            {
+                ItemID = item.ItemID,
+                MinimumRange = item.MinimumRange,
+                Note = item.Note,
+            };
+            return View(editItemViewModel);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(editItemViewModel viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var existedItem = await _context.Items.FirstOrDefaultAsync(i => i.ItemID == viewModel.ItemID);
+                    existedItem.Note = viewModel.Note;
+                    existedItem.MinimumRange = viewModel.MinimumRange;
+                    _context.Update(existedItem);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction("Index", "Items");
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            ModelState.AddModelError("", "زبط حقولك");
             return View(viewModel);
         }
 
@@ -146,6 +219,16 @@ namespace GraduationProject.Controllers
         private string makeserialnumber4digit(int serialnumber)
         {
             return serialnumber.ToString().PadLeft(4, '0');
+        }
+
+        /// <summary>
+        /// to lock if item was already existed
+        /// </summary>
+        /// <param name="itemName"></param>
+        /// <returns>true if item duplicate otherwise flase</returns>
+        private bool existedItem(string itemName)
+        {
+            return _context.Items.Any(i => i.Name == itemName);
         }
     }
 }
