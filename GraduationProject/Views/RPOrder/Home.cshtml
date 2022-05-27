@@ -1,5 +1,4 @@
-﻿<div class="container">
-
+﻿@*<div class="container">
     <br /><br />
     <div class="row">
         <div class="col-sm-4">
@@ -66,4 +65,74 @@
             </div>
         </div>
     </div>
+</div>*@
+
+<link href="~/css/RPCards.css" rel="stylesheet" />
+<div class="container">
+    <div class="card">
+        <div class="box">
+            <div class="content">
+                <h3>الاحتياج السنوي للسنة @ViewBag.Current_Year</h3>
+                @if (ViewBag.Annual_State == "incomplete_rp_side")
+                {
+                    <p>طلب الإحتياج في قيد التعديل</p>
+                    <a asp-action="GetAnnualNeedOrders" asp-controller="AnnualOrder">تعديل </a>
+                }
+                else if (ViewBag.Annual_State == "complete_vp_side")
+                {
+                    <p>طلب الإحتياج  قيد المراجعة</p>
+                    <a asp-action="GetAnnualNeedsDisplay" asp-controller="AnnualOrder">استعراض </a>
+                }
+                else if (ViewBag.Annual_State == "complete_rp_side")
+                {
+                    <p>طلب الإحتياج  يحتاج إلى تعديل</p>
+                    <a asp-action="GetAnnualNeedAltered" asp-controller="AnnualOrder">تعديل </a>
+                }
+                else if (ViewBag.Annual_State == "complete_sk_side")
+                {
+                    <p>طلب الإحتياج موافق عليه</p>
+                    <a asp-action="Index" asp-controller="AnnualOrder">استعراض </a>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="box">
+            <div class="content">
+                <h3> طلب غير مخطط</h3>
+                @if (ViewBag.Unplanned_State == "incomplete_rp_side")
+                {
+                    <p class="card-text">الطلب في قيد التعديل</p>
+                    <a asp-action="GetAllUnplanned" asp-controller="UnplannedOrder">تعديل</a>
+                }
+                else if (ViewBag.Unplanned_State == "complete_vp_side")
+                {
+                    <p class="card-text">الطلب قيد المراجعة</p>
+                    <a asp-action="GetUnplannedNeedsDisplay" asp-controller="UnplannedOrder">استعراض </a>
+                }
+                else if (ViewBag.Unplanned_State == "complete_rp_side")
+                {
+                    <p class="card-text">الطلب يحتاج إلى تعديل</p>
+                    <a asp-action="GetAllUnplannedAltered" asp-controller="UnplannedOrder">تعديل</a>
+                }
+                else if (ViewBag.Unplanned_State == "complete_sk_side")
+                {
+                    <p class="card-text">الطلب موافق عليه</p>
+                    <a asp-action="Index" asp-controller="UnplannedOrder">استعراض</a>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="box">
+            <div class="content">
+                <h3>الأرشيف</h3>
+                <p>جميع الطلبات : الإحتياجات سنوية و طلبات غير مخططة</p>
+                <a asp-action="Index" asp-controller="Archive">استعراض </a>
+            </div>
+        </div>
+    </div>
+
 </div>

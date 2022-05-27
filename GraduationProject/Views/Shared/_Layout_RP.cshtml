@@ -15,21 +15,22 @@
 <body>
     <div class="sidebar">
         <div class="logo-details">
-            <i class='bx bxl-c-plus-plus icon'></i>
-            <div class="logo_name">WHMS</div>
+            <img class="icon" src="~/img/Logo-Removed-bg.gif">
+            <div class="logo_name"><span>KALA</span>STORDER</div>
             <i class='bx bx-menu' id="btn"></i>
         </div>
         <ul class="nav-list">
-
-            <li>
-                <i class='bx bx-search'></i>
-                <input type="text" id="searchTable" placeholder="ابحث هنا..." onkeyup="searchTable()">
-                <span class="tooltip">ابحث</span>
-            </li>
             <!--to check if user was sign in or not to show to him the loging or logout-->
             <!--Admin Operation-->
             @if (User.IsInRole("Admin"))
             {
+
+                <li>
+                    <i class='bx bx-search'></i>
+                    <input type="text" id="searchTable" placeholder="ابحث هنا..." onkeyup="searchTable()">
+                    <span class="tooltip">ابحث</span>
+                </li>
+
                 <li>
                     <a href="~/Administration/DashBoard">
                         <i class='bx bxs-dashboard'></i>
@@ -42,6 +43,11 @@
             <!--StoreKeeper Operation-->
             @if (User.IsInRole("StoreKeep"))
             {
+                <li>
+                    <i class='bx bx-search'></i>
+                    <input type="text" id="searchTable" placeholder="ابحث هنا..." onkeyup="searchTable()">
+                    <span class="tooltip">ابحث</span>
+                </li>
                 <li>
                     <a href="~/Items/Index">
                         <i class='bx bx-spreadsheet'></i>
@@ -82,6 +88,11 @@
             @if (User.IsInRole("Requester"))
             {
                 <li>
+                    <i class='bx bx-search'></i>
+                    <input type="text" id="searchTable" placeholder="ابحث هنا..." onkeyup="searchTable()">
+                    <span class="tooltip">ابحث</span>
+                </li>
+                <li>
                     <a href="~/RPOrder/Home">
                         <i class='bx bxs-dashboard'></i>
                         <span class="links_name">الرئيسية</span>
@@ -102,7 +113,7 @@
                     </a>
                     <span class="tooltip">الطلبات غير المخططة</span>
                 </li>
-                
+
                 <li>
                     <a href="~/Archive/Index">
                         <i class='bx bx-archive'></i>
@@ -119,11 +130,9 @@
                 </li>
 
             }
-
             <!--VicePres Operation-->
             @if (User.IsInRole("VicePris"))
             {
-
                 <li>
                     <a href="~/VPOrder/Index">
                         <i class='bx bx-spreadsheet'></i>
@@ -140,36 +149,14 @@
                 </li>
                 <li>
                     <a href="#">
-                        <i class='bx bx-archive'></i>
-                        <span class="links_name"> الأرشيف</span>
-                    </a>
-                    <span class="tooltip"> الأرشيف</span>
-                </li>
-                <li>
-                    <a href="#">
                         <i class='bx bxs-store'></i>
                         <span class="links_name">المستودع </span>
                     </a>
                     <span class="tooltip">المستودع</span>
                 </li>
-                <li>
-                    <a href="#">
-                        <i class='bx bxs-report'></i>
-                        <span class="links_name">التقارير</span>
-                    </a>
-                    <span class="tooltip">التقارير</span>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class='bx bx-notification'></i>
-                        <span class="links_name">الإشعارات</span>
-                    </a>
-                    <span class="tooltip">الإشعارات</span>
-                </li>
-
             }
 
-            }
+            
             <li class="profile">
                 <div class="profile-details">
                     <!--<img src="profile.jpg" alt="profileImg">-->
