@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GraduationProject.Controllers;
 using GraduationProject.Service;
+using GraduationProject.ViewModels;
 
 namespace GraduationProject.Controllers
 {
@@ -37,8 +38,8 @@ namespace GraduationProject.Controllers
         //decide what type of document to review
         public IActionResult Index()
         {
-            ViewData["AnnualCount"] = "0" + (_context.Orders.Where(o => o.Type == false && o.State == "2").Count()).ToString();
-            ViewData["UnplannedCount"] = "0" + (_context.Orders.Where(o => o.Type == true && o.State == "2").Count().ToString());
+            ViewData["AnnualCount"] = "0" + (_context.Orders.Where(o => o.Type == false && o.State == OrderState.NeedOutPutDocmnet).Count()).ToString();
+            ViewData["UnplannedCount"] = "0" + (_context.Orders.Where(o => o.Type == true && o.State == OrderState.NeedOutPutDocmnet).Count().ToString());
             return View();
         }
 
@@ -60,17 +61,17 @@ namespace GraduationProject.Controllers
         //Get All AnnualNeed To Specific Order///// from archive
         [HttpGet]
         public IActionResult GetAnnualNeedOrders(int id)
-        
         {
             //var user = await _userManager.GetUserAsync(User);
             ViewBag.orderid = id;
+
             var model = new List<AnnualNeedOrderViewModel>();  ///model list of ano for seecting thwm ot use as template
 
             var userid = userManager.GetUserId(User);
             var annualneedorders = _context.AnnualOrder.Include(o => o.Order)
                 .Include(i => i.Item)
                 .Where(x => x.OrderId == id)
-                .Where(o => o.Order.Complete == true && o.Order.State == "2")
+                .Where(o => o.Order.State == OrderState.NeedOutPutDocmnet)
                 .Where(o => o.Order.UserId == userid)
                 .ToList();
 
@@ -135,12 +136,9 @@ namespace GraduationProject.Controllers
             }
             else
             {
-                //ViewBag.errorMessage = "طلب الإحتياج السنوي لا يمكن التعديل عليه.";
-                //return View(model);
+                //ViewBag.errorMassage = ".لا يمكن إضافة مواد والتعديل على الطلب الحالي";
                 return RedirectToAction("GetAnnualNeedOrders", "Archive");
-
             }
-
             return RedirectToAction("GetAnnualNeedOrders", "AnnualOrder");
 
         }
@@ -154,7 +152,7 @@ namespace GraduationProject.Controllers
                 .Include(i => i.Item)
                 .Where(x => x.OrderId == id)
                 .Where(o => o.Order.UserId == userid)
-                .Where(o => o.Order.Complete == true && o.Order.State == "2")
+                .Where(o => o.Order.State == OrderState.NeedOutPutDocmnet)
                 .ToList();
             return View(unplannedorders);
         }

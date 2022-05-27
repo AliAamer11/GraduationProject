@@ -32,6 +32,7 @@
 </style>
 <h1 class="tableheader">طلبات المواد في الإحتياج السنوي</h1>
 <form method="post" asp-action="GetAnnualNeedOrders" asp-route-id="@ViewBag.orderid">
+
     @if (ViewBag.errorMassage != null)
     {
         <div class="alert alert-danger" id="error-div" style="color:black; text-align:center; width:50%; right:25%; display:none;">
@@ -39,7 +40,8 @@
                 @ViewBag.errorMassage
             </span>
         </div>
-    }    
+
+    }
     <button id="submit" type="submit">إعادة استخدام المواد في هذا الطلب</button>
 
     <div class="table-responsive">
@@ -62,7 +64,7 @@
 
                 @for (int i = 0; i < Model.Count; i++)
                 {
-                    <tr >
+                    <tr>
                         <input type="hidden" asp-for="@Model[i].AnnualOrderID" />
                         <input type="hidden" asp-for="@Model[i].ItemId" />
                         <input type="hidden" asp-for="@Model[i].FirstSemQuantity" />
@@ -81,7 +83,7 @@
                         <td>@Model[i].Description</td>
                         <td>@Model[i].FlowRate</td>
                         <td>@Model[i].ApproxRate</td>
-                        <td class="containerx"> 
+                        <td class="containerx">
                             <input class="inputs chckbox" type="checkbox" asp-for="@Model[i].IsSelected" style="margin-top: 13px;" />
 
                         </td>
