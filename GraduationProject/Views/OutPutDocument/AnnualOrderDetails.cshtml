@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "تفاصيل الطلب السنوي";
+
 }
 <link href="~/css/button.css" rel="stylesheet" />
 <link href="~/css/tableformanagment.css" rel="stylesheet" />
@@ -39,8 +40,8 @@
                     <th>الكمية المأخوذة</th>
                     <th>الكمية المتبقية</th>
                     <th>الكمية المراد إخراجها</th>
+                    <th>الكمية المقترحة</th>
                     <th></th>
-
                 </tr>
             </thead>
             <tbody>
@@ -57,10 +58,13 @@
                         <td>@totalQuantity</td>
                         <td>@Model.QuantityModel[i].TakenQuantity</td>
                         <td><span class="recents">@recentQuantity</span></td>
-                        <td><input asp-for="@Model.QuantityModel[i].InputQuantity" value="@recentQuantity" class="inputs" /></td>
+                        <td><input asp-for="@Model.QuantityModel[i].InputQuantity" value="0" class="inputs" /></td>
+                        <td>@ViewBag.suggestedquantity[i]</td>
                         <td><input asp-for="@Model.QuantityModel[i].ItemId" type="hidden" /></td>
+                    
                     </tr>
                 }
+
             </tbody>
         </table>
     </div>
