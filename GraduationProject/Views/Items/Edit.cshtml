@@ -8,7 +8,7 @@
 <div class="container">
     <form id='create-form' asp-action="Edit">
         <p id='description' class="header">
-            تعديل المادة
+            تعديل المادة @Model.Name ذات الرمز @Model.Barcode
         </p>
         <input type="hidden" asp-for="ItemID" />
         <div class='form-input'>

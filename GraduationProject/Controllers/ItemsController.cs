@@ -32,7 +32,7 @@ namespace GraduationProject.Controllers
             var items = await _context.Items.Include(i => i.Category).Include(i => i.Measurement).ToListAsync();
             foreach (var item in items)
             {
-                if (item.MinimumRange > item.Quantity)
+                if (item.MinimumRange > item.Quantity && item.ExceededMinimumRange > 0)
                 {
                     _notyf.Error("إن كمية المادة" + " " + item.Name + " " + "ذات الرمز" + " " + item.BarCode + " " + "تخطت الحد الأدنى");
                 }
@@ -137,6 +137,8 @@ namespace GraduationProject.Controllers
             var editItemViewModel = new editItemViewModel
             {
                 ItemID = item.ItemID,
+                Name = item.Name,
+                Barcode = item.BarCode,
                 MinimumRange = item.MinimumRange,
                 Note = item.Note,
             };

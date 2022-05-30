@@ -9,6 +9,9 @@ namespace GraduationProject.ViewModels.Items
     public class editItemViewModel
     {
         public int ItemID { get; set; }
+        public string Name  { get; set; }
+
+        public string Barcode { get; set; }
 
         public int MinimumRange { get; set; }
 
