@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using GraduationProject.Data.Models;
 using Microsoft.AspNetCore.Authorization;
+using GraduationProject.ViewModels;
 
 namespace GraduationProject.Controllers
 {
@@ -84,21 +85,21 @@ namespace GraduationProject.Controllers
         {
             var model = _context.Orders.Find(id);
 
-            //still in editing 
-            if (model.Complete == false && model.State == "0")
-                return "incomplete_rp_side";
+            if (model.State == OrderState.RequestingParty)
+                return "RequestingParty";
 
-            //being reviewed
-            else if (model.Complete == true && model.State == "1")
-                return "complete_vp_side";
+            else if (model.State == OrderState.VicePrisdent)
+                return "VicePrisdent";
 
-            //being re-altered according to comments
-            else if (model.Complete == true && model.State == "0") // then i set it to incomplete manually on user side
-                return "complete_rp_side";
+            else if (model.State == OrderState.NeedOutPutDocmnet)
+                return "NeedOutPutDocmnet";
 
-            //archive
-            else if (model.Complete == true && model.State == "2")
-                return "complete_sk_side";
+            else if (model.State == OrderState.BeingReview)
+                return "BeingReview";
+
+            else if (model.State == OrderState.Finishid)
+                return "Finishid";
+
             return "error";
         }
 
@@ -106,7 +107,7 @@ namespace GraduationProject.Controllers
         public IActionResult Home()
         {
             ViewData["Current_Year"] = DateTime.Now.Year;
-            ViewData["Annual_State"]  = CheckOrderState(GetAnnualNeedOrderid());
+            ViewData["Annual_State"] = CheckOrderState(GetAnnualNeedOrderid());
             ViewData["Unplanned_State"] = CheckOrderState(GetUnplannedOrderid());
             return View();
         }
@@ -118,10 +119,10 @@ namespace GraduationProject.Controllers
             {
                 try
                 {
-                    order.Complete = true;    //the order has been complte from RP side
-                    order.State = "1";        //the order is now on the VP side
+                    order.State = OrderState.VicePrisdent;        //the order is now on the VP side
+
                     _context.SaveChanges();
-                    if(order.Type == false)
+                    if (order.Type == false)
                         return RedirectToAction("GetAnnualNeedsDisplay", "AnnualOrder");
                     return RedirectToAction("GetUnplannedNeedsDisplay", "UnplannedOrder");
                 }

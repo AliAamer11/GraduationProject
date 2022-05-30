@@ -1,6 +1,7 @@
 ﻿using GraduationProject.Data;
 using GraduationProject.Data.Models;
 using GraduationProject.Service;
+using GraduationProject.ViewModels;
 using GraduationProject.ViewModels.AnnualNeedOrders;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -39,21 +40,21 @@ namespace GraduationProject.Controllers
         {
             var model = _context.Orders.Find(id);
 
-            //still in editing 
-            if (model.Complete == false && model.State == "0")
-                return "incomplete_rp_side";
+            if (model.State == OrderState.RequestingParty)
+                return "RequestingParty";
 
-            //being reviewed
-            else if (model.Complete == true && model.State == "1")
-                return "complete_vp_side";
+            else if (model.State == OrderState.VicePrisdent)
+                return "VicePrisdent";
 
-            //being re-altered according to comments
-            else if (model.Complete == true && model.State == "0") // then i set it to incomplete manually on user side
-                return "complete_rp_side";
+            else if (model.State == OrderState.NeedOutPutDocmnet)
+                return "NeedOutPutDocmnet";
 
-            //archive
-            else if (model.Complete == true && model.State == "2")
-                return "complete_sk_side";
+            else if (model.State == OrderState.BeingReview)
+                return "BeingReview";
+
+            else if (model.State == OrderState.Finishid)
+                return "Finishid";
+
             return "error";
         }
         public int GetAnnualNeedOrderid()
@@ -93,7 +94,7 @@ namespace GraduationProject.Controllers
             var annualneeds = _context.Orders
                 .Where(x => x.Type == false)   //// annual order type
                 .Where(o => o.UserId == userid)    /// getting orders to this current user
-                .Where(o=> o.Complete==true && o.State =="2")  ///getting orders that are complete on StoreKeeper side
+                .Where(o => o.State == OrderState.NeedOutPutDocmnet)  ///getting orders that are complete on StoreKeeper side
                 .ToList();
             return View(annualneeds);
         }
@@ -107,12 +108,12 @@ namespace GraduationProject.Controllers
             int id = GetAnnualNeedOrderid();
             //if (id > 0)
             //{
-                var annualneedorders = _context.AnnualOrder.Include(o => o.Order)
-                    .Include(i => i.Item)
-                    .Where(x => x.OrderId == id)
-                    .Where(o => o.Order.Type == false && o.Order.Complete == false)
-                    .Where(o => o.Order.UserId == userid)
-                    .ToList();
+            var annualneedorders = _context.AnnualOrder.Include(o => o.Order)
+                .Include(i => i.Item)
+                .Where(x => x.OrderId == id)
+                .Where(o => o.Order.Type == false && o.Order.State == OrderState.RequestingParty)
+                .Where(o => o.Order.UserId == userid)
+                .ToList();
             ViewData["State"] = CheckOrderState(id);
             ViewData["id"] = id;
 
@@ -125,7 +126,7 @@ namespace GraduationProject.Controllers
 
 
 
-        //Get All AnnualNeed to Order where it is still  complete & needs alteration
+        //Get All AnnualNeed to Order where it is still not complete & needs alteration
         public IActionResult GetAnnualNeedAltered()
         {
             var userid = userManager.GetUserId(User);
@@ -134,8 +135,8 @@ namespace GraduationProject.Controllers
             var annualneedorders = _context.AnnualOrder.Include(o => o.Order)
                     .Include(i => i.Item)
                     .Where(x => x.OrderId == id)
-                    .Where(x=> x.Comment!=null)
-                    .Where(o => o.Order.Type == false && o.Order.Complete == true)
+                    .Where(x => x.Comment != null)
+                    .Where(o => o.Order.Type == false && o.Order.State == OrderState.BeingReview)
                     .Where(o => o.Order.UserId == userid)
                     .ToList();
             ViewData["id"] = id;
@@ -150,7 +151,8 @@ namespace GraduationProject.Controllers
             var annualneedorders = _context.AnnualOrder.Include(o => o.Order)
                     .Include(i => i.Item)
                     .Where(x => x.OrderId == id)
-                    .Where(o => o.Order.Type == false && o.Order.Complete == true && o.Order.State != "0")
+                    .Where(o => o.Order.Type == false)
+                    .Where(o => o.Order.State == OrderState.NeedOutPutDocmnet || o.Order.State == OrderState.VicePrisdent)
                     .Where(o => o.Order.UserId == userid)
                     .ToList();
             ViewData["id"] = id;
@@ -170,9 +172,19 @@ namespace GraduationProject.Controllers
         public async Task<IActionResult> CreateAnnualNeedOrder(CreateAnnualNeedOrderViewModel viewModel)
         {
             ViewData["OrderId"] = GetAnnualNeedOrderid();
+            var annualorderss = _context.AnnualOrder.Where(i => i.OrderId == GetAnnualNeedOrderid());
+
             ViewData["Item"] = new SelectList(BindListforItem(), "Value", "Text");
             if (ModelState.IsValid)
             {
+                foreach(var ano in annualorderss)
+                {
+                    if (viewModel.ItemId == ano.ItemId)
+                    {
+                        ViewBag.errorMassage = ".هذه المادة موجودة في الطلب";
+                        return View(viewModel);
+                    }
+                }
                 try
                 {
 
@@ -207,7 +219,7 @@ namespace GraduationProject.Controllers
             {
                 return NotFound();
             }
-            var annualorder = await _context.AnnualOrder.Include(o=>o.Order).Where(i=>i.AnnualOrderID==id).FirstOrDefaultAsync();
+            var annualorder = await _context.AnnualOrder.Include(o => o.Order).Where(i => i.AnnualOrderID == id).FirstOrDefaultAsync();
             if (annualorder == null)
             {
                 return NotFound();
@@ -241,7 +253,7 @@ namespace GraduationProject.Controllers
             {
                 try
                 {
-                    var annualorder = await _context.AnnualOrder.Include(o => o.Order).FirstOrDefaultAsync(i=>i.AnnualOrderID==viewModel.AnnualOrderID);
+                    var annualorder = await _context.AnnualOrder.Include(o => o.Order).FirstOrDefaultAsync(i => i.AnnualOrderID == viewModel.AnnualOrderID);
 
                     annualorder.ItemId = viewModel.ItemId;
                     annualorder.AnnualOrderID = viewModel.AnnualOrderID;
@@ -253,13 +265,13 @@ namespace GraduationProject.Controllers
                     annualorder.Comment = viewModel.Comment;
                     annualorder.ApproxRate = viewModel.ApproxRate;
                     annualorder.OrderId = viewModel.OrderId;
-                       
+
 
                     _context.Update(annualorder);
                     await _context.SaveChangesAsync();
-                    if (annualorder.Order.Complete == true)
+                    if (annualorder.Order.State == OrderState.BeingReview)
                     { return RedirectToAction("GetAnnualNeedAltered"); }
-                   
+
                     return RedirectToAction(nameof(getAnnualNeedOrders));
 
                 }

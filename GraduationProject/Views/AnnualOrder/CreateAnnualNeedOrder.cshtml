@@ -1,10 +1,13 @@
 ﻿@model GraduationProject.ViewModels.AnnualNeedOrders.CreateAnnualNeedOrderViewModel;
 
-    <link href="~/css/AnnualNeedCreateEditCard.css" rel="stylesheet" />
+<link href="~/css/AnnualNeedCreateEditCard.css" rel="stylesheet" />
 
 <h1 class="headingg">إنشاء طلب مادة</h1>
 <hr />
-
+@if (ViewBag.errorMassage != null)
+{
+    <h4 class="alert alert-danger">@ViewBag.errorMassage</h4>
+}
 <form asp-action="CreateAnnualNeedOrder" method="post">
     <div class="form-container" style=" position: relative; ">
         <div class="col-xs-12 col-sm-12 form-group">
@@ -64,10 +67,10 @@
                 <button type="submit" class="btn btn-primary btn-lg btn1">إنشاء<i class="bx bx-add-to-queue mr-3"></i></button>
             </div>
 
-            </div>
         </div>
+    </div>
 </form>
 
-    @section Scripts{
-        <partial name="_ValidationScriptsPartial" />
-    }
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}

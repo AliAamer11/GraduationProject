@@ -1,5 +1,6 @@
 ﻿using GraduationProject.Data;
 using GraduationProject.Data.Models;
+using GraduationProject.ViewModels;
 using GraduationProject.ViewModels.UnplannedOrders;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -58,21 +59,21 @@ namespace GraduationProject.Controllers.RP
         {
             var model = _context.Orders.Find(id);
 
-            //still in editing 
-            if (model.Complete == false && model.State == "0")
-                return "incomplete_rp_side";
+            if (model.State == OrderState.RequestingParty)
+                return "RequestingParty";
 
-            //being reviewed
-            else if (model.Complete == true && model.State == "1")
-                return "complete_vp_side";
+            else if (model.State == OrderState.VicePrisdent)
+                return "VicePrisdent";
 
-            //being re-altered according to comments
-            else if (model.Complete == true && model.State == "0") // then i set it to incomplete manually on user side
-                return "complete_rp_side";
+            else if (model.State == OrderState.NeedOutPutDocmnet)
+                return "NeedOutPutDocmnet";
 
-            //archive
-            else if (model.Complete == true && model.State == "2")
-                return "complete_sk_side";
+            else if (model.State == OrderState.BeingReview)
+                return "BeingReview";
+
+            else if (model.State == OrderState.Finishid)
+                return "Finishid";
+
             return "error";
         }
 
@@ -84,7 +85,7 @@ namespace GraduationProject.Controllers.RP
             var unplannedorders = _context.Orders
                 .Where(x => x.Type == true)   //// unplanned order type
                 .Where(o => o.UserId == userid)    /// getting orders to this current user
-                .Where(o => o.Complete == true && o.State == "2")  ///getting orders that are complete on StoreKeeper side
+                .Where(o => o.State == OrderState.NeedOutPutDocmnet)  ///getting orders that are complete on StoreKeeper side
                 .ToList();
             return View(unplannedorders);
         }
@@ -98,7 +99,7 @@ namespace GraduationProject.Controllers.RP
             var unplannedorders = _context.UnPlannedOrder
                 .Include(i => i.Item)
                 .Where(x => x.OrderId == id)
-                .Where(o => o.Order.Type == true && o.Order.Complete == false)
+                .Where(o => o.Order.Type == true && o.Order.State == OrderState.RequestingParty)
                 .Where(o => o.Order.UserId == userid)
                 .ToList();
             ViewData["id"] = id;
@@ -115,7 +116,7 @@ namespace GraduationProject.Controllers.RP
                 .Include(i => i.Item)
                 .Where(x => x.OrderId == id)
                 .Where(x => x.Comment != null)
-                .Where(o => o.Order.Type == true && o.Order.Complete == true)
+                .Where(o => o.Order.Type == true && o.Order.State == OrderState.BeingReview)
                 .Where(o => o.Order.UserId == userid)
                 .ToList();
             ViewData["id"] = id;
@@ -130,7 +131,7 @@ namespace GraduationProject.Controllers.RP
             var unplannedorders = _context.UnPlannedOrder.Include(o => o.Order)
                     .Include(i => i.Item)
                     .Where(x => x.OrderId == id)
-                    .Where(o => o.Order.Type == true && o.Order.Complete == true && o.Order.State != "0")
+                    .Where(o => o.Order.Type == true && o.Order.State == OrderState.VicePrisdent || o.Order.State == OrderState.NeedOutPutDocmnet)
                     .Where(o => o.Order.UserId == userid)
                     .ToList();
             ViewData["id"] = id;
@@ -152,8 +153,18 @@ namespace GraduationProject.Controllers.RP
         {
             ViewData["OrderId"] = GetUnplannedOrderid();
             ViewData["Item"] = new SelectList(BindListforItem(), "Value", "Text");
+            var unplannedorderss = _context.UnPlannedOrder.Where(i => i.OrderId == GetUnplannedOrderid());
+
             if (ModelState.IsValid)
             {
+                foreach (var ano in unplannedorderss)
+                {
+                    if (viewModel.ItemId == ano.ItemId)
+                    {
+                        ViewBag.errorMassage = ".هذه المادة موجودة في الطلب";
+                        return View(viewModel);
+                    }
+                }
                 try
                 {
                     var unplannedorder = new UnPlannedOrder
@@ -242,7 +253,7 @@ namespace GraduationProject.Controllers.RP
                     _context.Update(unplannedorder);
                     await _context.SaveChangesAsync();
 
-                    if (unplannedorder.Order.Complete == true)
+                    if (unplannedorder.Order.State == OrderState.BeingReview)
                     { return RedirectToAction("GetAllUnplannedAltered"); }
 
                     return RedirectToAction(nameof(GetAllUnplanned));

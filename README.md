@@ -1,0 +1,5 @@
+# Graduation Project Abstract 
+
+
+This application is built by the Dot Net Core development environment with Entity Framework Core and Razor Pages using C# language.
+The system provides control interfaces that enable the application manager to manage and supervise the users’ accounts. The system enables the party that wants to request certain materials to apply for a request by filling in the request form and be able to apply adjustments to this specific request until the requester is satisfied with the result. After the request has been confirmed, it will be directed to the vice president of the university. The system also provides the ability of all types of requests to be reviewed by the vice president. Who in return, will carefully examine all the requests. The vice-president, in addition to the above, is able to review and perform queries on the materials available inside the inventory. The system provides materials handling by monitoring and regulating the movement of materials to and from the inventory and inventory management. As well as the possibility of printing out inventory reports of all kinds.
