@@ -149,28 +149,28 @@ namespace GraduationProject.Controllers
             }
 
 
-            foreach (var item in allitems)
-            {
-                var itemnames = _context.Items.Where(i => i.ItemID == item.itemid).FirstOrDefault();
-                foreach (var output in outputdocument)
-                {
-                    var outputdoc = await _context.OutPutDocumentDetails.Include(o => o.OutPutDocument).Where(i => i.ItemId == item.itemid && i.OutPutDocumentId == output.OutPutDocumentID).ToListAsync();
+            //foreach (var item in allitems)
+            //{
+            //    var itemnames = _context.Items.Where(i => i.ItemID == item.itemid).FirstOrDefault();
+            //    foreach (var output in outputdocument)
+            //    {
+            //        var outputdoc = await _context.OutPutDocumentDetails.Include(o => o.OutPutDocument).Where(i => i.ItemId == item.itemid && i.OutPutDocumentId == output.OutPutDocumentID).ToListAsync();
 
-                }
+            //    }
 
-                foreach (var x in outputdoc)
-                {
-                    if (x == null)
-                    {
-                        haventbeenoutputed itemm = new haventbeenoutputed();
-                        itemm.Name = itemnames.Name;
-                        itemstobedisplayed.Add(itemm);
-                    }
-                    outputdocs.Add(x);
-                }
+            //    foreach (var x in outputdoc)
+            //    {
+            //        if (x == null)
+            //        {
+            //            haventbeenoutputed itemm = new haventbeenoutputed();
+            //            itemm.Name = itemnames.Name;
+            //            itemstobedisplayed.Add(itemm);
+            //        }
+            //        outputdocs.Add(x);
+            //    }
 
 
-            }
+            //}
 
 
 
