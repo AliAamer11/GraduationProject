@@ -1,0 +1,43 @@
+﻿@model List<GraduationProject.ViewModels.WareHouse.haventbeenoutputed>
+<form asp-action="HaventBeenOutputed" method="post">
+
+    <label>  أدخل التاريخ الابتدائي لمعرفة المواد التي لم يتم تخريجها  </label>
+
+    <input type="datetime-local" name="period"  />
+    <input type="submit" value=" استعراض " />
+
+
+</form>
+<br />
+<table class="styled-table">
+    <thead>
+        <tr>
+            <th>المواد</th>
+            <th>تاريخ الاخراج</th>
+            <th>مدة التخريج </th>
+
+
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            @if (Model != null)
+            {
+                @foreach (var m in Model)
+                {
+                    <td>@m.Name</td>
+                    <td>@m.OutPutDocumentDate</td>
+                    <td>@m.Span</td>
+
+
+
+                }
+            }
+            else
+            {
+            <td>@ViewBag.Empty </td>
+            }
+        </tr>
+    </tbody>
+</table>
+@ViewBag.period

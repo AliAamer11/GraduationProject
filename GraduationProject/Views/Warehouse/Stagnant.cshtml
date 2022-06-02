@@ -1,0 +1,27 @@
+﻿@model List<GraduationProject.ViewModels.WareHouse.StagnantItemsViewModel>
+<form asp-action="Stagnant" method="post">
+
+    <label>  أدخل المدة بالسنة  </label>
+
+    <input name="period" value="0" />
+    <input type="submit" value=" استعراض " />
+
+
+</form>
+<br />
+<table class="styled-table">
+    <thead>
+        <tr>
+            <th>المواد</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            @foreach (var m in Model)
+            {
+                <td>@m.Name</td>
+            }
+        </tr>
+    </tbody>
+</table>
+@ViewBag.period
