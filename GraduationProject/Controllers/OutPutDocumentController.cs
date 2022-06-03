@@ -113,7 +113,7 @@ namespace GraduationProject.Controllers
             //A dictionary for the aggregated item name and its recent value
             var recent = 0;
             //get all the orders of type annual 
-            var orders = _context.Orders.Where(o => o.Type == OrderType.Annual).ToList();
+            var orders = _context.Orders.Where(o => o.Type == OrderType.Annual && o.State == OrderState.NeedOutPutDocmnet).ToList();
             //now we are going to loop through each order
             for (int o = 0; o < orders.Count; o++)
             {   //for each order intialize a list to count the taken quantity
