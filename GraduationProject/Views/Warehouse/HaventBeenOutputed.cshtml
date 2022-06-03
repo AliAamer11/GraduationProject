@@ -1,43 +1,45 @@
 ﻿@model List<GraduationProject.ViewModels.WareHouse.haventbeenoutputed>
 <form asp-action="HaventBeenOutputed" method="post">
-
     <label>  أدخل التاريخ الابتدائي لمعرفة المواد التي لم يتم تخريجها  </label>
-
-    <input type="datetime-local" name="period"  />
+    <input type="datetime-local" name="period" />
     <input type="submit" value=" استعراض " />
-
-
 </form>
 <br />
 <table class="styled-table">
     <thead>
         <tr>
+            <th>الطلب</th>
             <th>المواد</th>
-            <th>تاريخ الاخراج</th>
-            <th>مدة التخريج </th>
-
-
         </tr>
     </thead>
     <tbody>
+        @if (Model != null)
+        {
+            foreach (var i in Model)
+            {
         <tr>
-            @if (Model != null)
+            <td>@i.Order.User.RequstingParty</td>
+            @i.
+            @foreach (var items in i.items)
             {
-                @foreach (var m in Model)
-                {
-                    <td>@m.Name</td>
-                    <td>@m.OutPutDocumentDate</td>
-                    <td>@m.Span</td>
+                <p>@items.item.Name </p>
+                <p>@items.recentQuantity </p>
+                <p>@items.Createdat </p>
 
 
 
-                }
-            }
-            else
-            {
-            <td>@ViewBag.Empty </td>
             }
         </tr>
+                <br />
+            }
+        }
+
+        else
+        {
+            <tr>
+                <td>@ViewBag.Empty </td>
+            </tr>
+        }
     </tbody>
 </table>
 @ViewBag.period

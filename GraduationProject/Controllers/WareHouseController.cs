@@ -1,5 +1,8 @@
 ﻿using GraduationProject.Data;
 using GraduationProject.Data.Models;
+using GraduationProject.ViewModels;
+using GraduationProject.ViewModels.OutPutDocument;
+using GraduationProject.ViewModels.Warehouse;
 using GraduationProject.ViewModels.WareHouse;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -127,89 +130,112 @@ namespace GraduationProject.Controllers
         [HttpGet]
         public async Task<IActionResult> HaventBeenOutputed()
         {
-            List<OutPutDocumentDetails> outputdocs = new List<OutPutDocumentDetails>();
-            List<haventbeenoutputed> itemstobedisplayed = new List<haventbeenoutputed>();
-            var allitems = await _context.InputDocumentDetails.GroupBy(i => i.ItemId).Select(o => new { itemid = o.Key }).ToListAsync();
-            var allorders = await _context.Orders.ToListAsync();
-
-            foreach(var order in allorders)
+            List<haventbeenoutputed> orderitems  = new List<haventbeenoutputed>();
+            //get all the items that have inputdocument 
+            var allitems = await _context.InputDocumentDetails.GroupBy(i => i.ItemId).Select(o=> o.Key ).ToListAsync();
+            //get all the orders 
+            var recent = 0;
+            var orders = await _context.Orders.Include(u=>u.User).Where(o => o.State == OrderState.NeedOutPutDocmnet).ToListAsync();
+            //1- loop threw orders 
+            for (int o = 0; o < orders.Count; o++)
             {
-                var outputdocuments = await _context.OutPutDocument.Where(o => o.OrderId == order.OrderID).ToListAsync();
-                foreach(var outputdocument in outputdocuments)
+                //for each order intialize a list to count the taken quantity
+                List<OutPutDocumnetForAnnualViewModel> TakenQuantity = new List<OutPutDocumnetForAnnualViewModel>();
+                List<HaventBeenOutPutedItemsViewModel> itemrecentquantity = new List<HaventBeenOutPutedItemsViewModel>();
+                //all the annual orders of the current order we are looping through
+                var anuualOrderDetails = _context.AnnualOrder.Include(o => o.Item).Where(or => or.OrderId == orders[o].OrderID).ToList();
+
+                //intialize the taken quantity
+                foreach (var item in anuualOrderDetails)
                 {
-                    foreach( var item in allitems)
+                    OutPutDocumnetForAnnualViewModel model = new OutPutDocumnetForAnnualViewModel();
+                    model.TakenQuantity = 0;
+                    model.InputQuantity = 0;
+                    model.ItemId = item.ItemId;
+                    TakenQuantity.Add(model);
+                }
+                //count the taken quantity for the current order we are looping through
+                var outPutDoument = _context.OutPutDocument.Where(or => or.OrderId == orders[o].OrderID).ToList();
+                //if there is an output document then it will be modified relative to the previous taken quantities
+                foreach (var element in outPutDoument)
+                {
+                    var OutPutDocumnetDetails = _context.OutPutDocumentDetails.Where(od => od.OutPutDocumentId == element.OutPutDocumentID).ToList();
+                    for (int j = 0; j < OutPutDocumnetDetails.Count; j++)
                     {
-                        haventbeenoutputed model = new haventbeenoutputed();
-                        var outputdocumentdetails = await _context.OutPutDocumentDetails.Where(i => i.ItemId == item.itemid && outputdocument.OutPutDocumentID == i.OutPutDocumentId).FirstOrDefaultAsync();
-                        var itemname =await   _context.Items.Where(i => i.ItemID == outputdocumentdetails.ItemId).FirstOrDefaultAsync();
-                        model.Name = itemname.Name;
-                        itemstobedisplayed.Add(model);
+                        TakenQuantity[j].TakenQuantity += OutPutDocumnetDetails[j].Quantity;
                     }
                 }
-            }
-
-
-            //foreach (var item in allitems)
-            //{
-            //    var itemnames = _context.Items.Where(i => i.ItemID == item.itemid).FirstOrDefault();
-            //    foreach (var output in outputdocument)
-            //    {
-            //        var outputdoc = await _context.OutPutDocumentDetails.Include(o => o.OutPutDocument).Where(i => i.ItemId == item.itemid && i.OutPutDocumentId == output.OutPutDocumentID).ToListAsync();
-
-            //    }
-
-            //    foreach (var x in outputdoc)
-            //    {
-            //        if (x == null)
-            //        {
-            //            haventbeenoutputed itemm = new haventbeenoutputed();
-            //            itemm.Name = itemnames.Name;
-            //            itemstobedisplayed.Add(itemm);
-            //        }
-            //        outputdocs.Add(x);
-            //    }
-
-
-            //}
-
-
-
-            ViewBag.Empty = "لا يوجد مواد لم يتم تخريجها";
-            return View(itemstobedisplayed);
-
-        }
-        [HttpPost]
-        public async Task<IActionResult> HaventBeenOutputed(DateTime period)
-        {
-
-            var itemsmaxdate = await _context.OutPutDocumentDetails
-                .Include(i=>i.Item)
-                .GroupBy(i=>i.ItemId)
-                .Select(o => new { ItemId = o.Key, MaxDate = o.Max(o => o.CreatedAt)})
-                .ToListAsync();
-
-            TimeSpan TempPeriod = System.DateTime.Now - period;
-            List<haventbeenoutputed> outputdocs = new List<haventbeenoutputed>();
-            foreach (var item in itemsmaxdate)
-            {
-                var name = _context.OutPutDocumentDetails
-                    .Include(i => i.Item)
-                    .Where(i => i.ItemId == item.ItemId).FirstOrDefault();
-
-                haventbeenoutputed model = new haventbeenoutputed();
-                TimeSpan TempSpan = System.DateTime.Now - item.MaxDate;
-                if (TempSpan <= TempPeriod)
+                for (int ao = 0; ao < anuualOrderDetails.Count; ao++)
                 {
-                    model.Name = name.Item.Name;
-                    model.OutPutDocumentDate = name.CreatedAt;
-                    model.Span = TempSpan;
-                    outputdocs.Add(model);
+                    HaventBeenOutPutedItemsViewModel model = new HaventBeenOutPutedItemsViewModel();
+                       //calculate the total quantity for the current annual order
+                        var TotalQuantity = anuualOrderDetails[ao].FirstSemQuantity + anuualOrderDetails[ao].SecondSemQuantity + anuualOrderDetails[ao].ThirdSemQuantity;
+                        //count the recent value for the current annual order
+                        recent = TotalQuantity - TakenQuantity[ao].TakenQuantity;
+
+                         model.recentQuantity = recent;                    
                 }
+
+
+                //get all the outputdocuments for the specified order 
+                var outputdocuments = await _context.OutPutDocument.Where(d => d.OrderId == orders[o].OrderID).ToListAsync();
+                //loop threw th outputdocument then  all the items 
+                haventbeenoutputed modelitem = new haventbeenoutputed();
+                modelitem.Order = orders[o];
+                foreach (var outputdocument in outputdocuments)
+                {
+                    
+                    var outputdocumentdetails = await _context.OutPutDocumentDetails.Include(i=>i.Item).Where(i => i.OutPutDocumentId == outputdocument.OutPutDocumentID && allitems.Contains(i.ItemId)).ToListAsync();
+                    foreach(var outputdocumentdetail in outputdocumentdetails)
+                    {
+                        HaventBeenOutPutedItemsViewModel model = new HaventBeenOutPutedItemsViewModel();
+                        model.item = outputdocumentdetail.Item;
+                        model.Createdat = outputdocumentdetail.CreatedAt;
+                        itemrecentquantity.Add(model);
+
+                    }
+
+                }
+                modelitem.items = itemrecentquantity;
+                orderitems.Add(modelitem);
             }
-
+   
             ViewBag.Empty = "لا يوجد مواد لم يتم تخريجها";
+            return View(orderitems);
 
-            return View(outputdocs);
         }
+        //[HttpPost]
+        //public async Task<IActionResult> HaventBeenOutputed(DateTime period)
+        //{
+
+        //    var itemsmaxdate = await _context.OutPutDocumentDetails
+        //        .Include(i=>i.Item)
+        //        .GroupBy(i=>i.ItemId)
+        //        .Select(o => new { ItemId = o.Key, MaxDate = o.Max(o => o.CreatedAt)})
+        //        .ToListAsync();
+
+        //    TimeSpan TempPeriod = System.DateTime.Now - period;
+        //    List<haventbeenoutputed> outputdocs = new List<haventbeenoutputed>();
+        //    foreach (var item in itemsmaxdate)
+        //    {
+        //        var name = _context.OutPutDocumentDetails
+        //            .Include(i => i.Item)
+        //            .Where(i => i.ItemId == item.ItemId).FirstOrDefault();
+
+        //        haventbeenoutputed model = new haventbeenoutputed();
+        //        TimeSpan TempSpan = System.DateTime.Now - item.MaxDate;
+        //        if (TempSpan <= TempPeriod)
+        //        {
+        //            model.Name = name.Item.Name;
+        //            model.OutPutDocumentDate = name.CreatedAt;
+        //            model.Span = TempSpan;
+        //            outputdocs.Add(model);
+        //        }
+        //    }
+
+        //    ViewBag.Empty = "لا يوجد مواد لم يتم تخريجها";
+
+        //    return View(outputdocs);
+        //}
     }
 }

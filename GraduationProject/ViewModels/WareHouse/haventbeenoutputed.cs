@@ -2,17 +2,23 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GraduationProject.Data.Models;
+using GraduationProject.ViewModels.Warehouse;
+
 
 namespace GraduationProject.ViewModels.WareHouse
 {
     public class haventbeenoutputed
     {
-        public Data.Models.Order Order { get; set; }
-        public Data.Models.Items Item { get; set; }
+        public Order Order { get; set; }
 
-        List <Data.Models.Items> items { set; get; }
-        public string Name { get; set; }
-        public DateTime OutPutDocumentDate { get; set; }
-        public TimeSpan Span { get; set; }
+        public List <HaventBeenOutPutedItemsViewModel> items { set; get; }
+
+        public haventbeenoutputed()
+        {
+            items = new List<HaventBeenOutPutedItemsViewModel>();
+
+        }
+
     }
 }
