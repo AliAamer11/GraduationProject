@@ -1,0 +1,56 @@
+﻿@model List<GraduationProject.ViewModels.WareHouse.materialreportsViewModel>
+
+<link href="~/css/tableformanagment.css" rel="stylesheet" />
+<form asp-action="MaterialInventoryReports" method="post">
+
+    <label>  أدخل التاريخ الأولي والثانوي للقيام بعملية الجرد  </label>
+    <label>first</label>
+    <input name="startdate" type="datetime-local"  />
+    <label>second</label>
+    <input name="finishdate" type="datetime-local"  />
+    <input type="submit" value=" استعراض " />
+
+
+</form>
+<br />
+<table class="styled-table">
+    <thead>
+        <tr>
+            <th>رمز المواد</th>
+            <th>اسم المواد</th>
+            <th>الوحدة الأساسية</th>
+            <th>الكمية الداخلة </th>
+            <th>الكمية الخارجة </th>
+            <th>الرصيد </th>
+
+
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            @foreach (var m in Model)
+            {
+                <tr>
+
+                    <td>@m.Barcode</td>
+                    <td>@m.Name</td>
+                    <td>@m.FlowRate</td>
+                    <td>@m.InputQuantity</td>
+                    <td>@m.OutputQuantity</td>
+                    <td>@m.InStock</td>
+
+
+                </tr>
+
+            }
+        }
+        else
+        {
+            <tr>
+                <td>@ViewBag.Empty </td>
+            </tr>
+
+        }
+    </tbody>
+</table>
