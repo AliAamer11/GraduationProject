@@ -132,16 +132,16 @@ namespace GraduationProject.Controllers
             var allitems = await _context.InputDocumentDetails.GroupBy(i => i.ItemId).Select(o => new { itemid = o.Key }).ToListAsync();
             var allorders = await _context.Orders.ToListAsync();
 
-            foreach(var order in allorders)
+            foreach (var order in allorders)
             {
                 var outputdocuments = await _context.OutPutDocument.Where(o => o.OrderId == order.OrderID).ToListAsync();
-                foreach(var outputdocument in outputdocuments)
+                foreach (var outputdocument in outputdocuments)
                 {
-                    foreach( var item in allitems)
+                    foreach (var item in allitems)
                     {
                         haventbeenoutputed model = new haventbeenoutputed();
                         var outputdocumentdetails = await _context.OutPutDocumentDetails.Where(i => i.ItemId == item.itemid && outputdocument.OutPutDocumentID == i.OutPutDocumentId).FirstOrDefaultAsync();
-                        var itemname =await   _context.Items.Where(i => i.ItemID == outputdocumentdetails.ItemId).FirstOrDefaultAsync();
+                        var itemname = await _context.Items.Where(i => i.ItemID == outputdocumentdetails.ItemId).FirstOrDefaultAsync();
                         model.Name = itemname.Name;
                         itemstobedisplayed.Add(model);
                     }
@@ -183,9 +183,9 @@ namespace GraduationProject.Controllers
         {
 
             var itemsmaxdate = await _context.OutPutDocumentDetails
-                .Include(i=>i.Item)
-                .GroupBy(i=>i.ItemId)
-                .Select(o => new { ItemId = o.Key, MaxDate = o.Max(o => o.CreatedAt)})
+                .Include(i => i.Item)
+                .GroupBy(i => i.ItemId)
+                .Select(o => new { ItemId = o.Key, MaxDate = o.Max(o => o.CreatedAt) })
                 .ToListAsync();
 
             TimeSpan TempPeriod = System.DateTime.Now - period;
@@ -211,5 +211,84 @@ namespace GraduationProject.Controllers
 
             return View(outputdocs);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> MaterialInventoryReports()
+        {
+            return View();
+
+        }
+        
+            [HttpPost]
+        public async Task<IActionResult> MaterialInventoryReports(DateTime stardate, DateTime finishdate)
+        {
+            List<materialreportsViewModel> models = new List<materialreportsViewModel>(); //model to save info of jrd
+            var allitems = await _context.Items.Include(i=>i.Measurement).ToListAsync(); //allitems from invetory 
+
+
+
+            var inputdocsQauntitySum = await _context.InputDocumentDetails
+                .Include(i => i.InputDocument)
+                .Where(i => i.InputDocument.CreatedAt >= stardate && i.InputDocument.CreatedAt <= finishdate)
+                .GroupBy(i => i.ItemId)
+                .Select(o => new { ItemId = o.Key, SumInputQuantity = o.Sum(o => o.Quantity) })
+                .ToListAsync();
+
+            foreach (var item in allitems)  //go on all items to save name and quantity
+            {
+                materialreportsViewModel model = new materialreportsViewModel();
+                model.ItemID = item.ItemID;
+                model.Barcode = item.BarCode;
+                model.Name = item.Name;
+                model.FlowRate = item.Measurement.Name;
+                model.InputQuantity = 0;
+                model.OutputQuantity = 0;
+                model.InStock = item.Quantity;
+
+                models.Add(model);
+            }
+
+
+            ///////Sum of Output Quantity to All Items 
+
+            //query to get all outputdocuments within the same range of time and group them by itemid and get the sum of the quantity
+            var outputdocsQauntitySum = await _context.OutPutDocumentDetails
+                .Where(i => i.CreatedAt >= stardate && i.CreatedAt <= finishdate)
+                .GroupBy(i => i.ItemId)
+                .Select(o => new { ItemId = o.Key, SumOutputQuantity = o.Sum(o => o.Quantity) })
+                .ToListAsync();
+            //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+            ///////Sum of Input Quantity to All Items 
+
+            //query to get all inputdocuments within the same range of time and group them by itemid and get the sum of the quantity
+
+
+
+            foreach (var model in models)
+            {
+                foreach (var outputdoc in outputdocsQauntitySum)
+                {
+                    if (outputdoc.ItemId == model.ItemID)
+                    {
+                        model.OutputQuantity = outputdoc.SumOutputQuantity;
+                    }
+
+                }
+                foreach (var inputdoc in inputdocsQauntitySum)
+                {
+                    if (inputdoc.ItemId == model.ItemID)
+                    {
+                        model.InputQuantity = inputdoc.SumInputQuantity;
+                    }
+
+                }
+            }
+            ViewBag.Empty = "لا يوجد مواد ";
+
+            return View(models);
+
+        }
     }
 }
+
