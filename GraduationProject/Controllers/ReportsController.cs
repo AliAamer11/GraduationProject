@@ -12,10 +12,10 @@ using GraduationProject.ViewModels;
 
 namespace GraduationProject.Controllers
 {
-    public class WarHouseController : Controller
+    public class ReportsController : Controller
     {
         private readonly ApplicationDbContext _context;
-        public WarHouseController(ApplicationDbContext context)
+        public ReportsController(ApplicationDbContext context)
         {
 
 
@@ -28,7 +28,7 @@ namespace GraduationProject.Controllers
         }
 
         [HttpGet]
-        public IActionResult test()
+        public IActionResult ItemReport()
         {
             var allitems = _context.Items.Include(c => c.Category).Include(m => m.Measurement).ToList();
             List<ItemsDatagridViewModel> itemsDatagrid = new List<ItemsDatagridViewModel>();
@@ -49,27 +49,6 @@ namespace GraduationProject.Controllers
             string jsonString = System.Text.Json.JsonSerializer.Serialize(itemsDatagrid);
             ViewBag.items = jsonString;
             return View();
-
-            //List<Items> model = new List<Items>();
-            //model = allitems;
-            //for (int i = 0; i < allitems.Count; i++)
-            //{
-            //    model[i].ItemID = allitems[i].ItemID;
-            //    model[i].Name = allitems[i].Name;
-            //    model[i].Quantity = allitems[i].Quantity;
-            //    model[i].Status = allitems[i].Status;
-            //    model[i].Note = allitems[i].Note;
-            //    model[i].Measurement.Name = allitems[i].Measurement.Name;
-            //    model[i].Category.Name = allitems[i].Category.Name;
-            //    model.Add(model[i]);
-            //}
-            //string jsonString = System.Text.Json.JsonSerializer.Serialize(model);
-            //ViewBag.items = jsonString;
-
-            //var itemss = _context.Items.ToList();
-            //string jsonString = System.Text.Json.JsonSerializer.Serialize(itemss);
-            //ViewBag.items = jsonString;
-            //Console.WriteLine(jsonString);
         }
     }
 }
