@@ -1,0 +1,36 @@
+﻿@model List<GraduationProject.ViewModels.WareHouse.haventbeenoutputed>
+<link href="~/css/tableformanagment.css" rel="stylesheet" />
+<link href="~/css/button.css" rel="stylesheet" />
+<form method="post">
+    <label>  أدخل التاريخ الابتدائي لمعرفة المواد التي لم يتم تخريجها  </label>
+    <input type="datetime-local" name="period" /><br />
+    <input class="show-icon-btn" type="submit" value="استعراض" />
+    <br />
+    <div class="table-responsive">
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th>الطلب</th>
+                    <th>المواد</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null)
+                {
+                    for (int i = 0; i < Model.Count(); i++)
+                    {
+                        <tr>
+                            <td>@Model[i].Order.User.RequstingParty</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td>@ViewBag.Empty </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</form>

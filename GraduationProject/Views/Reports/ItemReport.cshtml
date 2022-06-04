@@ -1,0 +1,29 @@
+﻿<link href="~/css/ReportsLayout.css" rel="stylesheet" />
+<script type="text/javascript" src="~/LibExtreme/js/jquery-3.5.1.min.js"></script>
+<link href="~/LibExtreme/css/dx.material.orange.light.css" rel="stylesheet" />
+<script type="text/javascript" src="~/LibExtreme/js/dx.all.js"></script>
+@{Layout = "ReportsLayout";
+}
+<script>
+        var dataset = [];
+        const items = @Html.Raw(ViewBag.items);
+        $(function () {
+            $("#dataGrid").dxDataGrid({
+                dataSource: items,
+                keyExpr: "",
+                filterRow: { visible: true },
+                searchPanel: { visible: true },
+                //columns: [
+                //    // ...
+                //    {
+                //        dataField: "ItemID",
+                //        visible: false
+                //    }],
+                columnChooser: { enabled: true },
+            });
+        });
+</script>
+
+<div class="dx-theme-border-color-as-background-color">
+    <div id="dataGrid"></div>
+</div>
