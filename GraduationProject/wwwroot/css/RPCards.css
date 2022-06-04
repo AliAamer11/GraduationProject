@@ -36,12 +36,17 @@ body .container .card:nth-child(3) .box .content a {
 background: #FF5733;
 }
 
+body .container .card:nth-child(4) .box .content a {
+    background: #FF5733;
+}
+
+
 body .container .card .box {
 position: absolute;
-top: 20px;
-left: 20px;
-right: 20px;
-bottom: 20px;
+top: 13px;
+left: 13px;
+right: 13px;
+bottom: 13px;
 background: #11101D;
 border-radius: 15px;
 display: flex;

@@ -89,15 +89,17 @@
                     </a>
                     <span class="tooltip">الطلبات</span>
                 </li>
+                <li>
+                    <a href="~/Reports/Index">
+                        <i class='bx bx-paper-plane'></i>
+                        <span class="links_name">التقارير</span>
+                    </a>
+                    <span class="tooltip">التقارير</span>
+                </li>
             }
             <!--Requester Operation-->
             @if (User.IsInRole("Requester"))
             {
-                <li>
-                    <i class='bx bx-search'></i>
-                    <input type="text" id="searchTable" placeholder="ابحث هنا..." onkeyup="searchTable()">
-                    <span class="tooltip">ابحث</span>
-                </li>
                 <li>
                     <a href="~/RPOrder/Home">
                         <i class='bx bxs-dashboard'></i>
@@ -134,7 +136,6 @@
                     </a>
                     <span class="tooltip">الإشعارات</span>
                 </li>
-
             }
             <!--VicePres Operation-->
             @if (User.IsInRole("VicePris"))
@@ -155,13 +156,6 @@
                 </li>
                 <li>
                     <a href="~/Reports/Index">
-                        <i class='bx bxs-store'></i>
-                        <span class="links_name">المستودع </span>
-                    </a>
-                    <span class="tooltip">المستودع</span>
-                </li>
-                <li>
-                    <a href="">
                         <i class='bx bx-paper-plane'></i>
                         <span class="links_name">التقارير</span>
                     </a>

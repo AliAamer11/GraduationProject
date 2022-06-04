@@ -1,12 +1,10 @@
 ﻿@model List<GraduationProject.ViewModels.WareHouse.StagnantItemsViewModel>
+<link href="~/css/tableformanagment.css" rel="stylesheet" />
+<link href="~/css/button.css" rel="stylesheet" />
 <form asp-action="Stagnant" method="post">
-
     <label>  أدخل المدة بالسنة  </label>
-
-    <input name="period" value="0" />
-    <input type="submit" value=" استعراض " />
-
-
+    <input name="period" value="0" /><br />
+    <input class="show-icon-btn" type="submit" value=" استعراض " />
 </form>
 <br />
 <table class="styled-table">
@@ -16,12 +14,12 @@
         </tr>
     </thead>
     <tbody>
-        <tr>
-            @foreach (var m in Model)
-            {
+        @foreach (var m in Model)
+        {
+            <tr>
                 <td>@m.Name</td>
-            }
-        </tr>
+            </tr>
+        }
     </tbody>
 </table>
 @ViewBag.period

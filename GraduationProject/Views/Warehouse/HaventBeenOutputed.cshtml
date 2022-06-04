@@ -1,7 +1,10 @@
 ﻿@model List<GraduationProject.ViewModels.WareHouse.haventbeenoutputed>
+<link href="~/css/tableformanagment.css" rel="stylesheet" />
+<link href="~/css/button.css" rel="stylesheet" />
 <form method="post">
     <label>  أدخل التاريخ الابتدائي لمعرفة المواد التي لم يتم تخريجها  </label>
-    <input type="datetime-local" name="period" />
+    <input type="datetime-local" name="period" /><br />
+    <input class="show-icon-btn" type="submit" value="استعراض" />
     <br />
     <div class="table-responsive">
         <table class="styled-table">
@@ -30,5 +33,4 @@
             </tbody>
         </table>
     </div>
-    <input type="submit" value="yalla" />
 </form>
