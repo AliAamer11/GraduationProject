@@ -20,7 +20,7 @@ namespace GraduationProject.ViewModels.Administration
         [EmailAddress(ErrorMessage = "البريد الإلكتروني ليس بالصيغة المناسبة")]
         public string Email { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "كلمة السر مطلوبة")]
         [Display(Name = "كلمة السر")]
         public string Password { get; set; }
 

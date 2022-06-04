@@ -2,9 +2,12 @@
 
 @{
     Layout = "";
+    ViewBag.Title = "تسجيل الدخول";
+
 }
-<html>
+<html dir="rtl" lang="ar">
 <head>
+    <meta charset="utf-8" />
     <title>تسجيل الدخول</title>
     <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" />
     <link href="~/css/Login.css" rel="stylesheet" />
@@ -13,14 +16,10 @@
 <body>
     <img class="wave" src="img/darkblue-wave.png">
     <div class="container">
-        <div class="img">
-            <img src="img/Warwhouse-animated-img.gif">
-        </div>
         <div class="login-content">
             <form method="post">
-                <div asp-validation-summary="ModelOnly" class="serverresponce"></div>
                 <img class="logo" src="img/KALASTORDER_Logo.gif">
-                <h2 class="title"> </h2>
+                <div asp-validation-summary="ModelOnly" class="serverresponce"></div>
                 <div class="input-div one">
                     <div class="i">
                         <i class="fas fa-user"></i>
@@ -41,18 +40,38 @@
                     </div>
                 </div>
                 <span asp-validation-for="Password" class="err"></span>
-                <button type="submit" class="btn">
+                <button type="submit" class="btn" style="margin-top:20px">
                     تسجيل الدخول
+                    <i class='fas fa-sign-in-alt' style="text-align:start;margin-right:10px;"></i>
+
                 </button>
             </form>
+        </div>
+        <div class="img">
+            <img src="img/Warwhouse-animated-img.gif">
         </div>
     </div>
 </body>
 </html>
 <script src="~/js/Login.js"></script>
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script src="~/lib/jquery-validate/jquery.validate.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+<script>
+    $(document).ready(function () {
+        var email = document.getElementById("email");
+        console.log(email.value);
+        if (email.value != "") {
+            email.value = "";
+        }
+    });
 
-@section Scripts{
-    <script src="~/js/Login.js"></script>
-    <partial name="_ValidationScriptsPartial" />
-
-}
+    function visibilPassword() {
+        var passwordInput = document.getElementById("passwordInput");
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+        } else {
+            passwordInput.type = "password";
+        }
+    }
+</script>

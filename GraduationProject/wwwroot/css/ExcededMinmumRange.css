@@ -1,0 +1,115 @@
+﻿:root {
+    /*this for navigation*/
+    --main-blue: #11101D;
+    --sub-blue: #1d1b31;
+    --background: #E4E9F7;
+    --main-orange: #FF5733;
+    /*special use*/
+    /*main color*/
+    --white: #fff;
+    --black: #000;
+    --gray: #e7e7e7;
+    --background-gray: #c7c7c7;
+    --red: #b2323d;
+    --black-hover: #171a20;
+    --red-hover: #92474d;
+}
+.title {
+    text-align: center;
+    font-size: 2.5rem;
+    color: #f18a1b;
+    font-weight: bold;
+}
+.tilesWrap {
+    padding: 0;
+    margin: 10px auto;
+    list-style: none;
+    text-align: center;
+}
+
+    .tilesWrap li {
+        display: inline-block;
+        width: 20%;
+        min-width: 70px;
+        max-width: 100px;
+        padding: 35px 10px 20px;
+        position: relative;
+        vertical-align: top;
+        margin: 5px;
+        min-height: 10vh;
+        /*  background: #262a2b;*/
+        background: var(--main-blue);
+        border: 1px solid #252727;
+        text-align: right;
+    }
+
+        .tilesWrap li h2 {
+            font-size: 22px;
+            margin: 0;
+            position: absolute;
+            opacity: 0.2;
+            top: 7px;
+            right: 10px;
+            transition: all 0.3s ease-in-out;
+            color:var(--main-orange);
+        }
+
+        .tilesWrap li h3 {
+            font-size: 20px;
+            color: var(--white);
+            margin-bottom: 5px;
+            text-align:center;
+        }
+
+        .tilesWrap li p {
+            font-size: 18px;
+            text-align:center;
+            line-height: 18px;
+            color: var(--white);
+            margin-top: 5px;
+        }
+
+
+        .tilesWrap li:hover h2 {
+            top: 0px;
+            opacity: 0.8;
+        }
+
+        .tilesWrap li:before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            z-index: -1;
+            background: #fff;
+            transform: skew(2deg, 2deg);
+        }
+
+        .tilesWrap li:after {
+            content: '';
+            position: absolute;
+            width: 40%;
+            height: 100%;
+            left: 0;
+            top: 0;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .tilesWrap li:nth-of-type(odd):before {
+            background: #C9FFBF;
+            background: -webkit-linear-gradient(to right, #FFAFBD, #C9FFBF);
+            background: linear-gradient(to right, #9b0da3, #FF5733);
+        }
+        .tilesWrap li:nth-of-type(even):before {
+            background: #C9FFBF;
+            background: -webkit-linear-gradient(to right, #FFAFBD, #C9FFBF);
+            background: linear-gradient(to right, #FF5733, #9b0da3);
+        }
+
+.center {
+    /*border: 5px solid #FFFF00;*/
+    display: flex;
+    justify-content: center;
+}

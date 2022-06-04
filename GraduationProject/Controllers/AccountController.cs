@@ -38,10 +38,10 @@ namespace GraduationProject.Controllers
             //inested of that we return him to view based on who is he
             //I use Sharingan *-*
             var userid = userService.GetUserId();
-            if (userid!=null)
+            if (userid != null)
             {
                 var user = await userManager.FindByIdAsync(userid);
-                if (user!=null)
+                if (user != null)
                 {
                     if (user.Type == "Admin")
                     {
@@ -79,7 +79,7 @@ namespace GraduationProject.Controllers
                     {
                         var result = await signInManager.PasswordSignInAsync(user.Email, viewModel.Password, true, false);
                         if (result.Succeeded)
-                        {                   
+                        {
                             if (user.Type == "Admin")
                             {
                                 return RedirectToAction("DashBoard", "Administration");
@@ -97,14 +97,12 @@ namespace GraduationProject.Controllers
                                 return RedirectToAction("Index", "Items");
                             }
                         }
-                        else
-                        {
-                            ViewBag.errorMessage = "Bad Password. Good Luck Next Time";
-                            return View(viewModel);
-                        }
                     }
+                    ModelState.AddModelError(string.Empty, "محاولة تسجيل عير ناجحة حاول مجددا");
 
                 }
+                viewModel.Email = "";
+                viewModel.Password = "";
                 return View(viewModel);
 
             }

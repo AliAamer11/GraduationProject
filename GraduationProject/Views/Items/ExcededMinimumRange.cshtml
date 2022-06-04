@@ -3,37 +3,49 @@
 @{
     ViewData["Title"] = "المواد التي تخطت الحد الأدنى";
 }
-
-<style>
-    .center {
-        /*border: 5px solid #FFFF00;*/
-        display: flex;
-        justify-content: center;
-    }
-</style>
+<link href="~/css/ExcededMinmumRange.css" rel="stylesheet" />
 <script src="~/lib/Chart.js/chart.min.js"></script>
+<ul class="tilesWrap">
+    @for (int i = 0; i < Model.Itemsname.Count; i++)
+    {
+        <li>
+            <h2>@i</h2>
+            <h3 class="names">@Model.Itemsname[i]</h3>
+            <p class="counts">@Model.ItemsCountofExcededMinimumRange[i]</p>
+        </li>
 
-
+    }
+</ul>
 <div class="center">
-    <canvas id="myChart" style="width:100%;max-width:800px"></canvas>
-</div>
+        <canvas id="myChart" style="width:100%;max-width:800px"></canvas>
+    </div>
 <script>
-    Chart.defaults.font.size = 20;
+
+    var listofnames = document.getElementsByClassName("names");
     var xValues = [];
 
-    @foreach (var d in Model.Itemsname)
+    for (var i = 0; i < listofnames.length; i++) {
+        xValues.push(listofnames[i].innerText);
+    }
+
+    Chart.defaults.font.size = 20;
+
+    @*@foreach (var d in Model.Itemsname)
     {
         @:xValues.push("@d");
-    }
+    }*@
     var yValues = [];
     @foreach (var d in Model.ItemsCountofExcededMinimumRange)
     {
         @:yValues.push("@d");
     }
 
+    //for (var i = 0; i < xValues.length; i++) {
+    //    console.log("sd" + xValues[i]);
+    //}
     new Chart("myChart", {
         type: "bar",
-        // to flip bar 
+        // to flip bar
         //options: {
         //    indexAxis: 'y',
         //},

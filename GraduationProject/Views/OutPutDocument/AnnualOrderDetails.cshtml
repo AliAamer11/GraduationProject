@@ -17,7 +17,7 @@
     </div>
 }
 
-<div class="alert alert-danger" id="error-div" style="display:none;">
+<div class="alert alert-danger" id="error-div" style="display:none;font-size:20px">
     <span id="view-err">
 
     </span>
@@ -61,7 +61,7 @@
                         <td><input asp-for="@Model.QuantityModel[i].InputQuantity" value="0" class="inputs" /></td>
                         <td>@ViewBag.suggestedquantity[i]</td>
                         <td><input asp-for="@Model.QuantityModel[i].ItemId" type="hidden" /></td>
-                    
+
                     </tr>
                 }
 
@@ -93,6 +93,16 @@
         var recents = document.getElementsByClassName("recents");
         $(function () {
             $("#submit").click(function () {
+
+                for (var i = 0; i < inputs.length; i++) {
+                    if (inputs[i].value < 0) {
+                        var div = document.getElementById('error-div');
+                        div.innerHTML = 'يعني هاد رجعلنا؟؟؟؟؟؟';
+                        $("#error-div").fadeIn();
+                        return false;
+                    }
+                }
+
 
                 for (var i = 0; i < inputs.length; i++) {
                     var recent = parseInt(recents[i].innerHTML);

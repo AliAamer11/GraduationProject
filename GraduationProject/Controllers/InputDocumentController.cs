@@ -51,9 +51,10 @@ namespace GraduationProject.Controllers
             {
                 try
                 {
+                    int count = 0;
                     if (viewModel.AddMoreList == null)
                     {
-                        ViewBag.errorMessage = "طيب عبيلك شي شغلة";
+                        ViewBag.errorMessage = "اضغط على + من أجل ادخال المادة وتفاصيلها";
                         return View(viewModel);
                     }
                     foreach (var item in viewModel.AddMoreList)
@@ -62,10 +63,19 @@ namespace GraduationProject.Controllers
                         {
                             if (item.Quantity < 1)
                             {
-                                ViewBag.errorMessage = "يعني كيف كمية وسالبة ؟؟؟؟؟؟";
+                                ViewBag.errorMessage = "لا يمكن لكمية المادة أن تكون سالبة";
                                 return View(viewModel);
                             }
                         }
+                        else
+                        {
+                            count++;
+                        }
+                    }
+                    if (count == viewModel.AddMoreList.Count)
+                    {
+                        ViewBag.errorMessage = "اضغط على + من أجل ادخال المادة وتفاصيلها";
+                        return View(viewModel);
                     }
                     var inputDocument = new InputDocument()
                     {
