@@ -9,9 +9,11 @@ using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using GraduationProject.Data.Models;
 using GraduationProject.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GraduationProject.Controllers
 {
+    [Authorize(Roles = "StoreKeep,Admin")]
     public class ReportsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -24,30 +26,6 @@ namespace GraduationProject.Controllers
         public IActionResult Index()
         {
 
-            return View();
-        }
-
-        [HttpGet]
-        public IActionResult ItemReport()
-        {
-            var allitems = _context.Items.Include(c => c.Category).Include(m => m.Measurement).ToList();
-            List<ItemsDatagridViewModel> itemsDatagrid = new List<ItemsDatagridViewModel>();
-            foreach (var item in allitems)
-            {
-                ItemsDatagridViewModel model = new ItemsDatagridViewModel();
-                model.ItemID = item.ItemID;
-                model.ItemName = item.Name;
-                model.BarCode = item.BarCode;
-                model.Quantity = item.Quantity;
-                model.MinimumRange = item.MinimumRange;
-                model.Status = item.Status;
-                model.Note = item.Note;
-                model.Category = item.Category.Name;
-                model.Measurement = item.Measurement.Name;
-                itemsDatagrid.Add(model);
-            }
-            string jsonString = System.Text.Json.JsonSerializer.Serialize(itemsDatagrid);
-            ViewBag.items = jsonString;
             return View();
         }
     }

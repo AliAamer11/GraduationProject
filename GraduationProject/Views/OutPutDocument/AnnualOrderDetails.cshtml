@@ -97,7 +97,7 @@
                 for (var i = 0; i < inputs.length; i++) {
                     if (inputs[i].value < 0) {
                         var div = document.getElementById('error-div');
-                        div.innerHTML = 'يعني هاد رجعلنا؟؟؟؟؟؟';
+                        div.innerHTML = 'لا يمكن إدخال كمية سالبة';
                         $("#error-div").fadeIn();
                         return false;
                     }

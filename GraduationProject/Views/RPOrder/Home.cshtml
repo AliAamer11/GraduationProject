@@ -14,7 +14,7 @@
                     <p>طلب الإحتياج  قيد المراجعة</p>
                     <a asp-action="GetAnnualNeedsDisplay" asp-controller="AnnualOrder">استعراض </a>
                 }
-                else if (ViewBag.Annual_State == "BeingReview")
+                else if (ViewBag.Annual_State == "BeingReview" || ViewBag.Annual_State == "QuantitiesDistributed")
                 {
                     <p>طلب الإحتياج  يحتاج إلى تعديل</p>
                     <a asp-action="GetAnnualNeedAltered" asp-controller="AnnualOrder">تعديل </a>

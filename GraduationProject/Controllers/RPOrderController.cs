@@ -9,20 +9,23 @@ using Microsoft.AspNetCore.Identity;
 using GraduationProject.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using GraduationProject.ViewModels;
+using AspNetCoreHero.ToastNotification.Abstractions;
 
 namespace GraduationProject.Controllers
 {
     [Authorize(Roles = "Requester")]
     public class RPOrderController : Controller
     {
+        private readonly INotyfService _notyf;
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> userManager;
 
         public RPOrderController(ApplicationDbContext context,
-            UserManager<ApplicationUser> userManager)
+            UserManager<ApplicationUser> userManager, INotyfService notyf)
         {
             this.userManager = userManager;
             _context = context;
+            _notyf = notyf;
         }
 
         public int GetUnplannedOrderid()
@@ -100,7 +103,8 @@ namespace GraduationProject.Controllers
             else if (model.State == OrderState.Finishid)
                 return "Finishid";
 
-            return "error";
+            else
+                return "QuantitiesDistributed";
         }
 
         [HttpGet]
@@ -108,6 +112,11 @@ namespace GraduationProject.Controllers
         {
             ViewData["Current_Year"] = DateTime.Now.Year;
             ViewData["Annual_State"] = CheckOrderState(GetAnnualNeedOrderid());
+            string state = CheckOrderState(GetAnnualNeedOrderid());
+            if (state == "QuantitiesDistributed")
+            {
+                _notyf.Information("لقد تم عمل عملية توزيع لطلبك");
+            }
             ViewData["Unplanned_State"] = CheckOrderState(GetUnplannedOrderid());
             return View();
         }

@@ -136,7 +136,7 @@ namespace GraduationProject.Controllers
                     .Include(i => i.Item)
                     .Where(x => x.OrderId == id)
                     .Where(x => x.Comment != null)
-                    .Where(o => o.Order.Type == false && o.Order.State == OrderState.BeingReview)
+                    .Where(o => o.Order.Type == false && o.Order.State == OrderState.BeingReview || o.Order.State == OrderState.QuantitiesDistributed)
                     .Where(o => o.Order.UserId == userid)
                     .ToList();
             ViewData["id"] = id;

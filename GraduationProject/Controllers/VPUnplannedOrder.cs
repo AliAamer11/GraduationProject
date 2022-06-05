@@ -65,7 +65,7 @@ namespace GraduationProject.Controllers
                 await _context.SaveChangesAsync();
             }
             var order = await _context.Orders.FirstOrDefaultAsync(o => o.OrderID == OrderId);
-            order.State =OrderState.RequestingParty;
+            order.State =OrderState.BeingReview;
             _context.Update(order);
             await _context.SaveChangesAsync();
 
