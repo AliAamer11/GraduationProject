@@ -1,5 +1,5 @@
 ﻿@model List<GraduationProject.ViewModels.WareHouse.materialreportsViewModel>
-    <link href="~/css/button.css" rel="stylesheet" />
+<link href="~/css/button.css" rel="stylesheet" />
 <link href="~/css/tableformanagment.css" rel="stylesheet" />
 <form asp-action="MaterialInventoryReports" method="post">
     <label>  أدخل التاريخ الأولي والثانوي للقيام بعملية الجرد  </label>
@@ -15,37 +15,92 @@
 
 </form>
 <br />
-<table class="styled-table">
-    <thead>
-        <tr>
-            <th>رمز المادة</th>
-            <th>اسم المادة</th>
-            <th>الوحدة الأساسية</th>
-            <th>الكمية الداخلة </th>
-            <th>الكمية الخارجة </th>
-            <th>الرصيد </th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (Model != null)
-        {
-            @foreach (var m in Model)
-            {
-                <tr>
-                    <td>@m.Barcode</td>
-                    <td>@m.Name</td>
-                    <td>@m.FlowRate</td>
-                    <td>@m.InputQuantity</td>
-                    <td>@m.OutputQuantity</td>
-                    <td>@m.InStock</td>
-                </tr>
-            }
-        }
-        else
-        {
-            <tr>
-                <td>@ViewBag.Empty </td>
-            </tr>
-        }
-    </tbody>
-</table>
+
+<script>
+        var dataset = [];
+        const items = @Html.Raw(ViewBag.items);
+        $(function () {
+            $("#dataGrid").dxDataGrid({
+                dataSource: items,
+                keyExpr: "",
+                filterRow: { visible: true },
+                searchPanel: { visible: true },
+                //allowColumnReordering: true,
+                allowColumnResizing: true,
+                columnAutoWidth: true,
+                showBorders: true,
+                selection: {
+                    mode: 'multiple',
+                },
+                groupPanel: {
+                    visible: true,
+                },
+                export: {
+                    enabled: true,
+                    allowExportSelectedData: true,
+                },
+                onExporting(e) {
+                    const workbook = new ExcelJS.Workbook();
+                    const worksheet = workbook.addWorksheet('المواد');
+                    DevExpress.excelExporter.exportDataGrid({
+                        component: e.component,
+                        worksheet,
+                        autoFilterEnabled: true,
+                    }).then(() => {
+                        workbook.xlsx.writeBuffer().then((buffer) => {
+                            saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'Items.xlsx');
+                        });
+                    });
+                    e.cancel = true;
+                },
+                paging: {
+                    enabled: true,
+                },
+                columns: [{
+                    caption: "رقم المادة",
+                    dataField: 'ItemID',
+                    alignment: 'center',
+                },
+                {
+                    caption: "رمز المادة",
+                    dataField: 'Barcode',
+                    alignment: 'center',
+                },
+                {
+                    caption: "اسم المادة",
+                    dataField: 'Name',
+                    alignment: 'center',
+                },
+                {
+                    caption: "التدفق",
+                    dataField: 'FlowRate',
+                    alignment: 'center',
+                },
+                {
+                    caption: "الكمية الداخلة",
+                    dataField: 'InputQuantity',
+                    alignment: 'center',
+                },
+                {
+                    caption: "الكمية الخارجة",
+                    dataField: 'OutputQuantity',
+                    alignment: 'center',
+                },
+                {
+                    caption: "الرصيد",
+                    dataField: 'InStock',
+                    alignment: 'center',
+                }
+
+                ],
+                columnChooser: { enabled: true },
+            });
+        });
+        DevExpress.config({
+            rtlEnabled: true
+        });
+</script>
+
+<div class="dx-theme-border-color-as-background-color">
+    <div id="dataGrid"></div>
+</div>
