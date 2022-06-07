@@ -78,62 +78,62 @@ namespace GraduationProject.Controllers.RP
         }
 
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             var userid = userManager.GetUserId(User);
 
-            var unplannedorders = _context.Orders
+            var unplannedorders = await _context.Orders
                 .Where(x => x.Type == true)   //// unplanned order type
                 .Where(o => o.UserId == userid)    /// getting orders to this current user
                 .Where(o => o.State == OrderState.NeedOutPutDocmnet)  ///getting orders that are complete on StoreKeeper side
-                .ToList();
+                .ToListAsync();
             return View(unplannedorders);
         }
 
         //Get All Unplanned to Order where it is still not complete
         [HttpGet]
-        public IActionResult GetAllUnplanned()
+        public async Task<IActionResult> GetAllUnplanned()
         {
             var userid = userManager.GetUserId(User);
             int id = GetUnplannedOrderid();
-            var unplannedorders = _context.UnPlannedOrder
+            var unplannedorders =await _context.UnPlannedOrder
                 .Include(i => i.Item)
                 .Where(x => x.OrderId == id)
                 .Where(o => o.Order.Type == true && o.Order.State == OrderState.RequestingParty)
                 .Where(o => o.Order.UserId == userid)
-                .ToList();
+                .ToListAsync();
             ViewData["id"] = id;
             return View(unplannedorders);
         }
 
         //Get All Unplanned to Order where it is complete &needs alteration
         [HttpGet]
-        public IActionResult GetAllUnplannedAltered()
+        public async Task<IActionResult> GetAllUnplannedAltered()
         {
             var userid = userManager.GetUserId(User);
             int id = GetUnplannedOrderid();
-            var unplannedorders = _context.UnPlannedOrder
+            var unplannedorders = await _context.UnPlannedOrder
                 .Include(i => i.Item)
                 .Where(x => x.OrderId == id)
                 .Where(x => x.Comment != null)
                 .Where(o => o.Order.Type == true && o.Order.State == OrderState.BeingReview)
                 .Where(o => o.Order.UserId == userid)
-                .ToList();
+                .ToListAsync();
             ViewData["id"] = id;
             return View(unplannedorders);
         }
 
-        public IActionResult GetUnplannedNeedsDisplay()
+        public async Task<IActionResult> GetUnplannedNeedsDisplay()
         {
             var userid = userManager.GetUserId(User);
             int id = GetUnplannedOrderid();
 
-            var unplannedorders = _context.UnPlannedOrder.Include(o => o.Order)
+            var unplannedorders = await _context.UnPlannedOrder.Include(o => o.Order)
                     .Include(i => i.Item)
                     .Where(x => x.OrderId == id)
                     .Where(o => o.Order.Type == true && o.Order.State == OrderState.VicePrisdent || o.Order.State == OrderState.NeedOutPutDocmnet)
                     .Where(o => o.Order.UserId == userid)
-                    .ToList();
+                    .ToListAsync();
             ViewData["id"] = id;
             return View(unplannedorders);
         }

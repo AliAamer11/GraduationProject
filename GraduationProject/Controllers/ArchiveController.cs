@@ -11,6 +11,7 @@ using System.Linq;
 using GraduationProject.Controllers;
 using GraduationProject.Service;
 using GraduationProject.ViewModels;
+using System.Threading.Tasks;
 
 namespace GraduationProject.Controllers
 {
@@ -38,8 +39,8 @@ namespace GraduationProject.Controllers
         //decide what type of document to review
         public IActionResult Index()
         {
-            ViewData["AnnualCount"] = "0" + (_context.Orders.Where(o => o.Type == false && o.State == OrderState.NeedOutPutDocmnet).Count()).ToString();
-            ViewData["UnplannedCount"] = "0" + (_context.Orders.Where(o => o.Type == true && o.State == OrderState.NeedOutPutDocmnet).Count().ToString());
+            ViewData["AnnualCount"] = "0" + ( _context.Orders.Where(o => o.Type == false && o.State == OrderState.NeedOutPutDocmnet).Count()).ToString();
+            ViewData["UnplannedCount"] = "0" + ( _context.Orders.Where(o => o.Type == true && o.State == OrderState.NeedOutPutDocmnet).Count().ToString());
             return View();
         }
 
@@ -60,7 +61,7 @@ namespace GraduationProject.Controllers
 
         //Get All AnnualNeed To Specific Order///// from archive
         [HttpGet]
-        public IActionResult GetAnnualNeedOrders(int id)
+        public async Task<IActionResult> GetAnnualNeedOrders(int id)
         {
             //var user = await _userManager.GetUserAsync(User);
             ViewBag.orderid = id;
@@ -68,12 +69,12 @@ namespace GraduationProject.Controllers
             var model = new List<AnnualNeedOrderViewModel>();  ///model list of ano for seecting thwm ot use as template
 
             var userid = userManager.GetUserId(User);
-            var annualneedorders = _context.AnnualOrder.Include(o => o.Order)
+            var annualneedorders = await _context.AnnualOrder.Include(o => o.Order)
                 .Include(i => i.Item)
                 .Where(x => x.OrderId == id)
                 .Where(o => o.Order.State == OrderState.NeedOutPutDocmnet)
                 .Where(o => o.Order.UserId == userid)
-                .ToList();
+                .ToListAsync();
 
             foreach (var ano in annualneedorders)
             {
@@ -99,7 +100,7 @@ namespace GraduationProject.Controllers
             return View(model);
         }
         [HttpPost]
-        public IActionResult GetAnnualNeedOrders(List<AnnualNeedOrderViewModel> model, int id)
+        public async Task<IActionResult> GetAnnualNeedOrders(List<AnnualNeedOrderViewModel> model, int id)
         {
             AnnualOrderController x = new AnnualOrderController(_context, userManager, userService);
 
@@ -127,8 +128,13 @@ namespace GraduationProject.Controllers
                             OrderId = orderid,
 
                         };
-                        _context.Add(annualorderx);
-                        _context.SaveChanges();
+                        var item = _context.AnnualOrder.Where(i => i.OrderId == orderid && i.ItemId == annualorderx.ItemId).FirstOrDefault();
+                        if (item == null)
+                        {
+                        await _context.AddAsync(annualorderx);
+                        await _context.SaveChangesAsync();
+                        }
+
 
                         //AnnualOrderstoAdd.Add(model[i]);
                     }
@@ -145,15 +151,15 @@ namespace GraduationProject.Controllers
 
         //Get All Unplanned Orders To Specific Order///// from archive
         [HttpGet]
-        public IActionResult GetUnplannedOrders(int id)
+        public async Task<IActionResult> GetUnplannedOrders(int id)
         {
             var userid = userManager.GetUserId(User);
-            var unplannedorders = _context.UnPlannedOrder.Include(o => o.Order)
+            var unplannedorders =await _context.UnPlannedOrder.Include(o => o.Order)
                 .Include(i => i.Item)
                 .Where(x => x.OrderId == id)
                 .Where(o => o.Order.UserId == userid)
                 .Where(o => o.Order.State == OrderState.NeedOutPutDocmnet)
-                .ToList();
+                .ToListAsync();
             return View(unplannedorders);
         }
     }

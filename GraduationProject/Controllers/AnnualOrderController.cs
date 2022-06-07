@@ -87,33 +87,33 @@ namespace GraduationProject.Controllers
             return model.OrderID;
 
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             var userid = userManager.GetUserId(User);
 
-            var annualneeds = _context.Orders
+            var annualneeds =await _context.Orders
                 .Where(x => x.Type == false)   //// annual order type
                 .Where(o => o.UserId == userid)    /// getting orders to this current user
                 .Where(o => o.State == OrderState.NeedOutPutDocmnet)  ///getting orders that are complete on StoreKeeper side
-                .ToList();
+                .ToListAsync();
             return View(annualneeds);
         }
 
         //Get All AnnualNeed to Order where it is still not complete
         [HttpGet]
-        public IActionResult getAnnualNeedOrders()
+        public async Task<IActionResult> getAnnualNeedOrders()
         {
             var userid = userManager.GetUserId(User);
 
             int id = GetAnnualNeedOrderid();
             //if (id > 0)
             //{
-            var annualneedorders = _context.AnnualOrder.Include(o => o.Order)
+            var annualneedorders = await _context.AnnualOrder.Include(o => o.Order)
                 .Include(i => i.Item)
                 .Where(x => x.OrderId == id)
                 .Where(o => o.Order.Type == false && o.Order.State == OrderState.RequestingParty)
                 .Where(o => o.Order.UserId == userid)
-                .ToList();
+                .ToListAsync();
             ViewData["State"] = CheckOrderState(id);
             ViewData["id"] = id;
 
@@ -127,34 +127,34 @@ namespace GraduationProject.Controllers
 
 
         //Get All AnnualNeed to Order where it is still not complete & needs alteration
-        public IActionResult GetAnnualNeedAltered()
+        public async Task<IActionResult> GetAnnualNeedAltered()
         {
             var userid = userManager.GetUserId(User);
             int id = GetAnnualNeedOrderid();
 
-            var annualneedorders = _context.AnnualOrder.Include(o => o.Order)
+            var annualneedorders =await _context.AnnualOrder.Include(o => o.Order)
                     .Include(i => i.Item)
                     .Where(x => x.OrderId == id)
                     .Where(x => x.Comment != null)
                     .Where(o => o.Order.Type == false && o.Order.State == OrderState.BeingReview || o.Order.State == OrderState.QuantitiesDistributed)
                     .Where(o => o.Order.UserId == userid)
-                    .ToList();
+                    .ToListAsync();
             ViewData["id"] = id;
             return View(annualneedorders);
         }
 
-        public IActionResult GetAnnualNeedsDisplay()
+        public async Task<IActionResult> GetAnnualNeedsDisplay()
         {
             var userid = userManager.GetUserId(User);
             int id = GetAnnualNeedOrderid();
 
-            var annualneedorders = _context.AnnualOrder.Include(o => o.Order)
+            var annualneedorders = await _context.AnnualOrder.Include(o => o.Order)
                     .Include(i => i.Item)
                     .Where(x => x.OrderId == id)
                     .Where(o => o.Order.Type == false)
                     .Where(o => o.Order.State == OrderState.NeedOutPutDocmnet || o.Order.State == OrderState.VicePrisdent)
                     .Where(o => o.Order.UserId == userid)
-                    .ToList();
+                    .ToListAsync();
             ViewData["id"] = id;
             return View(annualneedorders);
         }

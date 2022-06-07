@@ -57,7 +57,9 @@
                     <th>التوصيف</th>
                     <th>معدل التدفق</th>
                     <th>التدفق التقريبي</th>
-                    <th> </th>
+                    <th>
+                        <input class="inputs chckbox" type="checkbox" onclick='selects()' style="margin-top: 13px;" /> اختيار الجميع
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -127,3 +129,22 @@
 
     </script>
 }
+
+<script>
+
+    function selects() {
+        var ele = document.getElementsByClassName('chckbox');
+        for (var i = 0; i < ele.length; i++) {
+            if (ele[i].type == 'checkbox')
+                ele[i].checked = true;
+        }
+    }
+    function deSelect() {
+        var ele = document.getElementsByName('chk');
+        for (var i = 0; i < ele.length; i++) {
+            if (ele[i].type == 'checkbox')
+                ele[i].checked = false;
+
+        }
+    }
+</script>

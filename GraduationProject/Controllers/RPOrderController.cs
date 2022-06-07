@@ -77,16 +77,16 @@ namespace GraduationProject.Controllers
                     Type = false,
                     UserId = userid
                 };
-                var model1 = _context.Orders.Add(order);
-                _context.SaveChanges();
+                var model1 =  _context.Orders.Add(order);
+                 _context.SaveChanges();
                 return order.OrderID;
             }
             return model.OrderID;
 
         }
-        public string CheckOrderState(int id)
+        public string  CheckOrderState(int id)
         {
-            var model = _context.Orders.Find(id);
+            var model =  _context.Orders.Find(id);
 
             if (model.State == OrderState.RequestingParty)
                 return "RequestingParty";
@@ -120,7 +120,7 @@ namespace GraduationProject.Controllers
             ViewData["Unplanned_State"] = CheckOrderState(GetUnplannedOrderid());
             return View();
         }
-        public IActionResult CheckCompleteOrder(int id)
+        public async Task<IActionResult> CheckCompleteOrder(int id)
         {
             //var order = _context.Orders.Find(id);
             var order = _context.Orders.Where(o => o.OrderID == id).FirstOrDefault();
@@ -130,7 +130,7 @@ namespace GraduationProject.Controllers
                 {
                     order.State = OrderState.VicePrisdent;        //the order is now on the VP side
 
-                    _context.SaveChanges();
+                   await _context.SaveChangesAsync();
                     if (order.Type == false)
                         return RedirectToAction("GetAnnualNeedsDisplay", "AnnualOrder");
                     return RedirectToAction("GetUnplannedNeedsDisplay", "UnplannedOrder");

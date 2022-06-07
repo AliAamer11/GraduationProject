@@ -332,7 +332,8 @@ namespace GraduationProject.Controllers
                 }
             }
             ViewBag.Empty = "لا يوجد مواد ";
-
+            string jsonString = System.Text.Json.JsonSerializer.Serialize(models);
+            ViewBag.items = jsonString;
             return View(models);
 
         }
