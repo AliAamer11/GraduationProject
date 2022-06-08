@@ -6,7 +6,11 @@
 <link href="~/css/tableformanagment.css" rel="stylesheet" />
 <h1 class="tableheader">التخصيص اليدوي</h1>
 <h1 class="tableheader" style="font-size:30px;">تفاصيل طلب الإحتياج السنوي </h1>
+<div class="alert alert-danger" id="error-div" style="color:black; text-align:center; width:50%; right:25%; display:none;">
+    <span id="view-err">
 
+    </span>
+</div>
 <form method="post" asp-action="ManualDistribution">
     <div class="table-responsive">
         <table class="styled-table">
@@ -55,13 +59,6 @@
 <br />
 <a class="back-icon-btn" asp-controller="VPOrder" asp-action="ManualDistributionIndex">العودة إلى الطلبات</a>
 
-
-<div class="alert alert-danger" id="error-div" style="color:black; text-align:center; width:50%; right:25%; display:none;">
-    <span id="view-err">
-
-    </span>
-</div>
-<br />
 
 @section Scripts{
     <partial name="_ValidationScriptsPartial" />
