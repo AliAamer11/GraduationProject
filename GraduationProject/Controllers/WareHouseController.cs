@@ -154,8 +154,6 @@ namespace GraduationProject.Controllers
         }
 
 
-        /* still working on it
-         1-check if recent quantity !=0 && check if item list is not null to get the max date*/
         [HttpPost]
         public async Task<IActionResult> HaventBeenOutputed(DateTime period)
         {
@@ -178,6 +176,8 @@ namespace GraduationProject.Controllers
                 //for each order intialize a list to count the taken quantity
                 List<OutPutDocumnetForAnnualViewModel> TakenQuantity = new List<OutPutDocumnetForAnnualViewModel>();
                 List<HaventBeenOutPutedItemsViewModel> itemrecentquantity = new List<HaventBeenOutPutedItemsViewModel>();
+                List<HaventBeenOutPutedItemsViewModel> nooutputdocumenitems = new List<HaventBeenOutPutedItemsViewModel>();
+
                 //all the annual orders of the current order we are looping through
                 var anuualOrderDetails = _context.AnnualOrder.Include(o => o.Item).Where(or => or.OrderId == orders[o].OrderID).ToList();
 
@@ -203,7 +203,6 @@ namespace GraduationProject.Controllers
                 }
                 for (int ao = 0; ao < anuualOrderDetails.Count; ao++)
                 {
-                    HaventBeenOutPutedItemsViewModel model = new HaventBeenOutPutedItemsViewModel();
                     //calculate the total quantity for the current annual order
                     var TotalQuantity = anuualOrderDetails[ao].FirstSemQuantity + anuualOrderDetails[ao].SecondSemQuantity + anuualOrderDetails[ao].ThirdSemQuantity;
                     //count the recent value for the current annual order
@@ -218,46 +217,80 @@ namespace GraduationProject.Controllers
 
                 //get all the outputdocuments for the specified order 
                 var outputdocuments = await _context.OutPutDocument.Where(d => d.OrderId == orders[o].OrderID).ToListAsync();
-                //loop threw  outputdocument 
                 haventbeenoutputed modelitem = new haventbeenoutputed();
                 modelitem.Order = orders[o];
-                foreach (var outputdocument in outputdocuments)
+
+
+                foreach (var item in anuualOrderDetails)
                 {
-                    var outputdocumentdetails = await _context.OutPutDocumentDetails.Include(i => i.Item).Where(i => i.OutPutDocumentId == outputdocument.OutPutDocumentID && allitems.Contains(i.ItemId)).ToListAsync();
-                    foreach (var outputdocumentdetail in outputdocumentdetails)
+                    var totalquantity = item.FirstSemQuantity + item.SecondSemQuantity + item.ThirdSemQuantity;
+                    //check if the order doesnt have any output document 
+                    if (RecentItemQuantity[item.ItemId] == totalquantity)
                     {
+
+                        HaventBeenOutPutedItemsViewModel model = new HaventBeenOutPutedItemsViewModel(); ;
+                        model.Quantity = totalquantity;
+                        model.recentQuantity = RecentItemQuantity[item.ItemId];
+                        model.item = item.Item;
+                        nooutputdocumenitems.Add(model);
+                        modelitem.items = nooutputdocumenitems;
+
+                    }
+                    //check if the Annualorder  have an output document detail
+                    else if (RecentItemQuantity[item.ItemId] != totalquantity || RecentItemQuantity[item.ItemId] != 0)
+                    {
+                        var outputdocumentdetail = await _context.OutPutDocumentDetails.Where(i => i.ItemId == item.ItemId && i.OutPutDocument.OrderId == item.OrderId).FirstOrDefaultAsync();
                         HaventBeenOutPutedItemsViewModel model = new HaventBeenOutPutedItemsViewModel();
                         model.recentQuantity = RecentItemQuantity[outputdocumentdetail.ItemId];
+                        model.Quantity = totalquantity;
                         model.item = outputdocumentdetail.Item;
                         model.Createdat = outputdocumentdetail.CreatedAt;
                         itemrecentquantity.Add(model);
                     }
+
                 }
-                var itemrecentquantityMaxDate = itemrecentquantity.Max(o => o.Createdat);
-                modelitem.items = itemrecentquantity.Where(o => o.Createdat == itemrecentquantityMaxDate).ToList();
+                //add the list of items to the order 
+                if (itemrecentquantity.Count() != 0)
+                {
+                    var itemrecentquantityMaxDate = itemrecentquantity.GroupBy(o => o.item.ItemID).Select(o => o.Max(i => i.Createdat)).ToList();
+                    modelitem.items = itemrecentquantity.Where(d => itemrecentquantityMaxDate.Contains(d.Createdat)).ToList();
+                }
                 orderitems.Add(modelitem);
             }
+            //now check the item created date to the specified date 
             TimeSpan TempPeriod = System.DateTime.Now - period;
             List<haventbeenoutputed> orderitems2 = new List<haventbeenoutputed>();
-            List<HaventBeenOutPutedItemsViewModel> orderitem = new List<HaventBeenOutPutedItemsViewModel>();
             foreach (var model in orderitems)
             {
-                bool itemchecked = false;
+                haventbeenoutputed items2 = new haventbeenoutputed();
+                List<HaventBeenOutPutedItemsViewModel> items = new List<HaventBeenOutPutedItemsViewModel>();
+
                 foreach (var item in model.items)
                 {
-                    TimeSpan TempSpan = System.DateTime.Now - item.Createdat;
-                    if (TempSpan <= TempPeriod)
+                    if (item.Quantity != item.recentQuantity)
                     {
-                        itemchecked = true;
-                        // model.items.Add(item);
-                        orderitem.Add(item);
+                        TimeSpan TempSpan = System.DateTime.Now - item.Createdat;
+                        if (TempSpan <= TempPeriod)
+                        {
+                            // model.items.Add(item);
+                            items.Add(item);
+                        }
+                    }
+                    else if (item.Quantity == item.recentQuantity)
+                    {
+                        items.Add(item);
                     }
                 }
-                if (itemchecked)
-                { orderitems2.Add(model); }
+                if (items.Count() != 0)
+                {
+                    items2 = model;
+                    items2.items = items;
+                    orderitems2.Add(items2);
+                }
             }
             return View(orderitems2);
         }
+
 
 
         [HttpGet]
