@@ -1,4 +1,5 @@
-﻿using GraduationProject.Data;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using GraduationProject.Data;
 using GraduationProject.Data.Models;
 using GraduationProject.Service;
 using GraduationProject.ViewModels;
@@ -21,6 +22,7 @@ namespace GraduationProject.Controllers
 
     public class AnnualOrderController : Controller
     {
+        //private readonly INotyfService _notyf;
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IUserService userService;
@@ -28,10 +30,13 @@ namespace GraduationProject.Controllers
 
         public AnnualOrderController(ApplicationDbContext context,
                     UserManager<ApplicationUser> userManager,
-                                IUserService userService)
+                                IUserService userService
+            //, INotyfService notyf
+            )
         {
             this.userManager = userManager;
             this.userService = userService;
+            //_notyf = notyf;
 
             _context = context;
         }
@@ -103,6 +108,8 @@ namespace GraduationProject.Controllers
         [HttpGet]
         public async Task<IActionResult> getAnnualNeedOrders()
         {
+            var completeerrMsg = TempData["CompleteErrorMessage"] as string;
+            ViewBag.completeerrMsg = completeerrMsg;
             var userid = userManager.GetUserId(User);
 
             int id = GetAnnualNeedOrderid();

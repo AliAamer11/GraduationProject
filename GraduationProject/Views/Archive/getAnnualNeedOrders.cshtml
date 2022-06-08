@@ -33,13 +33,18 @@
 <h1 class="tableheader">طلبات المواد في الإحتياج السنوي</h1>
 <form method="post" asp-action="GetAnnualNeedOrders" asp-route-id="@ViewBag.orderid">
 
-    @if (ViewBag.errorMassage != null)
+    @*@if (@ViewBag.errormessage != null)
     {
         <div class="alert alert-danger" id="error-div" style="color:black; text-align:center; width:50%; right:25%; display:none;">
             <span id="view-err">
-                @ViewBag.errorMassage
+                @ViewBag.errormessage
             </span>
         </div>
+
+    }*@
+    @if (@ViewBag.errormessage != null)
+    {
+        <h4 class="alert alert-danger">@ViewBag.errormessage</h4>
 
     }
     <button id="submit" type="submit">إعادة استخدام المواد في هذا الطلب</button>

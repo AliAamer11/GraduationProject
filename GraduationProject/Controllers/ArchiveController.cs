@@ -65,7 +65,8 @@ namespace GraduationProject.Controllers
         {
             //var user = await _userManager.GetUserAsync(User);
             ViewBag.orderid = id;
-
+            var errormessage = TempData["errormessage"] as string;
+            ViewBag.errormessage = errormessage;
             var model = new List<AnnualNeedOrderViewModel>();  ///model list of ano for seecting thwm ot use as template
 
             var userid = userManager.GetUserId(User);
@@ -102,14 +103,15 @@ namespace GraduationProject.Controllers
         [HttpPost]
         public async Task<IActionResult> GetAnnualNeedOrders(List<AnnualNeedOrderViewModel> model, int id)
         {
+
             AnnualOrderController x = new AnnualOrderController(_context, userManager, userService);
 
             int orderid = x.GetAnnualNeedOrderid();
-
+            var order =  _context.Orders.Where(i=> i.OrderID == orderid).FirstOrDefault();
 
             var userid = userManager.GetUserId(User);
             //List<AnnualNeedOrderViewModel> AnnualOrderstoAdd = new();
-            if (orderid != id)
+            if (orderid != id &&  order.State=="0")
             {
                 for (int i = 0; i < model.Count(); i++)
                 {
@@ -136,6 +138,7 @@ namespace GraduationProject.Controllers
                         }
 
 
+
                         //AnnualOrderstoAdd.Add(model[i]);
                     }
                 }
@@ -143,6 +146,7 @@ namespace GraduationProject.Controllers
             else
             {
                 //ViewBag.errorMassage = ".لا يمكن إضافة مواد والتعديل على الطلب الحالي";
+                TempData["errormessage"] = ".لا يمكن إضافة مواد والتعديل على الطلب الحالي";
                 return RedirectToAction("GetAnnualNeedOrders", "Archive");
             }
             return RedirectToAction("GetAnnualNeedOrders", "AnnualOrder");

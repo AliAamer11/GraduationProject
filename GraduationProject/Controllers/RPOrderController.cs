@@ -112,14 +112,20 @@ namespace GraduationProject.Controllers
         {
             ViewData["Current_Year"] = DateTime.Now.Year;
             ViewData["Annual_State"] = CheckOrderState(GetAnnualNeedOrderid());
-            string state = CheckOrderState(GetAnnualNeedOrderid());
-            if (state == "QuantitiesDistributed")
+            string AOstate = CheckOrderState(GetAnnualNeedOrderid());
+            if (AOstate == "QuantitiesDistributed")
             {
                 _notyf.Information("لقد تم عمل عملية توزيع لطلبك");
             }
+            if (AOstate == "BeingReview")
+            {
+                _notyf.Information("طلب الإحنياج السنوي يحتاج إلى تعديل.");
+            }
+
             ViewData["Unplanned_State"] = CheckOrderState(GetUnplannedOrderid());
             return View();
         }
+
         public async Task<IActionResult> CheckCompleteOrder(int id)
         {
             //var order = _context.Orders.Find(id);
@@ -128,12 +134,39 @@ namespace GraduationProject.Controllers
             {
                 try
                 {
-                    order.State = OrderState.VicePrisdent;        //the order is now on the VP side
-
-                   await _context.SaveChangesAsync();
                     if (order.Type == false)
-                        return RedirectToAction("GetAnnualNeedsDisplay", "AnnualOrder");
-                    return RedirectToAction("GetUnplannedNeedsDisplay", "UnplannedOrder");
+                    {
+                        var ano = _context.AnnualOrder.Where(i => i.OrderId == id).ToList();
+                        if(ano.Count()!=0)
+                        {
+                            order.State = OrderState.VicePrisdent;        //the order is now on the VP side
+                            await _context.SaveChangesAsync();
+                            return RedirectToAction("GetAnnualNeedsDisplay", "AnnualOrder");
+                        }
+                        else
+                        {
+                            TempData["CompleteErrorMessage"] = "الطلب فارغ. الرجاء إضافة مادة واحدة على الأقل.";
+                            return RedirectToAction("getAnnualNeedOrders", "AnnualOrder");
+
+                        }
+                    }
+                    else if(order.Type == true)
+                    {
+                        var upo = _context.UnPlannedOrder.Where(i => i.OrderId == id).ToList();
+                        if (upo != null)
+                        {
+                            order.State = OrderState.VicePrisdent;        //the order is now on the VP side
+                            await _context.SaveChangesAsync();
+                            return RedirectToAction("GetUnplannedNeedsDisplay", "UnplannedOrder");
+                        }
+                        else
+                        {
+                            TempData["CompleteErrorMessage"] = "الطلب فارغ. الرجاء إضافة مادة واحدة على الأقل.";
+                            return RedirectToAction("GetAllUnplanned", "UnplannedOrder");
+                            
+                        }
+                    }
+
                 }
                 catch
                 { return NotFound(); }
