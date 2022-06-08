@@ -26776,3 +26776,18 @@ input.dx-hidden {
   background: rgba(0,0,0,.01);
   opacity: .01;
 }
+
+.dx-datagrid-text-content {
+    font-size: 15px;
+    font-weight: bold;
+    color: #ff5722;
+}
+
+.dx-datagrid-content {
+    font-size: 13px;
+    font-weight: bold;
+    color: #11101D;
+}
+
+
+

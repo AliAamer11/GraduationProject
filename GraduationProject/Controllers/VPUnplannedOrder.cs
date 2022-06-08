@@ -27,6 +27,8 @@ namespace GraduationProject.Controllers
         {
             ViewBag.OrderId = OrderId;
             var UnPlannedOrders = await _context.UnPlannedOrder.Include(i => i.Item).Where(o => o.OrderId == OrderId).ToListAsync();
+            var RequestingParty = await _context.Orders.Include(u => u.User).Where(o => o.OrderID == OrderId).FirstOrDefaultAsync();
+            ViewBag.RequestingParty = RequestingParty.User.RequstingParty;
             List<UnplannedCommentsViewModel> UnplannedComments = new List<UnplannedCommentsViewModel>();
             foreach (var item in UnPlannedOrders)
             {
