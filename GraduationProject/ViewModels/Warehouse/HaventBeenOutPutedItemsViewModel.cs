@@ -9,6 +9,9 @@ namespace GraduationProject.ViewModels.Warehouse
     {
         public Data.Models.Items item { get; set; }
         public int recentQuantity { get; set; }
+        public int Quantity { get; set; }
+
         public DateTime Createdat { get; set; }
+
     }
 }

@@ -19,16 +19,27 @@
                         <tr>
                             <td>@Model[i].Order.User.RequstingParty</td>
                         </tr>
+                        for (int j = 0; j < Model[i].items.Count(); j++)
+                        {
+                            <tr>
+                                <td>@Model[i].items[j].item.Name</td>
+                                <td>@Model[i].items[j].Quantity</td>
+                                <td>@Model[i].items[j].recentQuantity</td>
+                                <td>@Model[i].items[j].Createdat</td>
+
+
+                            </tr>
+                        }
                     }
                 }
                 else
                 {
-                    <tr>
-                        <td>@ViewBag.Empty </td>
-                    </tr>
+                        <tr>
+                            <td>@ViewBag.Empty </td>
+                        </tr>
                 }
-            </tbody>
-        </table>
-    </div>
-    <input type="submit" value="yalla" />
-</form>
+                </tbody>
+            </table>
+        </div>
+        <input type="submit" value="yalla" />
+    </form>
