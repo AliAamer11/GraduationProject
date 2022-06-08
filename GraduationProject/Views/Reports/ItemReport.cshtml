@@ -2,6 +2,8 @@
 <script type="text/javascript" src="~/LibExtreme/js/jquery-3.5.1.min.js"></script>
 <link href="~/LibExtreme/css/dx.material.orange.light.css" rel="stylesheet" />
 <script type="text/javascript" src="~/LibExtreme/js/dx.all.js"></script>
+<script type="text/javascript" src="~/LibExtreme/js/FileSaver.js"></script>
+<script type="text/javascript" src="~/LibExtreme/js/Excel.js"></script>
 @{Layout = "ReportsLayout";
 }
 <script>
@@ -13,14 +15,88 @@
                 keyExpr: "",
                 filterRow: { visible: true },
                 searchPanel: { visible: true },
-                //columns: [
-                //    // ...
-                //    {
-                //        dataField: "ItemID",
-                //        visible: false
-                //    }],
+                //allowColumnReordering: true,
+                allowColumnResizing: true,
+                columnAutoWidth: true,
+                showBorders: true,
+                selection: {
+                    mode: 'multiple',
+                },
+                groupPanel: {
+                    visible: true,
+                },
+                export: {
+                    enabled: true,
+                    allowExportSelectedData: true,
+                },
+                onExporting(e) {
+                    const workbook = new ExcelJS.Workbook();
+                    const worksheet = workbook.addWorksheet('المواد');
+                    DevExpress.excelExporter.exportDataGrid({
+                        component: e.component,
+                        worksheet,
+                        autoFilterEnabled: true,
+                    }).then(() => {
+                        workbook.xlsx.writeBuffer().then((buffer) => {
+                            saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'Items.xlsx');
+                        });
+                    });
+                    e.cancel = true;
+                },
+                paging: {
+                    enabled: true,
+                },
+                columns: [{
+                    caption: "رقم المادة",
+                    dataField: 'ItemID',
+                    alignment: 'center',
+                },
+                {
+                    caption: "رمز المادة",
+                    dataField: 'BarCode',
+                    alignment: 'center',
+                },
+                {
+                    caption: "اسم المادة",
+                    dataField: 'ItemName',
+                    alignment: 'center',
+                },
+                {
+                    caption: "الكمية",
+                    dataField: 'Quantity',
+                    alignment: 'center',
+                },
+                {
+                    caption: "الكمية الدنيا",
+                    dataField: 'MinimumRange',
+                    alignment: 'center',
+                },
+                {
+                    caption: "الحالة",
+                    dataField: 'Status',
+                    alignment: 'center',
+                },
+                {
+                    caption: "ملاحظات",
+                    dataField: 'Note',
+                    alignment: 'center',
+                },
+                {
+                    caption: "الصنف",
+                    dataField: 'Category',
+                    alignment: 'center',
+                },
+                {
+                    caption: "القياس",
+                    dataField: 'Measurement',
+                    alignment: 'center',
+                }
+                ],
                 columnChooser: { enabled: true },
             });
+        });
+        DevExpress.config({
+            rtlEnabled: true
         });
 </script>
 

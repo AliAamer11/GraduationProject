@@ -3,6 +3,7 @@
 <link href="~/css/tableformanagment.css" rel="stylesheet" />
 <link href="~/css/button.css" rel="stylesheet" />
 <h1 class="tableheader">تفاصيل طلب الإحتياج السنوي  </h1>
+<h1 class="tableheader" style="font-size:30px;"> @ViewBag.RequestingParty </h1>
 @{
     var OrderId = ViewBag.OrderId;
 }
@@ -87,26 +88,3 @@
         });
     </script>
 }
-
-
-
-@*<script type="text/javascript">
-        function check() {
-            var input = document.getElementsByName('myinput');
-            var isvalid = true;
-            for (var i = 0; i < input.length; i++) {
-                if (input[i].value === '') {
-                    continue;
-                }
-                else {
-                    isvalid = false;
-                }
-            }
-            if (isvalid) {
-                alert("يجب إدخال تعليق واحد على الأقل")
-                return false;
-            }
-        }
-
-    </script>*@
-
