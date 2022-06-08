@@ -6,6 +6,11 @@
 <link href="~/css/tableformanagment.css" rel="stylesheet" />
 <h1 class="tableheader">تفاصيل طلب الإحتياج غير المخطط</h1>
 <h1 class="tableheader" style="font-size:30px;"> @ViewBag.RequestingParty </h1>
+<div class="alert alert-danger" id="error-div" style="color:black; text-align:center; width:50%; right:25%; display:none;">
+    <span id="view-err">
+
+    </span>
+</div>
 
 <form method="post" asp-action="Index" asp-route-OrderId="@OrderId">
     <div class="table-responsive">
@@ -40,13 +45,7 @@
     <button class="update-icon-btn" id="submit" type="submit">إضافة التعليقات<h1 class="update-btn-text">وإعادة إرسال الطلب</h1></button>
 </form>
 
-<div class="alert alert-danger" id="error-div" style="color:black; text-align:center; width:50%; right:25%; display:none;">
-    <span id="view-err">
 
-    </span>
-</div>
-
-<br />
 <form method="post" asp-action="ApproveOrder" asp-route-id=@OrderId>
     <button class="create-icon-btn" type="submit">الموافقة </button>
 </form>
