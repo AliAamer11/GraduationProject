@@ -149,7 +149,7 @@ namespace GraduationProject.Controllers
 
         [HttpGet]
         public IActionResult HaventBeenOutputed()
-        { 
+        {
             return View();
         }
 
