@@ -26,7 +26,11 @@ namespace GraduationProject.ViewModels.AnnualNeedOrders
         [Range(0, int.MaxValue, ErrorMessage = "القيمة ليست ضمن المجال المحدد")]
         [Required(ErrorMessage = "هذا الحقل مطلوب")]
         public int ThirdSemQuantity { get; set; }
+        [Required(ErrorMessage = "هذا الحقل مطلوب")]
+
         public int FlowRate { get; set; }
+        [Required(ErrorMessage = "هذا الحقل مطلوب")]
+
         public int ApproxRate { get; set; }
         public string Description { get; set; }
 

@@ -28,6 +28,8 @@ namespace GraduationProject.Controllers
             _notyf = notyf;
         }
 
+
+
         public int GetUnplannedOrderid()
         {
             var userid = userManager.GetUserId(User);
@@ -107,6 +109,8 @@ namespace GraduationProject.Controllers
                 return "QuantitiesDistributed";
         }
 
+
+
         [HttpGet]
         public IActionResult Home()
         {
@@ -123,7 +127,44 @@ namespace GraduationProject.Controllers
             }
 
             ViewData["Unplanned_State"] = CheckOrderState(GetUnplannedOrderid());
+            ViewData["Unplanned_id"] = GetUnplannedOrderid();
             return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CreateUnplannedOrderMain()
+        {
+
+            var userid = userManager.GetUserId(User);
+            DateTime CurrentDate = DateTime.Now;
+            var order = new Order
+            {
+                CreatedAt = CurrentDate,
+                State = "0",
+                Type = true,
+                UserId = userid
+            };
+            await _context.Orders.AddAsync(order);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Home");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateUnplannedOrderMaina()
+        {
+            var userid = userManager.GetUserId(User);
+            DateTime CurrentDate = DateTime.Now;
+            var order = new Order
+            {
+                CreatedAt = CurrentDate,
+                State = "0",
+                Type = true,
+                UserId = userid
+            };
+            await _context.Orders.AddAsync(order);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Home");
         }
 
         public async Task<IActionResult> CheckCompleteOrder(int id)

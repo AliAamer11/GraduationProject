@@ -1,6 +1,7 @@
 ﻿var currentTab = 0;
 document.addEventListener("DOMContentLoaded", function (event) {
 
+    document.getElementById("prevBtn").style.display = "none";
 
     showTab(currentTab);
 
@@ -10,22 +11,24 @@ function showTab(n) {
     var x = document.getElementsByClassName("tab");
     x[n].style.display = "block";
     document.getElementById("submitbtn").style.display = "none";
-
+    document.getElementById("prevBtn").style.display = "none";
+    console.log(n);
     if (n == 0) {
-        document.getElementById("prevBtn").style.display = "none";
+       document.getElementById("prevBtn").style.display = "none";
 
 
     } else {
-        document.getElementById("prevBtn").style.display = "inline";
+        document.getElementById("prevBtn").style.display = "none";
     }
     if (n == (x.length - 1)) {
         document.getElementById("submitbtn").style.display = "inline";
-
-        document.getElementById("nextBtn").style.display = "none";
+        document.getElementById("prevBtn").style.display = "none";
         document.getElementById("nextBtn").style.display = "none";
     } else {
+        document.getElementById("prevBtn").style.display = "none";
         document.getElementById("nextBtn").innerHTML = '<i class="fa fa-angle-double-right"></i>';
     }
+    document.getElementById("prevBtn").style.display = "none";
 
     fixStepIndicator(n)
 }
@@ -37,15 +40,16 @@ function nextPrev(n) {
     currentTab = currentTab + n;
     if (currentTab >= x.length) {
 
-        document.getElementById("nextprevious").style.display = "none";
-        document.getElementById("all-steps").style.display = "none";
-        document.getElementById("register").style.display = "none";
+        //document.getElementById("nextprevious").style.display = "none";
+        //document.getElementById("all-steps").style.display = "none";
+        //document.getElementById("register").style.display = "none";
         document.getElementById("text-message").style.display = "block";
 
 
 
 
     }
+    console.log(currentTab);
     showTab(currentTab);
 }
 
