@@ -147,15 +147,17 @@ namespace GraduationProject.Controllers
 
         }
 
+
         [HttpGet]
         public IActionResult HaventBeenOutputed()
-        { 
-            return View();
+        {
+            List<haventbeenoutputed> orderitems = new List<haventbeenoutputed>();
+            return View(orderitems);
         }
 
-
+        [ValidateAntiForgeryToken]
         [HttpPost]
-        public async Task<IActionResult> HaventBeenOutputed(DateTime period)
+        public async Task<IActionResult> HaventBeenOutputed(DateTime period )
         {
             List<haventbeenoutputed> orderitems = new List<haventbeenoutputed>();
             //get all the items that have inputdocument 
@@ -257,7 +259,8 @@ namespace GraduationProject.Controllers
                 }
                 orderitems.Add(modelitem);
             }
-            //now check the item created date to the specified date 
+            ViewBag.errormsg = "لايوجد مواد راكدة";
+            // check the item created date to the specified date 
             TimeSpan TempPeriod = System.DateTime.Now - period;
             List<haventbeenoutputed> orderitems2 = new List<haventbeenoutputed>();
             foreach (var model in orderitems)
@@ -272,7 +275,6 @@ namespace GraduationProject.Controllers
                         TimeSpan TempSpan = System.DateTime.Now - item.Createdat;
                         if (TempSpan <= TempPeriod)
                         {
-                            // model.items.Add(item);
                             items.Add(item);
                         }
                     }
