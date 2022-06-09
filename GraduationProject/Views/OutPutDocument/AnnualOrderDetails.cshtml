@@ -7,7 +7,7 @@
 <link href="~/css/button.css" rel="stylesheet" />
 <link href="~/css/tableformanagment.css" rel="stylesheet" />
 <link href="~/css/OrdersDetails.css" rel="stylesheet" />
-<h1 class="tableheader">تفاصيل الطلب السنوي</h1>
+<h1 class="tableheader">إنشاء سند إخراج للطلب السنوي</h1>
 
 @if (ViewBag.isnotSuccess)
 {
@@ -17,7 +17,7 @@
     </div>
 }
 
-<div class="alert alert-danger" id="error-div" style="display:none;font-size:20px">
+<div class="alert alert-danger" id="error-div" style="text-align:center; display:none;font-size:20px">
     <span id="view-err">
 
     </span>
@@ -58,9 +58,9 @@
                         <td>@totalQuantity</td>
                         <td>@Model.QuantityModel[i].TakenQuantity</td>
                         <td><span class="recents">@recentQuantity</span></td>
-                        <td><input asp-for="@Model.QuantityModel[i].InputQuantity" value="0" class="inputs" /></td>
+                        <td><input style="width:140px;" asp-for="@Model.QuantityModel[i].InputQuantity" value="0" class="inputs" /></td>
                         <td>@ViewBag.suggestedquantity[i]</td>
-                        <td><input asp-for="@Model.QuantityModel[i].ItemId" type="hidden" /></td>
+                        <td><input  asp-for="@Model.QuantityModel[i].ItemId" type="hidden" /></td>
 
                     </tr>
                 }
@@ -78,7 +78,7 @@
             </button>
         </div>
 
-        <input asp-for="CommisaryName" placeholder="اسم المندوب" required class="commissaryName" />
+        <input style="text-align:center;" asp-for="CommisaryName" placeholder="اسم المندوب" required class="commissaryName" />
         <span asp-validation-for="CommisaryName" class="err text-danger"></span>
         <input type="hidden" asp-for="OrderId" />
 

@@ -1,12 +1,13 @@
-﻿<script type="text/javascript" src="~/LibExtreme/js/jquery-3.5.1.min.js"></script>
+﻿<link href="~/css/ReportsLayout.css" rel="stylesheet" />
+<script type="text/javascript" src="~/LibExtreme/js/jquery-3.5.1.min.js"></script>
 <link href="~/LibExtreme/css/dx.material.orange.light.css" rel="stylesheet" />
-<link href="~/css/ReportsLayout.css" rel="stylesheet" />
 <script type="text/javascript" src="~/LibExtreme/js/dx.all.js"></script>
-@{
-    Layout = "ReportsLayout";
+<script type="text/javascript" src="~/LibExtreme/js/FileSaver.js"></script>
+<script type="text/javascript" src="~/LibExtreme/js/Excel.js"></script>
+@{Layout = "ReportsLayout";
 }
 <script>
-                var dataset = [];
+        var dataset = [];
         const items = @Html.Raw(ViewBag.items);
         $(function () {
             $("#dataGrid").dxDataGrid({
@@ -18,13 +19,38 @@
                 allowColumnResizing: true,
                 columnAutoWidth: true,
                 showBorders: true,
+                selection: {
+                    mode: 'multiple',
+                },
                 groupPanel: {
                     visible: true,
+                },
+                export: {
+                    enabled: true,
+                    allowExportSelectedData: true,
+                },
+                onExporting(e) {
+                    const workbook = new ExcelJS.Workbook();
+                    const worksheet = workbook.addWorksheet('المواد');
+                    DevExpress.excelExporter.exportDataGrid({
+                        component: e.component,
+                        worksheet,
+                        autoFilterEnabled: true,
+                    }).then(() => {
+                        workbook.xlsx.writeBuffer().then((buffer) => {
+                            saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'Items.xlsx');
+                        });
+                    });
+                    e.cancel = true;
                 },
                 paging: {
                     enabled: true,
                 },
-                columns: [
+                columns: [{
+                    caption: "رقم المادة",
+                    dataField: 'ItemID',
+                    alignment: 'center',
+                },
                 {
                     caption: "رمز المادة",
                     dataField: 'BarCode',
@@ -68,6 +94,9 @@
                 ],
                 columnChooser: { enabled: true },
             });
+        });
+        DevExpress.config({
+            rtlEnabled: true
         });
 </script>
 

@@ -152,6 +152,11 @@ namespace GraduationProject.Controllers
                         ViewBag.errorMassage = "هذا البريد الالكتروني موجود بالفعل حاول مجددا";
                         return View(viewModel);
                     }
+                    if (checkForName(viewModel.RequestingParty))
+                    {
+                        ViewBag.errorMassage = "اسم هذا المستخدم موجود بالفعل حاول مجددا";
+                        return View(viewModel);
+                    }
                     var user = new ApplicationUser()
                     {
                         UserName = viewModel.Email,
@@ -264,6 +269,7 @@ namespace GraduationProject.Controllers
         /// <param name="email"></param>
         /// <returns> true if duplacate email false if not </returns>
         private bool checkForEmail(string email) => _context.Users.Any(t => t.Email == email);
+        private bool checkForName(string name) => _context.Users.Any(t => t.RequstingParty == name);
 
         /// <summary>
         /// this for not duplicate the email for any user
@@ -272,6 +278,7 @@ namespace GraduationProject.Controllers
         /// <param name="email"></param>
         /// <returns> true if duplacate email false if not </returns>
         private bool checkForEmail(string email, string id) => _context.Users.Any(t => t.Email == email && t.Id != id);
+        private bool checkForName(string name, string id) => _context.Users.Any(t => t.RequstingParty == name && t.Id != id);
 
     }
 }

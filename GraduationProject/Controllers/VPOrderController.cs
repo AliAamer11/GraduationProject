@@ -165,6 +165,7 @@ namespace GraduationProject.Controllers.VPControllers
                 model.SecondSemQuantity = item.SecondSemQuantity;
                 model.ThirdSemQuantity = item.ThirdSemQuantity;
                 model.TotalQuantity = item.FirstSemQuantity + item.SecondSemQuantity + item.ThirdSemQuantity;
+                model.comment = item.Comment;
                 manualDistributions.Add(model);
             }
             return View(manualDistributions);
@@ -184,8 +185,6 @@ namespace GraduationProject.Controllers.VPControllers
         {
             try
             {
-
-
                 foreach (var item in models)
                 {
                     AnnualOrder model = await _context.AnnualOrder.FirstOrDefaultAsync(a => a.AnnualOrderID == item.AnnualOrderID);
@@ -194,6 +193,7 @@ namespace GraduationProject.Controllers.VPControllers
                     model.FirstSemQuantity = item.FirstSemQuantity;
                     model.SecondSemQuantity = item.SecondSemQuantity;
                     model.ThirdSemQuantity = item.ThirdSemQuantity;
+                    model.Comment = item.comment;
                     _context.Update(model);
                     await _context.SaveChangesAsync();
                     //if a new semester quantity  and the total is updated too 
@@ -210,7 +210,7 @@ namespace GraduationProject.Controllers.VPControllers
                     }
                 }
                 var order = await _context.Orders.FirstOrDefaultAsync(o => o.OrderID == OrderId);
-                order.State = OrderState.QuantitiesDistributed;
+                order.State = OrderState.NeedOutPutDocmnet;
                 _context.Update(order);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("ManualDistributionIndex");

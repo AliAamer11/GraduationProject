@@ -1,6 +1,9 @@
 ﻿body {
 }
 
+.form-container .form-control {
+    height: auto;
+}
 .headingg {
     display: flex;
   align-items: center;

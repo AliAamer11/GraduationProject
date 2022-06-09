@@ -10,11 +10,18 @@ namespace GraduationProject.ViewModels
     {
         public string ItemName { get; set; }
         public int AnnualOrderID { get; set; }
+        [Range(1, int.MaxValue, ErrorMessage = "فضلًا أدخل قيمة موجبة")]
+        [Required(ErrorMessage = "هذا الحقل مطلوب")]
         public int FirstSemQuantity { get; set; }
+        [Range(1, int.MaxValue, ErrorMessage = "فضلًا أدخل قيمة موجبة")]
+        [Required(ErrorMessage = "هذا الحقل مطلوب")]
         public int SecondSemQuantity { get; set; }
-        [Range(0, int.MaxValue, ErrorMessage = "القيمة ليست ضمن المجال المحدد")]
+        [Range(1, int.MaxValue, ErrorMessage = "فضلًا أدخل قيمة موجبة")]
+        [Required(ErrorMessage = "هذا الحقل مطلوب")]
         public int ThirdSemQuantity { get; set; }
-        [Range(0, int.MaxValue, ErrorMessage = "القيمة ليست ضمن المجال المحدد")]
+        [Range(1, int.MaxValue, ErrorMessage = "فضلًا أدخل قيمة موجبة")]
+        [Required(ErrorMessage = "هذا الحقل مطلوب")]
         public int TotalQuantity { get; set; }
+        public string comment { get; set; }
     }
 }

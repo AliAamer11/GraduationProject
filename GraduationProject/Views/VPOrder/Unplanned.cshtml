@@ -21,7 +21,7 @@
                         <tr>
                             <td>@obj.User.RequstingParty </td>
                             <td>@obj.CreatedAt.Date.ToString("dd/M/yyyy") </td>
-                            <td> <a asp-action="Index" asp-controller="VPUnplannedOrders" asp-route-OrderId="@obj.OrderID">تفاصيل الطلب</a></td>
+                            <td> <a asp-action="Index" title="تفاصيل الطلب" asp-controller="VPUnplannedOrders" asp-route-OrderId="@obj.OrderID" class="edit-icon-btn ml-1"><i class='far fa-file'></i></a></td>
                         </tr>
                     </tbody>
                 }

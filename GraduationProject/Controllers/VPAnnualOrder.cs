@@ -22,10 +22,12 @@ namespace GraduationProject.Controllers
 
         [HttpGet]
         public async Task<IActionResult> Index(int? OrderId)
-        {
+        {   
             ViewBag.OrderId = OrderId;
             var annualOrders = await _context.AnnualOrder.Include(i => i.Item).Where(o => o.OrderId == OrderId).ToListAsync();
-            List<AnnualCommentsViewModel> annualComments = new List<AnnualCommentsViewModel>();
+            var RequestingParty =await _context.Orders.Include(u=>u.User).Where(o => o.OrderID == OrderId).FirstOrDefaultAsync();
+            ViewBag.RequestingParty = RequestingParty.User.RequstingParty;
+            List <AnnualCommentsViewModel> annualComments = new List<AnnualCommentsViewModel>();
             foreach (var item in annualOrders)
             {
                 AnnualCommentsViewModel model = new AnnualCommentsViewModel();

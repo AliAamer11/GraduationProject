@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<GraduationProject.Data.Models.Order>
 <link href="~/css/button.css" rel="stylesheet" />
 <link href="~/css/tableformanagment.css" rel="stylesheet" />
-<h1 class="tableheader">طلبات الاحتياجات السنويه  </h1>
+<h1 class="tableheader">طلبات الاحتياجات السنوية  </h1>
 <body>
     @if (Model.Count() > 0)
     {
@@ -20,7 +20,7 @@
                         <tr>
                             <td>@obj.User.RequstingParty</td>
                             <td>@obj.CreatedAt.Date.ToString("dd/M/yyyy") </td>
-                            <td> <a asp-action="ManualDistribution" asp-controller="VPOrder" asp-route-OrderId="@obj.OrderID">تفاصيل الطلب</a></td>
+                            <td> <a asp-action="ManualDistribution" title="تفاصيل الطلب" asp-controller="VPOrder" asp-route-OrderId="@obj.OrderID" class="edit-icon-btn ml-1"><i class='far fa-file'></i></a></td>
                         </tr>
                     </tbody>
                 }
