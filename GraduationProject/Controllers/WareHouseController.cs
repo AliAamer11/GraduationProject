@@ -2,6 +2,7 @@
 using GraduationProject.Data.Models;
 using GraduationProject.ViewModels;
 using GraduationProject.ViewModels.OutPutDocument;
+using GraduationProject.ViewModels.Warehouse;
 using GraduationProject.ViewModels.WareHouse;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -145,6 +146,155 @@ namespace GraduationProject.Controllers
             return View(StagnantItems);
 
         }
+
+
+        [HttpGet]
+        public IActionResult HaventBeenOutputed()
+        {
+            List<haventbeenoutputed> orderitems = new List<haventbeenoutputed>();
+            return View(orderitems);
+        }
+
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public async Task<IActionResult> HaventBeenOutputed(DateTime period )
+        {
+            List<haventbeenoutputed> orderitems = new List<haventbeenoutputed>();
+            //get all the items that have inputdocument 
+            var allitems = await _context.InputDocumentDetails.GroupBy(i => i.ItemId).Select(o => o.Key).ToListAsync();
+            //get all the orders
+            var orders = await _context.Orders.Include(u => u.User).Where(o => o.State == OrderState.NeedOutPutDocmnet).ToListAsync();
+            var recent = 0;
+
+            //1- loop threw orders 
+            for (int o = 0; o < orders.Count; o++)
+            {
+
+                ////////////////////////////////////////////////////////////////////////////////////////////////////
+                ///this block of code to calculate the recent quantity 
+
+                IDictionary<int, int> RecentItemQuantity = new Dictionary<int, int>();
+
+                //for each order intialize a list to count the taken quantity
+                List<OutPutDocumnetForAnnualViewModel> TakenQuantity = new List<OutPutDocumnetForAnnualViewModel>();
+                List<HaventBeenOutPutedItemsViewModel> itemrecentquantity = new List<HaventBeenOutPutedItemsViewModel>();
+                List<HaventBeenOutPutedItemsViewModel> nooutputdocumenitems = new List<HaventBeenOutPutedItemsViewModel>();
+
+                //all the annual orders of the current order we are looping through
+                var anuualOrderDetails = _context.AnnualOrder.Include(o => o.Item).Where(or => or.OrderId == orders[o].OrderID).ToList();
+
+                //intialize the taken quantity
+                foreach (var item in anuualOrderDetails)
+                {
+                    OutPutDocumnetForAnnualViewModel model = new OutPutDocumnetForAnnualViewModel();
+                    model.TakenQuantity = 0;
+                    model.InputQuantity = 0;
+                    model.ItemId = item.ItemId;
+                    TakenQuantity.Add(model);
+                }
+                //count the taken quantity for the current order we are looping through
+                var outPutDoument = _context.OutPutDocument.Where(or => or.OrderId == orders[o].OrderID).ToList();
+                //if there is an output document then it will be modified relative to the previous taken quantities
+                foreach (var element in outPutDoument)
+                {
+                    var OutPutDocumnetDetails = _context.OutPutDocumentDetails.Where(od => od.OutPutDocumentId == element.OutPutDocumentID).ToList();
+                    for (int j = 0; j < OutPutDocumnetDetails.Count; j++)
+                    {
+                        TakenQuantity[j].TakenQuantity += OutPutDocumnetDetails[j].Quantity;
+                    }
+                }
+                for (int ao = 0; ao < anuualOrderDetails.Count; ao++)
+                {
+                    //calculate the total quantity for the current annual order
+                    var TotalQuantity = anuualOrderDetails[ao].FirstSemQuantity + anuualOrderDetails[ao].SecondSemQuantity + anuualOrderDetails[ao].ThirdSemQuantity;
+                    //count the recent value for the current annual order
+                    recent = TotalQuantity - TakenQuantity[ao].TakenQuantity;
+                    RecentItemQuantity.Add(new KeyValuePair<int, int>(anuualOrderDetails[ao].ItemId, recent));
+
+
+                }
+                /////////////////////////////////////////////////////////////////////////////////////////
+
+                //this block of code for the havent been outputed items 
+
+                //get all the outputdocuments for the specified order 
+                var outputdocuments = await _context.OutPutDocument.Where(d => d.OrderId == orders[o].OrderID).ToListAsync();
+                haventbeenoutputed modelitem = new haventbeenoutputed();
+                modelitem.Order = orders[o];
+
+
+                foreach (var item in anuualOrderDetails)
+                {
+                    var totalquantity = item.FirstSemQuantity + item.SecondSemQuantity + item.ThirdSemQuantity;
+                    //check if the order doesnt have any output document 
+                    if (RecentItemQuantity[item.ItemId] == totalquantity)
+                    {
+
+                        HaventBeenOutPutedItemsViewModel model = new HaventBeenOutPutedItemsViewModel(); ;
+                        model.Quantity = totalquantity;
+                        model.recentQuantity = RecentItemQuantity[item.ItemId];
+                        model.item = item.Item;
+                        nooutputdocumenitems.Add(model);
+                        modelitem.items = nooutputdocumenitems;
+
+                    }
+                    //check if the Annualorder  have an output document detail
+                    else if (RecentItemQuantity[item.ItemId] != totalquantity || RecentItemQuantity[item.ItemId] != 0)
+                    {
+                        var outputdocumentdetail = await _context.OutPutDocumentDetails.Where(i => i.ItemId == item.ItemId && i.OutPutDocument.OrderId == item.OrderId).FirstOrDefaultAsync();
+                        HaventBeenOutPutedItemsViewModel model = new HaventBeenOutPutedItemsViewModel();
+                        model.recentQuantity = RecentItemQuantity[outputdocumentdetail.ItemId];
+                        model.Quantity = totalquantity;
+                        model.item = outputdocumentdetail.Item;
+                        model.Createdat = outputdocumentdetail.CreatedAt;
+                        itemrecentquantity.Add(model);
+                    }
+
+                }
+                //add the list of items to the order 
+                if (itemrecentquantity.Count() != 0)
+                {
+                    var itemrecentquantityMaxDate = itemrecentquantity.GroupBy(o => o.item.ItemID).Select(o => o.Max(i => i.Createdat)).ToList();
+                    modelitem.items = itemrecentquantity.Where(d => itemrecentquantityMaxDate.Contains(d.Createdat)).ToList();
+                }
+                orderitems.Add(modelitem);
+            }
+            ViewBag.errormsg = "لايوجد مواد راكدة";
+            // check the item created date to the specified date 
+            TimeSpan TempPeriod = System.DateTime.Now - period;
+            List<haventbeenoutputed> orderitems2 = new List<haventbeenoutputed>();
+            foreach (var model in orderitems)
+            {
+                haventbeenoutputed items2 = new haventbeenoutputed();
+                List<HaventBeenOutPutedItemsViewModel> items = new List<HaventBeenOutPutedItemsViewModel>();
+
+                foreach (var item in model.items)
+                {
+                    if (item.Quantity != item.recentQuantity)
+                    {
+                        TimeSpan TempSpan = System.DateTime.Now - item.Createdat;
+                        if (TempSpan <= TempPeriod)
+                        {
+                            items.Add(item);
+                        }
+                    }
+                    else if (item.Quantity == item.recentQuantity)
+                    {
+                        items.Add(item);
+                    }
+                }
+                if (items.Count() != 0)
+                {
+                    items2 = model;
+                    items2.items = items;
+                    orderitems2.Add(items2);
+                }
+            }
+            return View(orderitems2);
+        }
+
+
+
         [HttpGet]
         public IActionResult MaterialInventoryReports()
         {
