@@ -147,7 +147,6 @@ namespace GraduationProject.Controllers
 
         }
 
-
         [HttpGet]
         public IActionResult HaventBeenOutputed()
         {
@@ -157,7 +156,7 @@ namespace GraduationProject.Controllers
 
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public async Task<IActionResult> HaventBeenOutputed(DateTime period )
+        public async Task<IActionResult> HaventBeenOutputed(DateTime period)
         {
             List<haventbeenoutputed> orderitems = new List<haventbeenoutputed>();
             //get all the items that have inputdocument 
@@ -177,8 +176,13 @@ namespace GraduationProject.Controllers
 
                 //for each order intialize a list to count the taken quantity
                 List<OutPutDocumnetForAnnualViewModel> TakenQuantity = new List<OutPutDocumnetForAnnualViewModel>();
+                //used this list to get the items maxdate 
                 List<HaventBeenOutPutedItemsViewModel> itemrecentquantity = new List<HaventBeenOutPutedItemsViewModel>();
+                //this list for the items that doesn't have any outputdocument
                 List<HaventBeenOutPutedItemsViewModel> nooutputdocumenitems = new List<HaventBeenOutPutedItemsViewModel>();
+                //this list is for adding the filtered items "items that have maxoutputdocumentid"
+                List<HaventBeenOutPutedItemsViewModel> MaxDateoutputdocumentItem = new List<HaventBeenOutPutedItemsViewModel>();
+
 
                 //all the annual orders of the current order we are looping through
                 var anuualOrderDetails = _context.AnnualOrder.Include(o => o.Item).Where(or => or.OrderId == orders[o].OrderID).ToList();
@@ -235,28 +239,46 @@ namespace GraduationProject.Controllers
                         model.recentQuantity = RecentItemQuantity[item.ItemId];
                         model.item = item.Item;
                         nooutputdocumenitems.Add(model);
-                        modelitem.items = nooutputdocumenitems;
-
+                        //  modelitem.items = nooutputdocumenitems;
                     }
                     //check if the Annualorder  have an output document detail
-                    else if (RecentItemQuantity[item.ItemId] != totalquantity || RecentItemQuantity[item.ItemId] != 0)
+                    else if (RecentItemQuantity[item.ItemId] != totalquantity && RecentItemQuantity[item.ItemId] != 0)
                     {
-                        var outputdocumentdetail = await _context.OutPutDocumentDetails.Where(i => i.ItemId == item.ItemId && i.OutPutDocument.OrderId == item.OrderId).FirstOrDefaultAsync();
-                        HaventBeenOutPutedItemsViewModel model = new HaventBeenOutPutedItemsViewModel();
-                        model.recentQuantity = RecentItemQuantity[outputdocumentdetail.ItemId];
-                        model.Quantity = totalquantity;
-                        model.item = outputdocumentdetail.Item;
-                        model.Createdat = outputdocumentdetail.CreatedAt;
-                        itemrecentquantity.Add(model);
+                        //var outpudocuments = await _context.OutPutDocument.Where(i => i.OrderId == item.OrderId).ToListAsync();
+                        foreach (var outputitem in outputdocuments)
+                        {
+                            var outputdocumentdetail = await _context.OutPutDocumentDetails.Where(i => i.ItemId == item.ItemId && outputitem.OutPutDocumentID == i.OutPutDocumentId).FirstOrDefaultAsync();
+                            HaventBeenOutPutedItemsViewModel model = new HaventBeenOutPutedItemsViewModel();
+                            model.outputdocumentid = outputdocumentdetail.OutPutDocumentId;
+                            model.recentQuantity = RecentItemQuantity[outputdocumentdetail.ItemId];
+                            model.Quantity = totalquantity;
+                            model.item = outputdocumentdetail.Item;
+                            model.Createdat = outputdocumentdetail.CreatedAt;
+                            if(outputdocumentdetail.Quantity !=0)
+                            {
+                                itemrecentquantity.Add(model);
+                            }
+                          
+                        }
+
                     }
 
                 }
                 //add the list of items to the order 
                 if (itemrecentquantity.Count() != 0)
                 {
-                    var itemrecentquantityMaxDate = itemrecentquantity.GroupBy(o => o.item.ItemID).Select(o => o.Max(i => i.Createdat)).ToList();
-                    modelitem.items = itemrecentquantity.Where(d => itemrecentquantityMaxDate.Contains(d.Createdat)).ToList();
+                    var itemrecentquantityMaxDate = itemrecentquantity.GroupBy(o => o.item.ItemID).Select(o => new { MaxOPid = o.Max(i => i.outputdocumentid), itemid = o.Key }).ToList();
+                    //modelitem.items = itemrecentquantity.Where(d => itemrecentquantityMaxDate.Contains(d.Createdat)).ToList();
+
+                    foreach (var item in itemrecentquantityMaxDate)
+                    {
+
+                        MaxDateoutputdocumentItem.Add(itemrecentquantity.Where(o => o.outputdocumentid == item.MaxOPid && o.item.ItemID == item.itemid).FirstOrDefault());
+                    }
                 }
+                //append the nooutputdocumenitems list to itemrecentquantity
+                MaxDateoutputdocumentItem.AddRange(nooutputdocumenitems);
+                modelitem.items = MaxDateoutputdocumentItem;
                 orderitems.Add(modelitem);
             }
             ViewBag.errormsg = "لايوجد مواد راكدة";

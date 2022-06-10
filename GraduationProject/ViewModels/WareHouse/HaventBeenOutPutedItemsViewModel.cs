@@ -7,6 +7,7 @@ namespace GraduationProject.ViewModels.Warehouse
 {
     public class HaventBeenOutPutedItemsViewModel
     {
+        public int outputdocumentid { get; set; }
         public Data.Models.Items item { get; set; }
         public int recentQuantity { get; set; }
         public int Quantity { get; set; }
