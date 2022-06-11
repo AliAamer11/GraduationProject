@@ -10,7 +10,7 @@ namespace GraduationProject.ViewModels.Administration
     {
         public string UserID { get; set; }
 
-        [Required(ErrorMessage ="هذا الحقل مطلوب ")]
+        [Required(ErrorMessage = "هذا الحقل مطلوب ")]
         public string RequestingParty { get; set; }
 
         [Required(ErrorMessage = "البريد الالكتروني مطلوب")]
@@ -22,6 +22,8 @@ namespace GraduationProject.ViewModels.Administration
 
         [Required(ErrorMessage = "كلمة السر مطلوبة")]
         [Display(Name = "كلمة السر")]
+        [MinLength(4,ErrorMessage ="كلمة السر جدا قصيرة")]
+        [MaxLength(15,ErrorMessage ="كلمة السر جدا طويلة")]
         public string Password { get; set; }
 
         [Required]

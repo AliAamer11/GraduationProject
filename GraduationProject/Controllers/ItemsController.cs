@@ -152,10 +152,16 @@ namespace GraduationProject.Controllers
             {
                 try
                 {
-                    var existedItem = await _context.Items.FirstOrDefaultAsync(i => i.ItemID == viewModel.ItemID);
-                    existedItem.Note = viewModel.Note;
-                    existedItem.MinimumRange = viewModel.MinimumRange;
-                    _context.Update(existedItem);
+                    if (existedItem(viewModel.Name,viewModel.ItemID))
+                    {
+                        ViewBag.errorMassage = "هذا الاسم موجود بالفعل";
+                        return View(viewModel);
+                    }
+                    var item = await _context.Items.FirstOrDefaultAsync(i => i.ItemID == viewModel.ItemID);
+                    item.Name = viewModel.Name;
+                    item.Note = viewModel.Note;
+                    item.MinimumRange = viewModel.MinimumRange;
+                    _context.Update(item);
                     await _context.SaveChangesAsync();
                     return RedirectToAction("Index", "Items");
                 }
@@ -231,6 +237,17 @@ namespace GraduationProject.Controllers
         private bool existedItem(string itemName)
         {
             return _context.Items.Any(i => i.Name == itemName);
+        }
+
+        /// <summary>
+        /// this for edit item
+        /// to lock if item was already existed
+        /// </summary>
+        /// <param name="itemName"></param>
+        /// <returns>true if item duplicate otherwise flase</returns>
+        private bool existedItem(string itemName, int id)
+        {
+            return _context.Items.Any(i => i.Name == itemName && i.ItemID != id);
         }
     }
 }
