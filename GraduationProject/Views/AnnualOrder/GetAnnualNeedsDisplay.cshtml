@@ -17,20 +17,22 @@
             <th>كمية الفصل الثالث</th>
             <th>معدل التدفق</th>
             <th>التدفق التقريبي</th>
+            <th>الملاحظات</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var ano in Model)
         {
-            <tr>
-                <td>@Html.DisplayFor(modelItem => ano.Item.Name)</td>
-                <td>@ano.FirstSemQuantity</td>
-                <td>@ano.SecondSemQuantity</td>
-                <td>@ano.ThirdSemQuantity</td>
-                <td>@ano.FlowRate</td>
-                <td>@ano.ApproxRate</td>
+        <tr>
+            <td>@Html.DisplayFor(modelItem => ano.Item.Name)</td>
+            <td>@ano.FirstSemQuantity</td>
+            <td>@ano.SecondSemQuantity</td>
+            <td>@ano.ThirdSemQuantity</td>
+            <td>@ano.FlowRate</td>
+            <td>@ano.ApproxRate</td>
+            <td>@ano.Comment</td>
 
-            </tr>
+        </tr>
         }
     </tbody>
 </table>
