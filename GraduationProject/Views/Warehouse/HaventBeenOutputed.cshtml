@@ -1,34 +1,73 @@
 ﻿@model List<GraduationProject.ViewModels.WareHouse.haventbeenoutputed>
-<link href="~/css/tableformanagment.css" rel="stylesheet" />
-<link href="~/css/button.css" rel="stylesheet" />
-<form method="post">
-    <label>  أدخل التاريخ الابتدائي لمعرفة المواد التي لم يتم تخريجها  </label>
-    <input type="datetime-local" name="period" /><br />
-    <input class="show-icon-btn" type="submit" value="استعراض" />
-    <br />
+@{Layout = "ReportsLayout";
+}
+<script src="~/js/material.js"></script>
+<link href="~/css/ReportsLayout.css" rel="stylesheet" />
+<link href="~/css/material.css" rel="stylesheet" />
+<link href="~/css/NoOutputItemsTable.css" rel="stylesheet" />
+<form id="regForm" method="post" asp-action="HaventBeenOutputed">
+    <div class="container mt-sm-3">
+        <div class="row d-flex justify-content-center align-items-center">
+            <div class="col-md-8">
+                <h1 id="register">المواد الراكدة</h1>
+                <div class="all-steps" id="all-steps">
+                </div>
+                <div @*class="tab"*@>
+                    <h6 style="float:right;">أدخل التاريخ الابتدائي:</h6>
+                    <p>
+                        <input name="period" oninput="this.className = ''" type="datetime-local" required>
+                    </p>
+                </div>
+                <br />
+            </div>
+        </div>
+    </div>
+        <div class="vertical-center">
+            <button type="submit">استعراض</button>
+        </div>
     <div class="table-responsive">
         <table class="styled-table">
             <thead>
                 <tr>
-                    <th>الطلب</th>
-                    <th>المواد</th>
+                    <th>الجهةالطالبة</th>
+                    <th>المادة</th>
+                    <th>الكمية</th>
+                    <th>الكمية المتبقية</th>
+                    <th>تاريخ الاخراج</th>
                 </tr>
             </thead>
             <tbody>
-                @if (Model != null)
-                {
-                    for (int i = 0; i < Model.Count(); i++)
-                    {
-                        <tr>
-                            <td>@Model[i].Order.User.RequstingParty</td>
-                        </tr>
-                    }
-                }
-                else
+
+                @for (int i = 0; i < Model.Count(); i++)
                 {
                     <tr>
-                        <td>@ViewBag.Empty </td>
+                        <td id="rp">@Model[i].Order.User.RequstingParty</td>
+                        <td id="rp"></td>
+                        <td id="rp"></td>
+                        <td id="rp"></td>
+                        <td id="rp"></td>
                     </tr>
+
+                    for (int j = 0; j < Model[i].items.Count(); j++)
+                    {
+                        <tr>
+                            <td></td>
+                            <td>@Model[i].items[j].item.Name</td>
+                            <td>@Model[i].items[j].Quantity</td>
+                            <td>@Model[i].items[j].recentQuantity</td>
+                            <td>
+                                @if (@Model[i].items[j].Quantity != @Model[i].items[j].recentQuantity)
+                                {
+                                    @Model[i].items[j].Createdat.Date.ToString("dd/M/yyyy")
+                                }
+                                else
+                                {
+                                    <p id="tableP">لا يوجد سند إخراج</p>
+                                }
+                            </td>
+
+                        </tr>
+                    }
                 }
             </tbody>
         </table>

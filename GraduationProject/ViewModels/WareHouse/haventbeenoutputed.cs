@@ -12,7 +12,7 @@ namespace GraduationProject.ViewModels.WareHouse
     {
         public Order Order { get; set; }
 
-        public List <HaventBeenOutPutedItemsViewModel> items { set; get; }
+        public List<HaventBeenOutPutedItemsViewModel> items { set; get; }
 
         public haventbeenoutputed()
         {
