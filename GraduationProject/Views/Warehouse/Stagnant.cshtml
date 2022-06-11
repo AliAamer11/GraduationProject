@@ -1,25 +1,101 @@
-﻿@model List<GraduationProject.ViewModels.WareHouse.StagnantItemsViewModel>
-<link href="~/css/tableformanagment.css" rel="stylesheet" />
-<link href="~/css/button.css" rel="stylesheet" />
-<form asp-action="Stagnant" method="post">
-    <label>  أدخل المدة بالسنة  </label>
-    <input name="period" value="0" /><br />
-    <input class="show-icon-btn" type="submit" value=" استعراض " />
+﻿<link href="~/css/ReportsLayout.css" rel="stylesheet" />
+<script type="text/javascript" src="~/LibExtreme/js/jquery-3.5.1.min.js"></script>
+<link href="~/LibExtreme/css/dx.material.orange.light.css" rel="stylesheet" />
+<script type="text/javascript" src="~/LibExtreme/js/dx.all.js"></script>
+<script type="text/javascript" src="~/LibExtreme/js/FileSaver.js"></script>
+<script type="text/javascript" src="~/LibExtreme/js/Excel.js"></script>
+<link href="~/css/material.css" rel="stylesheet" />
+<script src="~/js/material.js"></script>
+@{Layout = "ReportsLayout";
+}
+<form id="regForm" asp-action="Stagnant" method="post">
+    <div class="container mt-sm-3">
+        <div class="row d-flex justify-content-center align-items-center">
+            <div class="col-md-8">
+                <h1 id="register">المواد الراكدة</h1>
+                <div class="all-steps" id="all-steps">
+                </div>
+                <div @*class="tab"*@>
+                    <h6 style="float:right;">أدخل المدة بالسنة</h6>
+                    <p>
+                        <input name="period" value="0" /><br />
+                    </p>
+                </div>
+                <br />
+            </div>
+        </div>
+    </div>
+    <div style=" text-align: center; transform: translateY(-30%);">
+        <button  type="submit">استعراض</button>
+    </div>
 </form>
-<br />
-<table class="styled-table">
-    <thead>
-        <tr>
-            <th>المواد</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var m in Model)
-        {
-            <tr>
-                <td>@m.Name</td>
-            </tr>
-        }
-    </tbody>
-</table>
-@ViewBag.period
+
+
+    <script>
+        var dataset = [];
+        const items = @Html.Raw(ViewBag.items);
+        $(function () {
+            $("#dataGrid").dxDataGrid({
+                dataSource: items,
+                keyExpr: "",
+                filterRow: { visible: true },
+                searchPanel: { visible: true },
+                //allowColumnReordering: true,
+                allowColumnResizing: true,
+                columnAutoWidth: true,
+                showBorders: true,
+                selection: {
+                    mode: 'multiple',
+                },
+                groupPanel: {
+                    visible: true,
+                },
+                export: {
+                    enabled: true,
+                    allowExportSelectedData: true,
+                },
+                onExporting(e) {
+                    const workbook = new ExcelJS.Workbook();
+                    const worksheet = workbook.addWorksheet('المواد');
+                    DevExpress.excelExporter.exportDataGrid({
+                        component: e.component,
+                        worksheet,
+                        autoFilterEnabled: true,
+                    }).then(() => {
+                        workbook.xlsx.writeBuffer().then((buffer) => {
+                            saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'Items.xlsx');
+                        });
+                    });
+                    e.cancel = true;
+                },
+                paging: {
+                    enabled: true,
+                },
+                columns: [
+                {
+                    caption: "اسم المادة",
+                    dataField: 'Name',
+                    alignment: 'center',
+                },
+                {
+                    caption: "تاريخ الإدخال",
+                    dataField: 'InputDocumentDate',
+                    alignment: 'center',
+                },
+                {
+                    caption: "تاريخ الإخراج",
+                    dataField: 'OutPutDocumentDate',
+                    alignment: 'center',
+                }
+                ],
+                columnChooser: { enabled: true },
+            });
+        });
+        DevExpress.config({
+            rtlEnabled: true
+        });
+    </script>
+
+    <div class="dx-theme-border-color-as-background-color">
+        <div id="dataGrid"></div>
+    </div>

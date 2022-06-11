@@ -52,42 +52,18 @@ namespace GraduationProject.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Stagnant()
+        public IActionResult Stagnant()
         {
-            //test
-            //first   groupby itemid and get the max date of each item 
-            var ItemOutputDocumentMaxDate = await _context.OutPutDocumentDetails.GroupBy(i => i.ItemId).Select(o => new { ItemId = o.Key, MaxDate = o.Max(o => o.CreatedAt) }).ToListAsync();
             List<StagnantItemsViewModel> StagnantItems = new List<StagnantItemsViewModel>();
-
-            //2 loop threw grouped items 
-            foreach (var obj in ItemOutputDocumentMaxDate)
-            {
-                //Max date for inputdocument item only the items that have an outputdocument 
-                //returns date time
-                var IteminputdocumentdetailMaxDate = _context.InputDocumentDetails.Include(i => i.InputDocument).Where(i => i.ItemId == obj.ItemId).Max(i => i.InputDocument.CreatedAt);
-                // returns a var of type InputDocumentDetail
-                var Iteminputdocumentdetail = await _context.InputDocumentDetails.Include(i => i.InputDocument).Include(i => i.Item).Where(i => i.ItemId == obj.ItemId & i.InputDocument.CreatedAt == IteminputdocumentdetailMaxDate).FirstOrDefaultAsync();
-                //Add to view list 
-                StagnantItemsViewModel model = new StagnantItemsViewModel();
-                //model.ItemID = Iteminputdocumentdetail.Item.ItemID;
-                //model.Name = Iteminputdocumentdetail.Item.Name;
-                model.InputDocumentDate = IteminputdocumentdetailMaxDate;
-                model.OutPutDocumentDate = obj.MaxDate;
-
-
-                StagnantItems.Add(model);
-
-            }
-
             return View(StagnantItems);
         }
 
         [HttpPost]
         public async Task<IActionResult> Stagnant(int period)
         {
-            //test
             //first   groupby itemid and get the max date of each item 
-            var ItemOutputDocumentMaxDate = await _context.OutPutDocumentDetails.GroupBy(i => i.ItemId).Select(o => new { ItemId = o.Key, MaxDate = o.Max(o => o.CreatedAt) }).ToListAsync();
+            var ItemOutputDocumentMaxDate = await _context.OutPutDocumentDetails.GroupBy(i => i.ItemId).Select(o => new { ItemId = o.Key, Maxid = o.Max(o => o.OutPutDocumentDetailsID) }).ToListAsync();
+            List<StagnantItemsViewModel> MAxOutputedItems = new List<StagnantItemsViewModel>();
             List<StagnantItemsViewModel> StagnantItems = new List<StagnantItemsViewModel>();
 
             //2 loop threw grouped items 
@@ -95,55 +71,43 @@ namespace GraduationProject.Controllers
             {
                 //Max date for inputdocument item only the items that have an outputdocument 
                 //returns date time
-                var IteminputdocumentdetailMaxDate = await _context.InputDocumentDetails.Include(i => i.InputDocument).Where(i => i.ItemId == obj.ItemId).MaxAsync(i => i.InputDocument.CreatedAt);
+                var IteminputdocumentdetailMaxDate = _context.InputDocumentDetails.Include(i => i.InputDocument).Where(i => i.ItemId == obj.ItemId).Max(i => i.InputDocumentDetailsID);
                 // returns a var of type InputDocumentDetail
-                var Iteminputdocumentdetail = await _context.InputDocumentDetails.Include(i => i.InputDocument).Include(i => i.Item).Where(i => i.ItemId == obj.ItemId & i.InputDocument.CreatedAt == IteminputdocumentdetailMaxDate).FirstOrDefaultAsync();
+                var Iteminputdocumentdetail = await _context.InputDocumentDetails.Include(i => i.InputDocument).Include(i => i.Item).Where(i => i.ItemId == obj.ItemId & i.InputDocumentDetailsID == IteminputdocumentdetailMaxDate).FirstOrDefaultAsync();
+                var OutPutDocumentitem = await _context.OutPutDocumentDetails.Where(i => i.ItemId == obj.ItemId & obj.Maxid == i.OutPutDocumentDetailsID).FirstOrDefaultAsync();
                 //Add to view list 
                 StagnantItemsViewModel model = new StagnantItemsViewModel();
-                //model.ItemID = Iteminputdocumentdetail.Item.ItemID;
-                //model.Name = Iteminputdocumentdetail.Item.Name;
-                model.InputDocumentDate = IteminputdocumentdetailMaxDate;
-                model.OutPutDocumentDate = obj.MaxDate;
+
+                model.Name = Iteminputdocumentdetail.Item.Name;
+                model.InputDocumentDate = Iteminputdocumentdetail.InputDocument.CreatedAt;
+                model.OutPutDocumentDate = OutPutDocumentitem.CreatedAt;
 
 
-                StagnantItems.Add(model);
+                MAxOutputedItems.Add(model);
 
             }
 
             int TempPeriod;
-            foreach (var m in StagnantItems.ToList())
+            foreach (var m in MAxOutputedItems.ToList())
             {
-                StagnantItemsViewModel model = new StagnantItemsViewModel();
-                if (m.InputDocumentDate > m.OutPutDocumentDate)
+                StagnantItemsViewModel model2 = new StagnantItemsViewModel();
+                if (m.InputDocumentDate < m.OutPutDocumentDate)
                 {
-                    TempPeriod = m.InputDocumentDate.Year - m.OutPutDocumentDate.Year;
-                    if (TempPeriod >= period)
-                    {
-                        var items = await _context.OutPutDocumentDetails.Include(i => i.Item).Where(o => o.CreatedAt.Year == TempPeriod).ToListAsync();
-                        foreach (var item in items)
-                        {
-                            model.Name = item.Item.Name;
-                        }
-                    }
-                }
-                else
-                {
-                    TempPeriod = m.OutPutDocumentDate.Year - m.InputDocumentDate.Year;
-                    if (TempPeriod >= period)
-                    {
-                        var items = await _context.OutPutDocumentDetails
-                            .Include(i => i.Item)
-                            .Where(o => o.CreatedAt.Year >= m.InputDocumentDate.Year && o.CreatedAt.Year <= m.OutPutDocumentDate.Year).ToListAsync();
-                        foreach (var item in items)
-                        {
-                            model.Name = item.Item.Name;
-                        }
-                    }
+                    TempPeriod = System.DateTime.Now.Year - m.OutPutDocumentDate.Year;
 
+                    if (TempPeriod >= period)
+                    {
+                        model2.Name = m.Name;
+                        model2.InputDocumentDate = m.InputDocumentDate;
+                        model2.OutPutDocumentDate = m.OutPutDocumentDate;
+                        StagnantItems.Add(model2);
+                    }
                 }
-                StagnantItems.Add(model);
+
             }
-            return View(StagnantItems);
+            string jsonString = System.Text.Json.JsonSerializer.Serialize(StagnantItems);
+            ViewBag.items = jsonString;
+            return View();
 
         }
 
@@ -254,11 +218,11 @@ namespace GraduationProject.Controllers
                             model.Quantity = totalquantity;
                             model.item = outputdocumentdetail.Item;
                             model.Createdat = outputdocumentdetail.CreatedAt;
-                            if(outputdocumentdetail.Quantity !=0)
+                            if (outputdocumentdetail.Quantity != 0)
                             {
                                 itemrecentquantity.Add(model);
                             }
-                          
+
                         }
 
                     }
