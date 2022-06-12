@@ -103,6 +103,18 @@ namespace GraduationProject.Controllers
                         StagnantItems.Add(model2);
                     }
                 }
+                if (m.InputDocumentDate >= m.OutPutDocumentDate)
+                {
+                    TempPeriod = System.DateTime.Now.Year - m.InputDocumentDate.Year;
+
+                    if (TempPeriod >= period)
+                    {
+                        model2.Name = m.Name;
+                        model2.InputDocumentDate = m.InputDocumentDate;
+                        model2.OutPutDocumentDate = m.OutPutDocumentDate;
+                        StagnantItems.Add(model2);
+                    }
+                }
 
             }
             string jsonString = System.Text.Json.JsonSerializer.Serialize(StagnantItems);
