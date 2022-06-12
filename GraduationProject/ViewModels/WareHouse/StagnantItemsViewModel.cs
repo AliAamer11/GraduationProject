@@ -10,6 +10,8 @@ namespace GraduationProject.ViewModels.WareHouse
         public int ItemID { get; set; }
         public string Name { get; set; }
         public DateTime InputDocumentDate { get; set; }
+        public string InputDocumentDatestring { get; set; }
+        public string OutPutDocumentDatestring { get; set; }
         public DateTime OutPutDocumentDate { get; set; }
     }
 }
