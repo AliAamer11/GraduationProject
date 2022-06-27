@@ -11,9 +11,9 @@
 
 @if (ViewBag.isnotSuccess)
 {
-    <div class="alert alert-warning alert-dismissible">
+    <div class="alert alert-danger alert-dismissible" style="text-align: center;font-size:1.5rem;">
         <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
-        <strong style="color:#0c5c82;">لا يمكن الموافقة لأن كمية المادة @ViewBag.itemName الموجودة في المستودع أقل من المطلوب</strong>
+        <strong style="color:#11101D;">لا يمكن الموافقة لأن كمية المادة @ViewBag.itemName الموجودة في المستودع أقل من المطلوب</strong>
     </div>
 }
 

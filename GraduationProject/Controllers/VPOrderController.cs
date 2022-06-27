@@ -210,7 +210,7 @@ namespace GraduationProject.Controllers.VPControllers
                     }
                 }
                 var order = await _context.Orders.FirstOrDefaultAsync(o => o.OrderID == OrderId);
-                order.State = OrderState.NeedOutPutDocmnet;
+                order.State = OrderState.VicePrisdent;
                 _context.Update(order);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("ManualDistributionIndex");

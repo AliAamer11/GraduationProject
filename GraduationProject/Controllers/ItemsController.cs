@@ -29,7 +29,7 @@ namespace GraduationProject.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var items = await _context.Items.Include(i => i.Category).Include(i => i.Measurement).ToListAsync();
+            var items = await _context.Items.Include(i => i.Category).Include(i => i.Measurement).OrderByDescending(i=>i.ItemID).ToListAsync();
             foreach (var item in items)
             {
                 if (item.MinimumRange > item.Quantity && item.ExceededMinimumRange > 0)
