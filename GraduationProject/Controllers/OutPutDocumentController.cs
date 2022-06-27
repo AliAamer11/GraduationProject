@@ -26,17 +26,17 @@ namespace GraduationProject.Controllers
         {
             OrdersViewModels viewModel = new OrdersViewModels();
             //this for get number of AnnualOrder
-            viewModel.countAnnualOrder = _context.Orders.Where(o => o.Type == OrderType.Annual && o.State == OrderState.NeedOutPutDocmnet).Count();
+            viewModel.countAnnualOrder = _context.Orders.Where(o => o.Type == OrderType.Annual && o.State == OrderState.NeedOutPutDocmnet && o.CreatedAt.Date.Year == DateTime.Now.Date.Year).Count();
 
             //this for get number of UnPlanned Order
             viewModel.countUnPlannedOrder = _context.Orders.Where(o => o.Type == OrderType.UnPlanned && o.State == OrderState.NeedOutPutDocmnet).Count();
 
             //get All OutPutDocument
             //this for OutPut Documnet for Annaul
-            var outPutDocumentAnnual = await _context.OutPutDocument.Include(o => o.OutPutDocumentDetails).Include(o => o.Order).Include(o => o.OutPutDocumentDetails).Where(o => o.Order.Type == OrderType.Annual).ToListAsync();
+            var outPutDocumentAnnual = await _context.OutPutDocument.Include(o => o.OutPutDocumentDetails).Include(o => o.Order).Include(o => o.OutPutDocumentDetails).Where(o => o.Order.Type == OrderType.Annual).OrderByDescending(o => o.OutPutDocumentID).ToListAsync();
 
             //this for OutPut Documnet for UnPlanned
-            var outPutDocumentUnPlanned = await _context.OutPutDocument.Include(o => o.OutPutDocumentDetails).Include(o => o.Order).Include(o => o.OutPutDocumentDetails).Where(o => o.Order.Type == OrderType.UnPlanned).ToListAsync();
+            var outPutDocumentUnPlanned = await _context.OutPutDocument.Include(o => o.OutPutDocumentDetails).Include(o => o.Order).Include(o => o.OutPutDocumentDetails).Where(o => o.Order.Type == OrderType.UnPlanned).OrderByDescending(o => o.OutPutDocumentID).ToListAsync();
 
             //make List for specific Data for OutPutDocumnet to show in View
             List<OutPutDocumentViewModel> outPutDocumentViewModelsUnPlanned = new List<OutPutDocumentViewModel>();
@@ -98,7 +98,7 @@ namespace GraduationProject.Controllers
         [HttpGet]
         public async Task<IActionResult> AnnualOrder()
         {
-            var annualOrders = await _context.Orders.Include(o => o.User).Where(o => o.Type == OrderType.Annual && o.State == OrderState.NeedOutPutDocmnet).ToListAsync();
+            var annualOrders = await _context.Orders.Include(o => o.User).Where(o => o.Type == OrderType.Annual && o.State == OrderState.NeedOutPutDocmnet && o.CreatedAt.Date.Year == DateTime.Now.Date.Year).ToListAsync();
             return View(annualOrders);
         }
 
@@ -113,7 +113,7 @@ namespace GraduationProject.Controllers
             //A dictionary for the aggregated item name and its recent value
             var recent = 0;
             //get all the orders of type annual 
-            var orders = _context.Orders.Where(o => o.Type == OrderType.Annual && o.State == OrderState.NeedOutPutDocmnet).ToList();
+            var orders = _context.Orders.Where(o => o.Type == OrderType.Annual && o.State == OrderState.NeedOutPutDocmnet && o.CreatedAt.Date.Year == DateTime.Now.Date.Year).ToList();
             //now we are going to loop through each order
             for (int o = 0; o < orders.Count; o++)
             {   //for each order intialize a list to count the taken quantity

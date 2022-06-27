@@ -148,7 +148,7 @@ namespace GraduationProject.Controllers
             var items = _context.Items.ToList();
             foreach (var item in items)
             {
-                list.Add(new SelectListItem { Text = item.BarCode + "  " + item.Name, Value = item.ItemID.ToString() });
+                list.Add(new SelectListItem { Text = item.Name + "  " + item.BarCode, Value = item.ItemID.ToString() });
             }
             return list;
         }
