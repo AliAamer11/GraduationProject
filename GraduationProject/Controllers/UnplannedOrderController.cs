@@ -85,7 +85,7 @@ namespace GraduationProject.Controllers.RP
             var unplannedorders = await _context.Orders
                 .Where(x => x.Type == true)   //// unplanned order type
                 .Where(o => o.UserId == userid)    /// getting orders to this current user
-                .Where(o => o.State == OrderState.NeedOutPutDocmnet)  ///getting orders that are complete on StoreKeeper side
+                .Where(o => o.State == OrderState.NeedOutPutDocmnet || o.State == OrderState.Finishid)  ///getting orders that are complete on StoreKeeper side
                 .ToListAsync();
             return View(unplannedorders);
         }
@@ -131,7 +131,7 @@ namespace GraduationProject.Controllers.RP
             var unplannedorders = await _context.UnPlannedOrder.Include(o => o.Order)
                     .Include(i => i.Item)
                     .Where(x => x.OrderId == id)
-                    .Where(o => o.Order.Type == true && o.Order.State == OrderState.VicePrisdent || o.Order.State == OrderState.NeedOutPutDocmnet)
+                    .Where(o => o.Order.Type == true && o.Order.State == OrderState.VicePrisdent || o.Order.State == OrderState.NeedOutPutDocmnet || o.Order.State == OrderState.Finishid)
                     .Where(o => o.Order.UserId == userid)
                     .ToListAsync();
             ViewData["id"] = id;

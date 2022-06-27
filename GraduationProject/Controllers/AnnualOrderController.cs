@@ -99,7 +99,7 @@ namespace GraduationProject.Controllers
             var annualneeds =await _context.Orders
                 .Where(x => x.Type == false)   //// annual order type
                 .Where(o => o.UserId == userid)    /// getting orders to this current user
-                .Where(o => o.State == OrderState.NeedOutPutDocmnet)  ///getting orders that are complete on StoreKeeper side
+                .Where(o => o.State == OrderState.NeedOutPutDocmnet || o.State == OrderState.Finishid)  ///getting orders that are complete on StoreKeeper side
                 .ToListAsync();
             return View(annualneeds);
         }
@@ -159,7 +159,7 @@ namespace GraduationProject.Controllers
                     .Include(i => i.Item)
                     .Where(x => x.OrderId == id)
                     .Where(o => o.Order.Type == false)
-                    .Where(o => o.Order.State == OrderState.NeedOutPutDocmnet || o.Order.State == OrderState.VicePrisdent)
+                    .Where(o => o.Order.State == OrderState.NeedOutPutDocmnet || o.Order.State == OrderState.VicePrisdent || o.Order.State == OrderState.Finishid)
                     .Where(o => o.Order.UserId == userid)
                     .ToListAsync();
             ViewData["id"] = id;
