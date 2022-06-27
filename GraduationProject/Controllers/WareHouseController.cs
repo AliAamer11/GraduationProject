@@ -498,9 +498,9 @@ namespace GraduationProject.Controllers
         }
 
 
-    }
+    
         [HttpGet]
-        public async Task<IActionResult> RPItems()
+        public  IActionResult RPItems()
         {
             List<RPitemsReportViewModel> RPitems = new List<RPitemsReportViewModel>();
 
