@@ -373,82 +373,92 @@ namespace GraduationProject.Controllers
         [HttpGet]
         public async Task<IActionResult> RPItems()
         {
-            return View();
+            List<RPitemsReportViewModel> RPitems = new List<RPitemsReportViewModel>();
+
+            return View(RPitems);
         }
 
-            [HttpPost]
-        public async Task<IActionResult> RPItems(string rp, DateTime starttime,DateTime finishtime)
+        [HttpPost]
+        public async Task<IActionResult> RPItems(string rp, DateTime starttime, DateTime finishtime)
         {
             List<RPitemsReportViewModel> RPitems = new List<RPitemsReportViewModel>();
 
 
             ///////get annualorders for rp and in certain time 
             var Aorders = await _context.Orders.Where(i => i.Type == false && i.User.RequstingParty == rp && i.CreatedAt >= starttime && i.CreatedAt <= finishtime).ToListAsync();
-           
+
             ///////get unplanned orders for rp and in certain time 
             var Uorders = await _context.Orders.Where(i => i.Type == true && i.User.RequstingParty == rp && i.CreatedAt >= starttime && i.CreatedAt <= finishtime).ToListAsync();
 
             ////this list is to calculate taken quantity foreach item in oRDERS (ANNUAL)
             //List<OutPutDocumnetForAnnualViewModel> AOTakenQuantity = new List<OutPutDocumnetForAnnualViewModel>();
-            
+
             ////this list is to calculate taken quantity foreach item in oRDERS (UNPLANNED)
             //List<OutPutDocumnetForAnnualViewModel> UOTakenQuantity = new List<OutPutDocumnetForAnnualViewModel>();
 
             //VIEWMODEL For AnnualoRDER
-
-            foreach (var Aorder in Aorders)
+            if (starttime < finishtime)
             {
-                var annualorders = await _context.AnnualOrder.Where(i=>i.OrderId==Aorder.OrderID).GroupBy(m => m.Item.ItemID).Select(m => new { itemid = m.Key , total = m.Sum(m => m.FirstSemQuantity) + m.Sum(m => m.SecondSemQuantity) + m.Sum(m => m.ThirdSemQuantity) }).ToListAsync();
-
-                foreach (var item in annualorders)
+                foreach (var Aorder in Aorders)
                 {
-                    RPitemsReportViewModel model = new RPitemsReportViewModel();
-                    
-                    model.Item = _context.Items.Where(i => i.ItemID == item.itemid).FirstOrDefault();
-                    
-                    model.requested_quantity = item.total;
-                    //model.taken_quantity = 0;    //needs to be calculated thru alis code. which im so freaking confused
-                    //model.recent_quantity = 0;   //needs to bei either ==> requesed - taken OOORRRRR from the databse get the quantity
+                    var annualorders = await _context.AnnualOrder.Where(i => i.OrderId == Aorder.OrderID).GroupBy(m => m.Item.ItemID).Select(m => new { itemid = m.Key, total = m.Sum(m => m.FirstSemQuantity) + m.Sum(m => m.SecondSemQuantity) + m.Sum(m => m.ThirdSemQuantity) }).ToListAsync();
 
-                    var outPutDoument = await _context.OutPutDocument.Where(o => o.OrderId == Aorder.OrderID).ToListAsync(); //is this suppossed to be here or out:/// ???
+                    foreach (var item in annualorders)
+                    {
+                        RPitemsReportViewModel model = new RPitemsReportViewModel();
 
-                    if (outPutDoument == null)
-                    {
-                        model.taken_quantity = 0;
-                        //
-                    }
-                    else
-                    {
-                        foreach (var element in outPutDoument)
+                        model.Item = _context.Items.Where(i => i.ItemID == item.itemid).FirstOrDefault();
+                        model.requested_quantity = item.total;
+
+                        //taken quantity code
+                        var outPutDoument = await _context.OutPutDocument.Where(o => o.OrderId == Aorder.OrderID).ToListAsync();
+                        if (outPutDoument == null)
                         {
-                            var OutPutDocumnetDetails = await _context.OutPutDocumentDetails.Where(o => o.OutPutDocumentId == element.OutPutDocumentID && o.ItemId == item.itemobj.ItemID).ToListAsync();
-                            for (int i = 0; i < OutPutDocumnetDetails.Count; i++)
+                            model.taken_quantity = 0;
+                        }
+                        else
+                        {
+                            foreach (var element in outPutDoument)
                             {
-                                //TakenQuantity[i].TakenQuantity += OutPutDocumnetDetails[i].Quantity;
-                                model.taken_quantity = model.taken_quantity + OutPutDocumnetDetails[i].Quantity;
+                                var OutPutDocumnetDetails = await _context.OutPutDocumentDetails.Where(o => o.OutPutDocumentId == element.OutPutDocumentID && o.ItemId == item.itemid).ToListAsync();
+                                for (int i = 0; i < OutPutDocumnetDetails.Count; i++)
+                                {
+                                    model.taken_quantity = model.taken_quantity + OutPutDocumnetDetails[i].Quantity;
+                                }
                             }
                         }
+
+                        //test wether the item exists
+                        bool test = false;
+                        foreach (var itemss in RPitems)
+                        {
+                            if (item.itemid == itemss.Item.ItemID)
+                                test = true;
+                        }
+                        if (!test)
+                        {
+                            //add model to the main ITEMS report after calculating ALLLLL of the quantities;
+                            RPitems.Add(model);
+                        }
+                        else
+                        {
+                            // var updateitem =RPitems.Find(o => o.Item.ItemID == item.itemid);
+                            // updateitem.taken_quantity += model.taken_quantity;
+                            RPitems.Find(o => o.Item.ItemID == item.itemid).taken_quantity += model.taken_quantity;
+                            RPitems.Find(o => o.Item.ItemID == item.itemid).requested_quantity += model.requested_quantity;
+                        }
                     }
-                    model.recent_quantity = model.requested_quantity - model.taken_quantity; ///i thing this is wrong....yeah this is wrong
-                    //add model to the main ITEMS report after calculating ALLLLL of the quantities;
-                    RPitems.Add(model);
-
-
-
-
                 }
-
-               
-
-
-
-
 
             }
 
+            else
+            {
+                ViewBag.errormessage = "الرجاء إدخال تواريخ صحيحة. ";
+            }
             ///////get unplanned for rp in certain time
 
             return View(RPitems);
-        } 
+        }
     }
 }

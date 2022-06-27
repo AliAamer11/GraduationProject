@@ -12,7 +12,6 @@ namespace GraduationProject.ViewModels.WareHouse
         public string itemname { get; set; }
         public int requested_quantity { get; set; }
         public int taken_quantity { get; set; }
-        public int recent_quantity { get; set; }
 
     }
 }
