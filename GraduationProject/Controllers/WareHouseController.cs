@@ -6,6 +6,7 @@ using GraduationProject.ViewModels.Warehouse;
 using GraduationProject.ViewModels.WareHouse;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -369,6 +370,224 @@ namespace GraduationProject.Controllers
             ViewBag.items = jsonString;
             return View(models);
 
+        }
+
+        [HttpGet]
+        public  IActionResult MaterialStatisticsReport()
+        {
+            List<MaterialStatisticsReportViewModel> Models = new List<MaterialStatisticsReportViewModel>();
+            ViewData["RP"] = new SelectList(BindListforRP(), "Value", "Text");
+
+            return View(Models);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> MaterialStatisticsReport(string rp)
+        {
+            //viewmodel list to store the data
+            List<MaterialStatisticsReportViewModel> Models = new List<MaterialStatisticsReportViewModel>();
+
+            //get annual orders for rp where its finished. check if its there or not // finisheed or not 
+            var anorder_currentyear = await _context.Orders
+           .Where(o => o.Type == false)                                                             //annual orders
+           .Where(o => o.State == OrderState.NeedOutPutDocmnet || o.State == OrderState.Finishid)   //finished and approved
+           .Where(u => u.User.RequstingParty == rp)                                                //for a specific party
+           .Where(o=>o.CreatedAt.Year == DateTime.Now.Year)                                        //for this year
+           .OrderBy(o => o.CreatedAt)
+           .LastOrDefaultAsync();
+
+            if (anorder_currentyear != null) //if there is an order for the current year
+            {
+                //we get the order for the year before the current one to compare
+                int year_before_this = DateTime.Now.Year - 1;
+                var anorder_before = await _context.Orders
+                   .Where(o => o.Type == false)
+                   .Where(o => o.State == OrderState.NeedOutPutDocmnet || o.State == OrderState.Finishid)
+                   .Where(u => u.User.RequstingParty == rp)
+                   .Where(o => o.CreatedAt.Year == year_before_this)
+                   .OrderBy(o => o.CreatedAt)
+                   .FirstOrDefaultAsync();
+
+
+                if(anorder_before!=null)
+                {
+                    var itemsforordercurrentyear = await _context.AnnualOrder.Include(u=>u.Item).Where(o => o.OrderId == anorder_currentyear.OrderID).ToListAsync();
+                    var itemsfororderbefore = await _context.AnnualOrder.Where(o => o.OrderId == anorder_before.OrderID).ToListAsync();
+
+                    //go thru all items added in current order to add to viewmodel
+                    foreach(var item in itemsforordercurrentyear)
+                    {
+                        MaterialStatisticsReportViewModel model = new MaterialStatisticsReportViewModel();
+                        model.item = item.Item;
+                        //model.item.Name = item.Item.Name;
+                        model.FirstYear = item.Order.CreatedAt.Year; //first for current year
+                        model.SecondYear = item.Order.CreatedAt.Year -1;
+                        model.FirstQuantity = item.FirstSemQuantity + item.SecondSemQuantity + item.ThirdSemQuantity;  ///for current year
+
+                        var itembefore = await _context.AnnualOrder
+                            .Include(u => u.Item)
+                            .Where(o => o.OrderId == anorder_before.OrderID)
+                            .Where(i=>i.ItemId == item.ItemId)
+                            .FirstOrDefaultAsync();
+                        if(itembefore!=null)
+                        {
+                            model.SecondQuantity = itembefore.FirstSemQuantity + itembefore.SecondSemQuantity + itembefore.ThirdSemQuantity;
+                        }
+                        else
+                        {
+                            model.SecondQuantity = 0;
+                        }
+                        model.Percentage = ((model.FirstQuantity - model.SecondQuantity) / Math.Max(model.FirstQuantity,model.SecondQuantity) * 100);
+                        Models.Add(model);
+
+
+                    }
+
+                    //List<MaterialStatisticsReportViewModel> Models = new List<MaterialStatisticsReportViewModel>();
+
+                    //go thru items in year before where they havent been ordered the current year
+                    foreach (var item in itemsfororderbefore)
+                    {
+                        bool test = false;
+                       foreach(var testi in itemsforordercurrentyear)
+                        {
+                            if (testi.Item.Name == item.Item.Name)
+                                test = true;
+                        }
+                        if(!test)
+                        {
+                            MaterialStatisticsReportViewModel model = new MaterialStatisticsReportViewModel();
+                            model.item = item.Item;
+                            model.FirstYear = item.Order.CreatedAt.Year;
+                            model.SecondYear = item.Order.CreatedAt.Year - 1;
+                            model.SecondQuantity = item.FirstSemQuantity + item.SecondSemQuantity + item.ThirdSemQuantity;
+                            model.FirstQuantity = 0;
+                            model.Percentage = ((model.FirstQuantity - model.SecondQuantity) / Math.Max(model.FirstQuantity, model.SecondQuantity) * 100);
+                            Models.Add(model);
+
+                        }
+                    }
+
+                }
+                else
+                {
+                    ViewBag.errormessage = "لا يوجد طلب احتياج سنوي للسنة السابقة";
+                }
+
+
+            }
+            else
+            {
+                ViewBag.errormessage = "لا يوجد طلب احتياج للسنة الحالية.";
+            }
+
+
+            ViewData["RP"] = new SelectList(BindListforRP(), "Value", "Text");
+            return View(Models);
+        }
+
+        private List<SelectListItem> BindListforRP()
+        {
+            List<SelectListItem> list = new();
+            var users = _context.Users.ToList();
+            foreach (var user in users)
+            {
+                list.Add(new SelectListItem { Text = user.RequstingParty, Value = user.RequstingParty.ToString() });
+            }
+            return list;
+        }
+
+
+    
+        [HttpGet]
+        public  IActionResult RPItems()
+        {
+            List<RPitemsReportViewModel> RPitems = new List<RPitemsReportViewModel>();
+
+            return View(RPitems);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RPItems(string rp, DateTime starttime, DateTime finishtime)
+        {
+            List<RPitemsReportViewModel> RPitems = new List<RPitemsReportViewModel>();
+
+
+            ///////get annualorders for rp and in certain time 
+            var Aorders = await _context.Orders.Where(i => i.Type == false && i.User.RequstingParty == rp && i.CreatedAt >= starttime && i.CreatedAt <= finishtime).ToListAsync();
+
+            ///////get unplanned orders for rp and in certain time 
+            var Uorders = await _context.Orders.Where(i => i.Type == true && i.User.RequstingParty == rp && i.CreatedAt >= starttime && i.CreatedAt <= finishtime).ToListAsync();
+
+            ////this list is to calculate taken quantity foreach item in oRDERS (ANNUAL)
+            //List<OutPutDocumnetForAnnualViewModel> AOTakenQuantity = new List<OutPutDocumnetForAnnualViewModel>();
+
+            ////this list is to calculate taken quantity foreach item in oRDERS (UNPLANNED)
+            //List<OutPutDocumnetForAnnualViewModel> UOTakenQuantity = new List<OutPutDocumnetForAnnualViewModel>();
+
+            //VIEWMODEL For AnnualoRDER
+            if (starttime < finishtime)
+            {
+                foreach (var Aorder in Aorders)
+                {
+                    var annualorders = await _context.AnnualOrder.Where(i => i.OrderId == Aorder.OrderID).GroupBy(m => m.Item.ItemID).Select(m => new { itemid = m.Key, total = m.Sum(m => m.FirstSemQuantity) + m.Sum(m => m.SecondSemQuantity) + m.Sum(m => m.ThirdSemQuantity) }).ToListAsync();
+
+                    foreach (var item in annualorders)
+                    {
+                        RPitemsReportViewModel model = new RPitemsReportViewModel();
+
+                        model.Item = _context.Items.Where(i => i.ItemID == item.itemid).FirstOrDefault();
+                        model.requested_quantity = item.total;
+
+                        //taken quantity code
+                        var outPutDoument = await _context.OutPutDocument.Where(o => o.OrderId == Aorder.OrderID).ToListAsync();
+                        if (outPutDoument == null)
+                        {
+                            model.taken_quantity = 0;
+                        }
+                        else
+                        {
+                            foreach (var element in outPutDoument)
+                            {
+                                var OutPutDocumnetDetails = await _context.OutPutDocumentDetails.Where(o => o.OutPutDocumentId == element.OutPutDocumentID && o.ItemId == item.itemid).ToListAsync();
+                                for (int i = 0; i < OutPutDocumnetDetails.Count; i++)
+                                {
+                                    model.taken_quantity = model.taken_quantity + OutPutDocumnetDetails[i].Quantity;
+                                }
+                            }
+                        }
+
+                        //test wether the item exists
+                        bool test = false;
+                        foreach (var itemss in RPitems)
+                        {
+                            if (item.itemid == itemss.Item.ItemID)
+                                test = true;
+                        }
+                        if (!test)
+                        {
+                            //add model to the main ITEMS report after calculating ALLLLL of the quantities;
+                            RPitems.Add(model);
+                        }
+                        else
+                        {
+                            // var updateitem =RPitems.Find(o => o.Item.ItemID == item.itemid);
+                            // updateitem.taken_quantity += model.taken_quantity;
+                            RPitems.Find(o => o.Item.ItemID == item.itemid).taken_quantity += model.taken_quantity;
+                            RPitems.Find(o => o.Item.ItemID == item.itemid).requested_quantity += model.requested_quantity;
+                        }
+                    }
+                }
+
+            }
+
+            else
+            {
+                ViewBag.errormessage = "الرجاء إدخال تواريخ صحيحة. ";
+            }
+            ///////get unplanned for rp in certain time
+
+            return View(RPitems);
         }
     }
 }

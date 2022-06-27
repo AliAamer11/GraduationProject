@@ -39,8 +39,16 @@ namespace GraduationProject.Controllers
         //decide what type of document to review
         public IActionResult Index()
         {
-            ViewData["AnnualCount"] = "0" + ( _context.Orders.Where(o => o.Type == false && o.State == OrderState.NeedOutPutDocmnet).Count()).ToString();
-            ViewData["UnplannedCount"] = "0" + ( _context.Orders.Where(o => o.Type == true && o.State == OrderState.NeedOutPutDocmnet).Count().ToString());
+            var userid = userManager.GetUserId(User);
+
+            ViewData["AnnualCount"] = "0" + (_context.Orders.Where(o => o.Type == false)
+                                                            .Where(o=>o.State == OrderState.NeedOutPutDocmnet || o.State == OrderState.Finishid)//// annual order type
+                                                             .Where(o => o.UserId == userid)
+                                                            .Count()).ToString();
+            ViewData["UnplannedCount"] = "0" + (_context.Orders.Where(o => o.Type == true)
+                                                               .Where(o => o.State == OrderState.NeedOutPutDocmnet || o.State == OrderState.Finishid)//// annual order type
+                                                                .Where(o => o.UserId == userid)
+                                                               .Count().ToString());
             return View();
         }
 
@@ -73,7 +81,7 @@ namespace GraduationProject.Controllers
             var annualneedorders = await _context.AnnualOrder.Include(o => o.Order)
                 .Include(i => i.Item)
                 .Where(x => x.OrderId == id)
-                .Where(o => o.Order.State == OrderState.NeedOutPutDocmnet)
+                .Where(o => o.Order.State == OrderState.NeedOutPutDocmnet || o.Order.State == OrderState.Finishid)
                 .Where(o => o.Order.UserId == userid)
                 .ToListAsync();
 
@@ -162,7 +170,7 @@ namespace GraduationProject.Controllers
                 .Include(i => i.Item)
                 .Where(x => x.OrderId == id)
                 .Where(o => o.Order.UserId == userid)
-                .Where(o => o.Order.State == OrderState.NeedOutPutDocmnet)
+                .Where(o => o.Order.State == OrderState.NeedOutPutDocmnet || o.Order.State == OrderState.Finishid)
                 .ToListAsync();
             return View(unplannedorders);
         }

@@ -1,0 +1,69 @@
+﻿@model List<GraduationProject.ViewModels.WareHouse.RPitemsReportViewModel>
+
+<link href="~/css/NoOutputItemsTable.css" rel="stylesheet" />
+<script src="~/js/material.js"></script>
+<link href="~/css/ReportsLayout.css" rel="stylesheet" />
+<link href="~/css/material.css" rel="stylesheet" />
+<link href="~/css/NoOutputItemsTable.css" rel="stylesheet" />
+
+@if (ViewBag.errormessage != null)
+{
+    <h4 class="alert alert-danger">@ViewBag.errormessage</h4>
+}
+<form id="regForm" method="post" asp-action="RPItems">
+    <div class="container mt-sm-3">
+        <div class="row d-flex justify-content-center align-items-center">
+            <div class="col-md-8">
+                <h1 id="register">جرد للمواد حسب جهة طالبة معينة</h1>
+                <div class="all-steps" id="all-steps">
+                </div>
+                <div>
+                    <h6 style="float:right;">أدخل الجهة الطالبة:</h6>
+                    <p>
+                        <input name="rp" type="text" required>
+                    </p>
+                    <h6 style="float:right;">أدخل التاريخ الابتدائي:</h6>
+                    <p>
+                        <input name="starttime" type="datetime-local" required>
+                    </p>
+                    <h6 style="float:right;">أدخل التاريخ النهائي:</h6>
+                    <p>
+                        <input name="finishtime" type="datetime-local" required>
+                    </p>
+                </div>
+                <br />
+            </div>
+        </div>
+    </div>
+    <div class="vertical-center">
+        <button type="submit">استعراض</button>
+    </div>
+    <div class="table-responsive">
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th>المادة</th>
+                    <th>الكميةالمطلوبة</th>
+                    <th>الكميةالمأخوذة</th>
+                    <th>الكميةالمتبقي</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Count() > 0)
+                {
+                    @for (int i = 0; i < Model.Count(); i++)
+                    {
+                        <tr>
+                            <td>@Model[i].Item.Name</td>
+                            <td>@Model[i].requested_quantity</td>
+                            <td>@Model[i].taken_quantity</td>
+                            @{int recent = @Model[i].requested_quantity - @Model[i].taken_quantity;}
+                            <td>@recent</td>
+                        </tr>
+                    }
+                }
+
+            </tbody>
+        </table>
+    </div>
+</form>
