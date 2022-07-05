@@ -1,55 +1,63 @@
 ﻿@model List<GraduationProject.ViewModels.WareHouse.MaterialStatisticsReportViewModel>
+    <link href="~/css/material.css" rel="stylesheet" />
+    <link href="~/css/tableformanagment.css" rel="stylesheet" />
+    <link href="~/css/ReportsLayout.css" rel="stylesheet" />
 
-<link href="~/css/tableformanagment.css" rel="stylesheet" />
+    @if (ViewBag.errormessage != null)
+    {
+        <h4 class="alert alert-danger">@ViewBag.errormessage</h4>
+    }
 
-@if (ViewBag.errormessage != null)
-{
-    <h4 class="alert alert-danger">@ViewBag.errormessage</h4>
-}
-<form id="regForm" method="post" asp-action="MaterialStatisticsReport">
-    <div class="container mt-sm-3">
-        <div class="row d-flex justify-content-center align-items-center">
-            <div class="col-md-8">
-                <h1 id="register">تقرير احصائي لحساب نسب كمية المواد...؟</h1>
-                <div class="all-steps" id="all-steps">
+
+    <form id="regForm" method="post" asp-action="MaterialStatisticsReport">
+        <div class="container mt-sm-3">
+            <div class="row d-flex justify-content-center align-items-center">
+                <div class="col-md-8">
+                    <h1 id="register">تقرير إحصائي لحساب نسب كميات المواد المطلوبة</h1>
+                    <div class="all-steps" id="all-steps">
+                    </div>
+                    <div @*class="tab"*@>
+                        <h6 style="float:right;"> اختر الجهة الطالبة</h6>
+                        <p>
+                            <select name="rp" asp-items="ViewBag.RP" required></select>
+                        </p>
+                    </div>
+                    <br />
                 </div>
-                <div>
-                    <h6 style="float:right;">أدخل الجهة الطالبة:</h6>
-                    <p>
-                        <select name="rp" asp-items="ViewBag.RP" required></select>
-
-                    </p>
-                </div>
-                <input type="submit" placeholder="إرسال" />
-                <br />
             </div>
         </div>
-    </div>
-</form>
-<table class="styled-table">
-    <thead>
-        <tr>
-            <th>اسم المادة</th>
-            <th>كمية المواد للسنة الحالية</th>
-            <th>كمية المواد للسنة السابقة</th>
-            <th>النسبة</th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (@Model.Count() > 0)
-        {
-            @foreach (var item in Model)
+        <div style=" text-align: center; transform: translateY(-30%);">
+            <input type="submit" placeholder="استعراض" />
+        </div>
+    </form>
+
+
+
+
+    <table class="styled-table">
+        <thead>
+            <tr>
+                <th>اسم المادة</th>
+                <th>كمية المواد للسنة الحالية</th>
+                <th>كمية المواد للسنة السابقة</th>
+                <th>النسبة</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (@Model.Count() > 0)
             {
-                <tr>
-                    <td>@item.item.Name</td>
-                    <td>@item.FirstQuantity</td>
-                    <td>@item.SecondQuantity</td>
-                    <td>@item.Percentage</td>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.item.Name</td>
+                        <td>@item.FirstQuantity</td>
+                        <td>@item.SecondQuantity</td>
+                        <td>@item.Percentage</td>
 
 
-                </tr>
+                    </tr>
+                }
             }
-        }
-    </tbody>
-</table>
+        </tbody>
+    </table>
 

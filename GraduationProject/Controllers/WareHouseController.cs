@@ -492,7 +492,10 @@ namespace GraduationProject.Controllers
             var users = _context.Users.ToList();
             foreach (var user in users)
             {
-                list.Add(new SelectListItem { Text = user.RequstingParty, Value = user.RequstingParty.ToString() });
+                if (!(user.RequstingParty == "SuperHeroAdmin" || user.RequstingParty == "سائد الناظر" || user.RequstingParty == "أسامة السجاد"))
+                {
+                    list.Add(new SelectListItem { Text = user.RequstingParty, Value = user.RequstingParty.ToString() });
+                }
             }
             return list;
         }
@@ -503,6 +506,7 @@ namespace GraduationProject.Controllers
         public  IActionResult RPItems()
         {
             List<RPitemsReportViewModel> RPitems = new List<RPitemsReportViewModel>();
+            ViewData["RP"] = new SelectList(BindListforRP(), "Value", "Text");
 
             return View(RPitems);
         }
@@ -511,8 +515,7 @@ namespace GraduationProject.Controllers
         public async Task<IActionResult> RPItems(string rp, DateTime starttime, DateTime finishtime)
         {
             List<RPitemsReportViewModel> RPitems = new List<RPitemsReportViewModel>();
-
-
+            ViewData["RP"] = new SelectList(BindListforRP(), "Value", "Text");
             ///////get annualorders for rp and in certain time 
             var Aorders = await _context.Orders.Where(i => i.Type == false && i.User.RequstingParty == rp && i.CreatedAt >= starttime && i.CreatedAt <= finishtime).ToListAsync();
 
