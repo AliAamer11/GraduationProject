@@ -7,43 +7,46 @@
 <link href="~/css/tableformanagment.css" rel="stylesheet" />
 
 <h1 class="tableheader">طلبات المواد في الإحتياج السنوي</h1>
-<a>إعادة استخدام المواد في هذا الطلب</a>
-<div class="table-responsive">
-    <table class="styled-table">
-        <thead >
-        <thead>
-            <tr>
-                <th style="padding-left:80px">#</th>
-                <th>اسم المادة</th>
-                <th>كمية الفصل الأول</th>
-                <th>كمية الفصل الثاني</th>
-                <th>كمية الفصل الثالث</th>
-                <th>التوصيف</th>
-                <th>معدل التدفق</th>
-                <th>التدفق التقريبي</th>
-                <th> </th>
-            </tr>
-        </thead>
-        <tbody>
+<form action="post">
+    <button type="submit">إعادة استخدام المواد في هذا الطلب</button>
 
-            @for (int i = 0; i < Model.Count; i++)
-            {
+    <div class="table-responsive">
+        <table class="styled-table">
+
+            <thead>
                 <tr>
-                    <td>@Model[i].AnnualOrderID</td>
-                    <td>@Model[i].Item.Name</td>
-                    <td>@Model[i].FirstSemQuantity</td>
-                    <td>@Model[i].SecondSemQuantity</td>
-                    <td>@Model[i].ThirdSemQuantity</td>
-                    <td>@Model[i].Description</td>
-                    <td>@Model[i].FlowRate</td>
-                    <td>@Model[i].ApproxRate</td>
-                    <td>
-                        <input asp-for="@Model[i].IsSelected" class="form-check-input" style="margin-top: 13px;" />
-                    </td>
-
+                    <th style="padding-left:80px">#</th>
+                    <th>اسم المادة</th>
+                    <th>كمية الفصل الأول</th>
+                    <th>كمية الفصل الثاني</th>
+                    <th>كمية الفصل الثالث</th>
+                    <th>التوصيف</th>
+                    <th>معدل التدفق</th>
+                    <th>التدفق التقريبي</th>
+                    <th> </th>
                 </tr>
-            }
+            </thead>
+            <tbody>
 
-        </tbody>
-    </table>
+                @for (int i = 0; i < Model.Count; i++)
+                {
+                    <tr>
+                        <td>@Model[i].AnnualOrderID</td>
+                        <td>@Model[i].Item.Name</td>
+                        <td>@Model[i].FirstSemQuantity</td>
+                        <td>@Model[i].SecondSemQuantity</td>
+                        <td>@Model[i].ThirdSemQuantity</td>
+                        <td>@Model[i].Description</td>
+                        <td>@Model[i].FlowRate</td>
+                        <td>@Model[i].ApproxRate</td>
+                        <td>
+                            <input asp-for="@Model[i].IsSelected" class="form-check-input" style="margin-top: 13px;" />
+                        </td>
+
+                    </tr>
+                }
+
+            </tbody>
+        </table>
     </div>
+</form> 
