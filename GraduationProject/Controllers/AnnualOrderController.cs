@@ -1,5 +1,6 @@
 ﻿using GraduationProject.Data;
 using GraduationProject.Data.Models;
+using GraduationProject.Service;
 using GraduationProject.ViewModels.AnnualNeedOrders;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -21,11 +22,16 @@ namespace GraduationProject.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly IUserService userService;
+
 
         public AnnualOrderController(ApplicationDbContext context,
-                    UserManager<ApplicationUser> userManager)
+                    UserManager<ApplicationUser> userManager,
+                                IUserService userService)
         {
             this.userManager = userManager;
+            this.userService = userService;
+
             _context = context;
         }
 
@@ -52,7 +58,7 @@ namespace GraduationProject.Controllers
         }
         public int GetAnnualNeedOrderid()
         {
-            var userid = userManager.GetUserId(User);
+            var userid = userService.GetUserId();
             DateTime CurrentDate = DateTime.Now;
             int CurrentYear = CurrentDate.Year;
 

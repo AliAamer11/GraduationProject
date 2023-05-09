@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using GraduationProject.Controllers;
+using GraduationProject.Service;
 
 namespace GraduationProject.Controllers
 {
@@ -17,14 +18,19 @@ namespace GraduationProject.Controllers
     {
         private readonly UserManager<ApplicationUser> userManager;
         private readonly SignInManager<ApplicationUser> signInManager;
+        private readonly IUserService userService;
+
 
         private readonly ApplicationDbContext _context;
         public ArchiveController(ApplicationDbContext context,
                                 UserManager<ApplicationUser> userManager,
-                                 SignInManager<ApplicationUser> signInManager)
+                                 SignInManager<ApplicationUser> signInManager,
+                                 IUserService userService)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
+            this.userService = userService;
+
             _context = context;
         }
 
@@ -54,7 +60,7 @@ namespace GraduationProject.Controllers
         //Get All AnnualNeed To Specific Order///// from archive
         [HttpGet]
         public IActionResult GetAnnualNeedOrders(int id)
-        {
+                {
             //var user = await _userManager.GetUserAsync(User);
 
             var model = new List<AnnualNeedOrderViewModel>();  ///model list of ano for seecting thwm ot use as template
@@ -93,7 +99,8 @@ namespace GraduationProject.Controllers
         [HttpPost]
         public IActionResult GetAnnualNeedOrders(List<AnnualNeedOrderViewModel> model, int id)
         {
-            AnnualOrderController x = new AnnualOrderController(_context, userManager);
+            AnnualOrderController x = new AnnualOrderController(_context, userManager, userService);
+
             int orderid = x.GetAnnualNeedOrderid();
 
 
@@ -103,14 +110,27 @@ namespace GraduationProject.Controllers
             {
                 if(model[i].IsSelected ==true)
                 {
-                     _context.Add(model[i]);
+                    var annualorderx = new AnnualOrder
+                    {
+                        //AnnualOrderID = model[i].AnnualOrderID,
+                        ItemId = model[i].ItemId,
+                        FirstSemQuantity = model[i].FirstSemQuantity,
+                        SecondSemQuantity = model[i].SecondSemQuantity,
+                        ThirdSemQuantity = model[i].ThirdSemQuantity,
+                        Description = model[i].Description,
+                        FlowRate = model[i].FlowRate,
+                        ApproxRate = model[i].ApproxRate,
+                        OrderId = orderid,
+
+                    };
+                     _context.Add(annualorderx);
                      _context.SaveChanges();
 
                    //AnnualOrderstoAdd.Add(model[i]);
                 }
             }
             
-            return RedirectToAction("getAnnualNeedOrders", "AnnualOrder");
+            return RedirectToAction("GetAnnualNeedOrders", "AnnualOrder");
 
         }
 
